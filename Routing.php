@@ -27,23 +27,17 @@ class Routing {
     ];
 
     public static function run(string $path) {
-        // TODO sprawdzać za pomoca array_key_exists
+        if (array_key_exists($path, Routing::$routes)) {
+            $controller = Routing::$routes[$path]["controller"];
+            $action = Routing::$routes[$path]["action"];
 
-        switch($path) {
-            case 'dashboard':
-            case '':
-            case 'login':
-                $controller = Routing::$routes[$path]["controller"];
-                $action = Routing::$routes[$path]["action"];
+            $controllerObj = new $controller;
+            $id = null;
 
-                $controllerObj = new $controller;
-                $id = null;
-
-                $controllerObj->$action($id);
-                break; 
-            default:
-                include 'public/views/404.html';
-                break;
+            $controllerObj->$action($id);
+        }
+        else {
+            include 'public/views/404.html';
         }
     }
 }
