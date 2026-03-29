@@ -1,3 +1,35 @@
+body {
+    margin: 0;
+}
+
 h1 {
     color: purple;
+}
+
+nav {
+    background-color: grey;
+}
+
+nav > div.container {
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+nav > div.container > ul {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    list-style-type: none;
+}
+
+nav > div.container > ul > li > a {
+    text-decoration: none;
+    color: white;
+}
+
+.container {
+    max-width: 1000px;
+    margin: auto;
 }
