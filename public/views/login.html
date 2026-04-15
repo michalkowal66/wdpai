@@ -2,11 +2,65 @@
 <html lang="en">
 <head>
     <?php include __DIR__ . '/partials/head.html'; ?>
-    <title>Login</title>
+    <title>HotDesk - Login</title>
 </head>
-<body>
-    <h1>
-        Login
-    </h1>
+<body class="page">
+    <header class="header">
+        <div class="container header__container">
+            <h1 class="header__logo">HotDesk</h1>
+            
+            <nav class="header__nav desktop-only">
+                <span class="header__text">Don't have an account?</span>
+                <a href="#" class="btn btn--secondary">Sign Up</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main">
+        <article class="login-card">
+            <header class="login-card__header">
+                <h2 class="login-card__title">Welcome Back</h2>
+                <p class="login-card__subtitle">Please enter your details to sign in.</p>
+            </header>
+
+            <form class="form" action="#" method="POST">
+                <div class="form__group">
+                    <label for="email" class="form__label">Email</label>
+                    <div class="form__input-wrapper">
+                        <span class="material-symbols-outlined form__icon form__icon--left desktop-only">mail</span>
+                        <input type="email" id="email" name="email" class="form__input form__input--email" placeholder="name@company.com" required>
+                    </div>
+                </div>
+
+                <div class="form__group">
+                    <label for="password" class="form__label">Password</label>
+                    <div class="form__input-wrapper">
+                        <span class="material-symbols-outlined form__icon form__icon--left desktop-only">lock</span>
+                        <input type="password" id="password" name="password" class="form__input form__input--password" placeholder="••••••••" required>
+                        <button type="button" class="form__icon-btn form__icon-btn--right" aria-label="Toggle password visibility">
+                            <span class="material-symbols-outlined">visibility</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form__options">
+                    <label class="checkbox" for="remember-me">
+                        <input type="checkbox" id="remember-me" name="remember-me" class="checkbox__input">
+                        <span class="checkbox__label">Remember me</span>
+                    </label>
+                    <a href="#" class="link link--primary font-medium">Forgot password?</a>
+                </div>
+
+                <button type="submit" class="btn btn--primary btn--full">Log In</button>
+            </form>
+
+            <footer class="login-card__footer mobile-only">
+                <p class="login-card__footer-text">
+                    Don't have an account? 
+                    <a href="#" class="link link--primary font-bold">Sign Up</a>
+                </p>
+            </footer>
+        </article>
+    </main>
 </body>
 </html>
