@@ -198,7 +198,6 @@ body {
     box-shadow: 0 0 0 2px var(--color-border-focus);
 }
 
-/* Zabezpieczenie przed tekstem najeżdżającym na ikonę oka */
 .form__input--with-icon-right {
     padding-right: 2.5rem;
 }
@@ -358,7 +357,6 @@ body {
         background-color: var(--color-bg-input);
     }
 
-    /* Uniwersalne dodawanie paddingu z lewej strony dla wejść z ikonami (tylko na desktopie) */
     .form__input--with-icon {
         padding-left: 2.5rem;
     }
