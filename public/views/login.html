@@ -11,16 +11,16 @@
             
             <nav class="header__nav desktop-only">
                 <span class="header__text">Don't have an account?</span>
-                <a href="#" class="btn btn--secondary">Sign Up</a>
+                <a href="register" class="btn btn--secondary">Sign Up</a>
             </nav>
         </div>
     </header>
 
     <main class="main">
-        <article class="login-card">
-            <header class="login-card__header">
-                <h2 class="login-card__title">Welcome Back</h2>
-                <p class="login-card__subtitle">Please enter your details to sign in.</p>
+        <article class="auth-card">
+            <header class="auth-card__header">
+                <h2 class="auth-card__title">Welcome Back</h2>
+                <p class="auth-card__subtitle">Please enter your details to sign in.</p>
             </header>
 
             <form class="form" action="#" method="POST">
@@ -28,7 +28,7 @@
                     <label for="email" class="form__label">Email</label>
                     <div class="form__input-wrapper">
                         <span class="material-symbols-outlined form__icon form__icon--left desktop-only">mail</span>
-                        <input type="email" id="email" name="email" class="form__input form__input--email" placeholder="name@company.com" required>
+                        <input type="email" id="email" name="email" class="form__input form__input--email form__input--with-icon" placeholder="name@company.com" required>
                     </div>
                 </div>
 
@@ -36,7 +36,7 @@
                     <label for="password" class="form__label">Password</label>
                     <div class="form__input-wrapper">
                         <span class="material-symbols-outlined form__icon form__icon--left desktop-only">lock</span>
-                        <input type="password" id="password" name="password" class="form__input form__input--password" placeholder="••••••••" required>
+                        <input type="password" id="password" name="password" class="form__input form__input--password form__input--with-icon form__input--with-icon-right" placeholder="••••••••" required>
                         <button type="button" class="form__icon-btn form__icon-btn--right" aria-label="Toggle password visibility">
                             <span class="material-symbols-outlined">visibility</span>
                         </button>
@@ -54,8 +54,8 @@
                 <button type="submit" class="btn btn--primary btn--full">Log In</button>
             </form>
 
-            <footer class="login-card__footer mobile-only">
-                <p class="login-card__footer-text">
+            <footer class="auth-card__footer mobile-only">
+                <p class="auth-card__footer-text">
                     Don't have an account? 
                     <a href="#" class="link link--primary font-bold">Sign Up</a>
                 </p>
