@@ -1,13 +1,157 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
+    <?php include __DIR__ . '/partials/head.html'; ?>
+    <title>HotDesk - Floor Map</title>
 </head>
-<body>
-    <h1>
-        Dashboard
-    </h1>
+<body class="page page--dashboard">
+    <header class="header header--app">
+        <div class="container header__container header__container--app">
+            <div class="header__brand">
+                <h1 class="header__logo">HotDesk</h1>
+            </div>
+
+            <nav class="header__nav desktop-only">
+                <a href="#" class="nav-link nav-link--active">Floor Map</a>
+                <a href="#" class="nav-link">My Bookings</a>
+            </nav>
+
+            <div class="header__user desktop-only">
+                <div class="user-info">
+                    <span class="user-info__name">Welcome, Alex</span>
+                    <span class="user-info__role">UX Designer</span>
+                </div>
+                <div class="user-avatar" style="background-image: url('https://ui-avatars.com/api/?name=Alex&background=e2e8f0');"></div>
+                <button class="btn btn--secondary btn--small btn--icon">
+                    <span class="material-symbols-outlined">logout</span>
+                    Logout
+                </button>
+            </div>
+
+            <button class="btn-icon mobile-only" aria-label="Open menu">
+                <span class="material-symbols-outlined">menu</span>
+            </button>
+        </div>
+    </header>
+
+    <main class="main main--dashboard">
+        <div class="container dashboard-container">
+            
+            <header class="dashboard-header">
+                <div class="dashboard-header__text">
+                    <h2 class="dashboard-header__title">Office Floor Plan</h2>
+                    <p class="dashboard-header__subtitle desktop-only">Select an available desk to book your spot for the day.</p>
+                </div>
+                
+                <div class="status-filters desktop-only">
+                    <button class="filter-btn filter-btn--active">
+                        <span class="material-symbols-outlined">grid_view</span> All Desks
+                    </button>
+                    <button class="filter-btn filter-btn--success">
+                        <span class="material-symbols-outlined">check_circle</span> Available
+                    </button>
+                    <button class="filter-btn filter-btn--disabled">
+                        <span class="material-symbols-outlined">cancel</span> Occupied
+                    </button>
+                    <button class="filter-btn filter-btn--warning">
+                        <span class="material-symbols-outlined">build</span> Maintenance
+                    </button>
+                </div>
+            </header>
+
+            <div class="dashboard-grid">
+                
+                <section class="map-section">
+                    <header class="map-section__controls">
+                        <div class="control-group">
+                            <label class="control-input">
+                                <span class="material-symbols-outlined control-input__icon">layers</span>
+                                <select class="control-input__select">
+                                    <option>North Wing Floor 4</option>
+                                    <option>North Wing Floor 3</option>
+                                </select>
+                            </label>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-input">
+                                <span class="material-symbols-outlined control-input__icon">calendar_today</span>
+                                <input type="date" class="control-input__select" value="2023-10-24">
+                            </label>
+                        </div>
+                    </header>
+
+                    <div class="legend">
+                        <div class="legend__item"><span class="legend__dot legend__dot--success"></span> Available</div>
+                        <div class="legend__item"><span class="legend__dot legend__dot--disabled"></span> Occupied</div>
+                        <div class="legend__item"><span class="legend__dot legend__dot--warning"></span> Maintenance</div>
+                    </div>
+
+                    <div class="map-placeholder">
+                        <span class="material-symbols-outlined map-placeholder__icon">map</span>
+                        <p class="map-placeholder__text">Interactive Floor Map Area</p>
+                        <p class="map-placeholder__subtext">(Canvas / SVG integration goes here)</p>
+                    </div>
+                </section>
+
+                <div class="booking-panel-backdrop mobile-only"></div>
+                <aside class="booking-panel">
+                    <div class="booking-panel__handle mobile-only"></div>
+                    
+                    <header class="booking-panel__header">
+                        <div>
+                            <h3 class="booking-panel__title">Booking Details</h3>
+                            <p class="booking-panel__subtitle mobile-only">October 24, 2023 • Floor 4</p>
+                        </div>
+                        <button class="btn-icon desktop-only" aria-label="Close details">
+                            <span class="material-symbols-outlined">close</span>
+                        </button>
+                        <span class="badge badge--success mobile-only">
+                            <span class="badge__dot"></span> Available
+                        </span>
+                    </header>
+
+                    <div class="booking-panel__content">
+                        <div class="desk-card">
+                            <div class="desk-card__image-wrapper">
+                                <img src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=300&q=80" alt="Desk workspace" class="desk-card__image">
+                            </div>
+                            <div class="desk-card__info">
+                                <div class="desk-card__title-row">
+                                    <div>
+                                        <span class="desk-card__id">Desk A1</span>
+                                        <h4 class="desk-card__name">Premium Window View</h4>
+                                    </div>
+                                    <span class="badge badge--success desktop-only">Available</span>
+                                </div>
+                                <div class="desk-card__features">
+                                    <span class="feature-tag"><span class="material-symbols-outlined">wifi</span> Strong WiFi</span>
+                                    <span class="feature-tag"><span class="material-symbols-outlined">power</span> Power Outlet</span>
+                                </div>
+                                <p class="desk-card__location desktop-only">North Wing • Quiet Zone</p>
+                            </div>
+                        </div>
+
+                        <div class="policy-box">
+                            <span class="material-symbols-outlined policy-box__icon">info</span>
+                            <div class="policy-box__content">
+                                <span class="policy-box__title">Booking Policy</span>
+                                <p class="policy-box__text">This booking is for a full work day (8:00 AM - 6:00 PM). Cancellations must be made 2 hours prior to start.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <footer class="booking-panel__actions">
+                        <button class="btn btn--primary btn--full btn--large">
+                            <span class="material-symbols-outlined desktop-only">check_circle</span>
+                            Confirm Booking
+                            <span class="material-symbols-outlined mobile-only">arrow_forward</span>
+                        </button>
+                        <button class="btn btn--text btn--full mobile-only">Cancel</button>
+                    </footer>
+                </aside>
+
+            </div>
+        </div>
+    </main>
 </body>
 </html>
