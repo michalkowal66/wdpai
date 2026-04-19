@@ -20,6 +20,10 @@ class Routing {
             "controller" => "DashboardController",
             "action" => "index"
         ],
+        "register" => [
+            "controller" => "SecurityController",
+            "action" => "register"
+        ],
         "" => [
             "controller" => "SecurityController",
             "action" => "login"
