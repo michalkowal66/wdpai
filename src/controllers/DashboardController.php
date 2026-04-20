@@ -12,4 +12,10 @@ class DashboardController extends AppController {
 
         return $this->render("dashboard", ["title" => $title]);
     }
+
+    public function bookings() {
+        $title = "HotDesk - My Bookings";
+
+        return $this->render("bookings", ["title" => $title]);
+    }
 }
