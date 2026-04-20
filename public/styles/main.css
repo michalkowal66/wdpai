@@ -17,6 +17,10 @@
     --color-success-bg: #f0fdf4;
     --color-warning: #f97316;
     --color-disabled: #94a3b8;
+    --color-danger: #ef4444;
+    --color-danger-bg: #fef2f2;
+    --color-danger-border: #fca5a5;
+    --color-pending: #eab308;
     
     /* Text colors */
     --color-text-main: #0f172a;
@@ -745,5 +749,268 @@ body {
         width: 100%;
         height: auto;
         aspect-ratio: 16/9;
+    }
+}
+
+/* =========================================
+   Bookings Specific Styles
+   ========================================= */
+.tabs {
+    display: flex;
+    width: 100%;
+    border-bottom: 1px solid var(--color-border);
+    margin-bottom: 1.5rem;
+    gap: 2rem;
+}
+.tabs__link {
+    padding-bottom: 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-text-muted);
+    text-decoration: none;
+    position: relative;
+    transition: color 0.2s;
+}
+.tabs__link:hover {
+    color: var(--color-text-main);
+}
+.tabs__link--active {
+    color: var(--color-primary);
+    font-weight: 600;
+}
+.tabs__link--active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: var(--color-primary);
+    border-radius: 2px 2px 0 0;
+}
+
+.bookings-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+}
+
+/* Booking Card */
+.booking-card {
+    display: flex;
+    flex-direction: column;
+    background: var(--color-bg-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow 0.2s, transform 0.2s, opacity 0.2s;
+}
+.booking-card:hover {
+    box-shadow: var(--shadow-card);
+}
+.booking-card--past {
+    opacity: 0.75;
+}
+.booking-card--past:hover {
+    opacity: 1;
+}
+
+.booking-card__image-wrapper {
+    position: relative;
+    width: 100%;
+    height: 12rem;
+    flex-shrink: 0;
+}
+.booking-card__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.booking-card--past .booking-card__image {
+    filter: grayscale(50%);
+}
+
+.booking-card__badge {
+    position: absolute;
+    top: 0.75rem;
+    left: 0.75rem;
+    padding: 0.25rem 0.625rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--color-text-inverse);
+    background-color: rgba(0, 0, 0, 0.5); /* fallback */
+    backdrop-filter: blur(4px);
+    box-shadow: var(--shadow-sm);
+}
+.booking-card__badge--success { background-color: rgba(34, 197, 94, 0.9); }
+.booking-card__badge--info { background-color: rgba(59, 130, 246, 0.9); }
+.booking-card__badge--neutral { background-color: rgba(100, 116, 139, 0.9); }
+
+.booking-card__content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 1.5rem;
+}
+
+.booking-card__header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+}
+
+.booking-card__date {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-primary);
+}
+.booking-card__date .material-symbols-outlined {
+    display: none;
+}
+
+.booking-card__title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--color-text-main);
+}
+
+.booking-card__details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    color: var(--color-text-muted);
+    font-size: 0.875rem;
+    align-items: center;
+}
+
+.booking-card__footer {
+    margin-top: auto;
+    padding-top: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.booking-card__status {
+    display: none;
+}
+
+.btn--danger {
+    color: var(--color-danger);
+    border-color: var(--color-danger-border);
+    background-color: transparent;
+}
+.btn--danger:hover {
+    background-color: var(--color-danger-bg);
+}
+
+.btn--link {
+    background: transparent;
+    color: var(--color-primary);
+    border: none;
+    padding: 0;
+    height: auto;
+}
+.btn--link:hover {
+    color: var(--color-primary-hover);
+    box-shadow: none;
+    transform: none;
+}
+
+.load-more {
+    display: flex;
+    justify-content: center;
+    padding: 1rem 0 3rem;
+}
+
+.status-dot {
+    display: block;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+}
+.status-dot--success { background-color: var(--color-success); }
+    .status-dot--warning { background-color: var(--color-pending); }
+    .status-dot--neutral { background-color: var(--color-disabled); }
+
+/* Tablet & Desktop overrides for Bookings */
+@media (min-width: 768px) {
+    .tabs {
+        gap: 2rem;
+    }
+    .tabs__link {
+        flex: none;
+    }
+
+    .booking-card {
+        flex-direction: row;
+    }
+    .booking-card__image-wrapper {
+        width: 16rem;
+        height: auto;
+    }
+    .booking-card__content {
+        justify-content: space-between;
+    }
+    .booking-card__header {
+        text-align: left;
+    }
+    .booking-card__date {
+        justify-content: flex-start;
+        color: var(--color-text-muted);
+        font-weight: 500;
+        margin-bottom: 0.25rem;
+    }
+    .booking-card__date .material-symbols-outlined {
+        display: block;
+        font-size: 1.125rem;
+    }
+    .booking-card__title {
+        font-size: 1.25rem;
+        margin-bottom: 0.5rem;
+    }
+    .booking-card__details {
+        flex-direction: row;
+        gap: 1rem;
+    }
+    
+    .booking-card__footer {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        border-top: 1px solid var(--color-border);
+        padding-top: 1.5rem;
+        margin-top: 1.5rem;
+    }
+    .booking-card__status {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.75rem;
+        font-weight: 500;
+        color: var(--color-text-muted);
+    }
+    .btn--danger {
+        width: auto;
+    }
+}
+@media (max-width: 767px) {
+    .tabs {
+        display: flex;
+        justify-content: space-between;
+        gap: 0;
+    }
+    .tabs__link {
+        flex: 1;
+        text-align: center;
+        padding-bottom: 0.75rem;
     }
 }

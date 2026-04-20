@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <?php include __DIR__ . '/partials/head.html'; ?>
+    <title><?= $title ?? 'My Bookings - HotDesk'; ?></title>
+</head>
+<body class="page page--dashboard">
+    <header class="header header--app">
+        <div class="container header__container header__container--app">
+            <div class="header__brand">
+                <h1 class="header__logo">HotDesk</h1>
+            </div>
+
+            <nav class="header__nav desktop-only">
+                <a href="dashboard" class="nav-link">Floor Map</a>
+                <a href="bookings" class="nav-link nav-link--active">My Bookings</a>
+            </nav>
+
+            <div class="header__user desktop-only">
+                <div class="user-info">
+                    <span class="user-info__name">Welcome, Alex</span>
+                    <span class="user-info__role">UX Designer</span>
+                </div>
+                <div class="user-avatar" style="background-image: url('https://ui-avatars.com/api/?name=Alex&background=e2e8f0');"></div>
+                <a class="btn btn--secondary btn--small btn-icon" href="login">
+                    <span class="material-symbols-outlined">logout</span>
+                    Logout
+                </a>
+            </div>
+
+            <button class="btn-icon mobile-only" aria-label="Open menu">
+                <span class="material-symbols-outlined">menu</span>
+            </button>
+        </div>
+    </header>
+
+    <main class="main main--dashboard">
+        <div class="container dashboard-container">
+            
+            <header class="dashboard-header">
+                <div class="dashboard-header__text">
+                    <h2 class="dashboard-header__title">My Bookings</h2>
+                    <p class="dashboard-header__subtitle desktop-only">Manage your upcoming and past desk reservations.</p>
+                </div>
+                <div class="dashboard-header__actions">
+                    <button class="btn btn--primary btn--full">
+                        <span class="material-symbols-outlined">add</span> Book New Desk
+                    </button>
+                </div>
+            </header>
+
+            <nav class="tabs">
+                <a href="#" class="tabs__link tabs__link--active">Upcoming</a>
+                <a href="#" class="tabs__link">History</a>
+                <a href="#" class="tabs__link">Cancelled</a>
+            </nav>
+
+            <section class="bookings-list">
+                
+                <!-- Booking Card 1 (Upcoming - Confirmed) -->
+                <article class="booking-card">
+                    <figure class="booking-card__image-wrapper">
+                        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBiz0PJsq_cYV7rQHxNQoYc29x6SCc15vcJuzFgZ4Xp_-x1ySBbaRXKmIj7_QdPb5lLpVhkyxR54gm5YH9B-unG52lVnKeXBAyLsxvlfw5_1ZEG7zciejLWb14kVHqE-PZWQvwCHiRjzbTRjsKGRKDpwnZ2LiqYNm2EjHJu_ehDIHFu0yq18oPI4K9tuRFhwE5GBkk0FZ7cMiZg4lwVKA3YPb_2MNa1Zz93smzBy2qkZElgClahgK-grb29ds91XxFD9lCdB0aS1c8" alt="Modern office desk setup with natural light" class="booking-card__image">
+                        <span class="booking-card__badge booking-card__badge--success desktop-only">Confirmed</span>
+                    </figure>
+                    <div class="booking-card__content">
+                        <header class="booking-card__header">
+                            <div class="booking-card__date">
+                                <span class="material-symbols-outlined">calendar_month</span>
+                                <span>Monday, Oct 24, 2023</span>
+                            </div>
+                            <h3 class="booking-card__title">Desk 42 - Quiet Zone</h3>
+                            <div class="booking-card__details">
+                                <span class="feature-tag"><span class="material-symbols-outlined">schedule</span> All Day</span>
+                                <span class="feature-tag"><span class="material-symbols-outlined">location_on</span> Floor 3, East Wing</span>
+                            </div>
+                        </header>
+                        <footer class="booking-card__footer">
+                            <div class="booking-card__status">
+                                <span class="status-dot status-dot--success"></span>
+                                <span class="status-text">Checked In</span>
+                            </div>
+                            <div class="booking-card__actions">
+                                <button class="btn btn--secondary btn--danger btn--full">
+                                    <span class="material-symbols-outlined desktop-only">cancel</span> Cancel Reservation
+                                </button>
+                            </div>
+                        </footer>
+                    </div>
+                </article>
+
+                <!-- Booking Card 2 (Upcoming - Pending) -->
+                <article class="booking-card">
+                    <figure class="booking-card__image-wrapper">
+                        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDhr-3ssa_umDQ6DjyEDn1V5kCq2lE3-qcGS7190N4OJ2Vg6_s9ydfOg7t_QSq46-B5-uHuOwGRY_YggG8RyqWpYUjSl48hUo6MV3Sk52hZIOGYmXHI8viaRsHlMfdYStmvl2_BOu2mKuz2WcX0b4wrnk5giUh10atsZMPw-Yu79K-APV5hFrfapDOsT63cwJ8zjXTZZg8HOHe6ybxTsEjV1sVDUWO9bhzaOgki4lvjHPMOx13JeIGxgPnEA988iQd-ZMzlPhsxnLU" alt="Collaborative workspace area with multiple chairs" class="booking-card__image">
+                        <span class="booking-card__badge booking-card__badge--info desktop-only">Upcoming</span>
+                    </figure>
+                    <div class="booking-card__content">
+                        <header class="booking-card__header">
+                            <div class="booking-card__date">
+                                <span class="material-symbols-outlined">calendar_month</span>
+                                <span>Tuesday, Oct 25, 2023</span>
+                            </div>
+                            <h3 class="booking-card__title">Desk 15 - Collaboration Hub</h3>
+                            <div class="booking-card__details">
+                                <span class="feature-tag"><span class="material-symbols-outlined">schedule</span> All Day</span>
+                                <span class="feature-tag"><span class="material-symbols-outlined">location_on</span> Floor 2, Central Area</span>
+                            </div>
+                        </header>
+                        <footer class="booking-card__footer">
+                            <div class="booking-card__status">
+                                <span class="status-dot status-dot--warning"></span>
+                                <span class="status-text">Pending Check-in</span>
+                            </div>
+                            <div class="booking-card__actions">
+                                <button class="btn btn--secondary btn--danger btn--full">
+                                    <span class="material-symbols-outlined desktop-only">cancel</span> Cancel Reservation
+                                </button>
+                            </div>
+                        </footer>
+                    </div>
+                </article>
+
+                <!-- Booking Card 3 (Past - Completed) -->
+                <article class="booking-card booking-card--past">
+                    <figure class="booking-card__image-wrapper">
+                        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAoXOognIG4i4CDv96EPumNTUQp7FaYjf-dMzbGL9Xik5tYsXjrOLBIbh_ZRHkA4FtNUU7fbM_x8ptHyrqFgTtUEpOxhs9uVqSs0060iP37Mg6aNaNhOGimtxh1IdaVAOooaXDIgZSkx5uzcu5TmqUV_Og0VlFpcV7VM9I7I1dtLxuzVuBwk5y2EcFQPwACcZ2ZNLLJ-mHXRqz6aVYePNwFh13HIjDMJbD-nTYSnuYKrXGLsOjgJ_p7kU4TCcMMUr9y4Zsy_cceO4Q" alt="Minimalist desk with plant and laptop" class="booking-card__image">
+                        <span class="booking-card__badge booking-card__badge--neutral desktop-only">Completed</span>
+                    </figure>
+                    <div class="booking-card__content">
+                        <header class="booking-card__header">
+                            <div class="booking-card__date" style="color: var(--color-text-muted);">
+                                <span class="material-symbols-outlined">calendar_month</span>
+                                <span>Friday, Oct 20, 2023</span>
+                            </div>
+                            <h3 class="booking-card__title">Desk 08 - Window View</h3>
+                            <div class="booking-card__details">
+                                <span class="feature-tag"><span class="material-symbols-outlined">schedule</span> All Day</span>
+                                <span class="feature-tag"><span class="material-symbols-outlined">location_on</span> Floor 4, North Side</span>
+                            </div>
+                        </header>
+                        <footer class="booking-card__footer">
+                            <div class="booking-card__status">
+                                <span class="status-dot status-dot--neutral"></span>
+                                <span class="status-text">Completed</span>
+                            </div>
+                            <div class="booking-card__actions" style="margin-left: auto;">
+                                <button class="btn btn--link">
+                                    Book Again <span class="material-symbols-outlined">arrow_forward</span>
+                                </button>
+                            </div>
+                        </footer>
+                    </div>
+                </article>
+
+            </section>
+            
+            <div class="load-more">
+                <button class="btn btn--text">
+                    Load more history <span class="material-symbols-outlined">expand_more</span>
+                </button>
+            </div>
+
+        </div>
+    </main>
+</body>
+</html>
