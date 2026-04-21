@@ -2,6 +2,7 @@
 
 require_once 'src/controllers/SecurityController.php';
 require_once 'src/controllers/DashboardController.php';
+require_once 'src/controllers/AdminController.php';
 
 // TODO musimy zapewnic, ze utworzony 
 // obiekt kontrollera ma tylko jedna instancję - SINGLETON
@@ -23,6 +24,10 @@ class Routing {
         "bookings" => [
             "controller" => "DashboardController",
             "action" => "bookings"
+        ],
+        "users" => [
+            "controller" => "AdminController",
+            "action" => "users"
         ],
         "register" => [
             "controller" => "SecurityController",
