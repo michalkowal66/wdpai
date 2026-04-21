@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <?php include __DIR__ . '/partials/head.html'; ?>
+    <title><?= $title ?? 'User Management - HotDesk'; ?></title>
+</head>
+<body class="page page--dashboard">
+    <header class="header header--app">
+        <div class="container header__container header__container--app">
+            <div class="header__brand">
+                <h1 class="header__logo">HotDesk</h1>
+            </div>
+
+            <nav class="header__nav desktop-only">
+                <a href="dashboard" class="nav-link">Floor Map</a>
+                <a href="bookings" class="nav-link">My Bookings</a>
+                <a href="users" class="nav-link nav-link--active">Users</a>
+            </nav>
+
+            <div class="header__user desktop-only">
+                <div class="user-info">
+                    <span class="user-info__name">Welcome, Admin</span>
+                    <span class="user-info__role">Administrator</span>
+                </div>
+                <div class="user-avatar" style="background-image: url('https://ui-avatars.com/api/?name=Admin&background=e2e8f0');"></div>
+                <a class="btn btn--secondary btn--small btn-icon" href="login">
+                    <span class="material-symbols-outlined">logout</span>
+                    Logout
+                </a>
+            </div>
+
+            <button class="btn-icon mobile-only" aria-label="Open menu">
+                <span class="material-symbols-outlined">menu</span>
+            </button>
+        </div>
+    </header>
+
+    <main class="main main--dashboard main-container--users">
+        
+        <div class="users-content container">
+            <header class="dashboard-header">
+                <div class="dashboard-header__text">
+                    <h2 class="dashboard-header__title">User Management</h2>
+                    <p class="dashboard-header__subtitle desktop-only">Manage system users and their roles.</p>
+                </div>
+                <div class="dashboard-header__actions" style="width: 100%;">
+                    <button class="btn btn--primary btn--full">
+                        <span class="material-symbols-outlined">add</span> Add User
+                    </button>
+                </div>
+            </header>
+
+            <!-- Desktop View: Table -->
+            <section class="data-table-wrapper desktop-only">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th style="text-align: right;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="data-table tr--selected">
+                            <td>
+                                <div class="user-cell">
+                                    <div class="avatar-initials">SJ</div>
+                                    <div class="user-cell__details">
+                                        <span class="user-cell__name">Sarah Jenkins</span>
+                                        <span class="user-cell__role">UX Designer</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>sarah@example.com</td>
+                            <td><span class="badge badge--success">Admin</span></td>
+                            <td style="text-align: right;">
+                                <button class="btn-icon"><span class="material-symbols-outlined">edit</span></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="user-cell">
+                                    <div class="avatar-initials avatar-initials--secondary">MB</div>
+                                    <div class="user-cell__details">
+                                        <span class="user-cell__name">Marcus Bennett</span>
+                                        <span class="user-cell__role">Product Manager</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>m.bennett@example.com</td>
+                            <td><span class="badge" style="background: var(--color-bg-input); color: var(--color-text-muted);">Employee</span></td>
+                            <td style="text-align: right;">
+                                <button class="btn-icon"><span class="material-symbols-outlined">edit</span></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="user-cell">
+                                    <div class="avatar-initials avatar-initials--secondary">AL</div>
+                                    <div class="user-cell__details">
+                                        <span class="user-cell__name">Aria Lawson</span>
+                                        <span class="user-cell__role">Frontend Developer</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>aria.l@example.com</td>
+                            <td><span class="badge" style="background: var(--color-bg-input); color: var(--color-text-muted);">Employee</span></td>
+                            <td style="text-align: right;">
+                                <button class="btn-icon"><span class="material-symbols-outlined">edit</span></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <footer class="pagination">
+                    <span class="pagination__info">Showing 1 to 3 of 24 users</span>
+                    <div class="pagination__actions">
+                        <button class="btn btn--secondary btn--small" disabled><span class="material-symbols-outlined">chevron_left</span></button>
+                        <button class="btn btn--secondary btn--small"><span class="material-symbols-outlined">chevron_right</span></button>
+                    </div>
+                </footer>
+            </section>
+
+            <!-- Mobile View: Cards -->
+            <section class="user-cards-list mobile-only">
+                <article class="user-card">
+                    <button class="btn-icon user-card__edit"><span class="material-symbols-outlined">edit</span></button>
+                    <div class="user-card__header">
+                        <span class="user-card__name">Alex Rivera</span>
+                        <span class="user-card__title">UX Designer</span>
+                        <span class="user-card__email">alex.rivera@hotdesk.io</span>
+                    </div>
+                    <div class="user-card__footer">
+                        <span class="badge badge--success">Admin</span>
+                    </div>
+                </article>
+
+                <article class="user-card">
+                    <button class="btn-icon user-card__edit"><span class="material-symbols-outlined">edit</span></button>
+                    <div class="user-card__header">
+                        <span class="user-card__name">Sarah Jenkins</span>
+                        <span class="user-card__title">Frontend Lead</span>
+                        <span class="user-card__email">s.jenkins@hotdesk.io</span>
+                    </div>
+                    <div class="user-card__footer">
+                        <span class="badge" style="background: var(--color-bg-input); color: var(--color-text-muted);">Employee</span>
+                    </div>
+                </article>
+            </section>
+        </div>
+
+        <!-- Sidebar / Bottom Sheet -->
+        <aside class="side-panel side-panel--active">
+            <div class="side-panel__handle mobile-only"></div>
+            <header class="side-panel__header">
+                <h2 class="side-panel__title">Edit User</h2>
+                <button class="btn-icon desktop-only" aria-label="Close panel"><span class="material-symbols-outlined">close</span></button>
+            </header>
+            
+            <div class="side-panel__content">
+                <form class="form">
+                    <div class="form__group">
+                        <label class="form__label">Full Name</label>
+                        <input type="text" class="form__input" value="Sarah Jenkins">
+                    </div>
+                    <div class="form__group">
+                        <label class="form__label">Job Title</label>
+                        <input type="text" class="form__input" value="UX Designer">
+                    </div>
+                    <div class="form__group">
+                        <label class="form__label">Email Address</label>
+                        <div class="form__input-wrapper">
+                            <input type="email" class="form__input" value="sarah@example.com" disabled readonly style="background: var(--color-bg-input); color: var(--color-text-muted);">
+                            <span class="material-symbols-outlined form__icon" style="right: 1rem;">lock</span>
+                        </div>
+                    </div>
+                    <div class="form__group">
+                        <label class="form__label">Role</label>
+                        <select class="form__input">
+                            <option selected>Admin</option>
+                            <option>Employee</option>
+                            <option>Manager</option>
+                        </select>
+                    </div>
+                    
+                    <div class="status-box" style="margin-top: 1rem;">
+                        <span class="status-box__label">Account Status</span>
+                        <div class="status-box__value">
+                            <span class="status-box__dot"></span> Active & Verified
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <footer class="side-panel__footer">
+                <button class="btn btn--primary btn--full btn--large">
+                    Save Changes
+                    <span class="material-symbols-outlined mobile-only">arrow_forward</span>
+                </button>
+                <button class="btn btn--text btn--full text-error mobile-only">Cancel</button>
+                <button class="btn btn--text btn--full text-error desktop-only" style="color: var(--color-danger);">Delete User</button>
+            </footer>
+        </aside>
+
+    </main>
+</body>
+</html>
