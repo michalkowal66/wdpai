@@ -5,35 +5,7 @@
     <title><?= $title ?? 'User Management - HotDesk'; ?></title>
 </head>
 <body class="page page--dashboard">
-    <header class="header header--app">
-        <div class="container header__container header__container--app">
-            <div class="header__brand">
-                <h1 class="header__logo">HotDesk</h1>
-            </div>
-
-            <nav class="header__nav desktop-only">
-                <a href="dashboard" class="nav-link">Floor Map</a>
-                <a href="bookings" class="nav-link">My Bookings</a>
-                <a href="users" class="nav-link nav-link--active">Users</a>
-            </nav>
-
-            <div class="header__user desktop-only">
-                <div class="user-info">
-                    <span class="user-info__name">Welcome, Admin</span>
-                    <span class="user-info__role">Administrator</span>
-                </div>
-                <div class="user-avatar" style="background-image: url('https://ui-avatars.com/api/?name=Admin&background=e2e8f0');"></div>
-                <a class="btn btn--secondary btn--small btn-icon" href="login">
-                    <span class="material-symbols-outlined">logout</span>
-                    Logout
-                </a>
-            </div>
-
-            <button class="btn-icon mobile-only" aria-label="Open menu">
-                <span class="material-symbols-outlined">menu</span>
-            </button>
-        </div>
-    </header>
+    <?php include __DIR__ . '/partials/nav.html'; ?>
 
     <main class="main main--dashboard main-container--users">
         

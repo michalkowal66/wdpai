@@ -1,10 +1,31 @@
-<nav>
-    <div class="container">
-        <span>LOGO</span>
-        
-        <ul>
-            <li><i class="fa-regular fa-house"></i><a href="/">Home</a></li>
-            <li><i class="fa-solid fa-chart-line"></i><a href="/dashboard">Dashboard</a></li>
-        </ul>
+<?php $uri = $_SERVER['REQUEST_URI']; ?>
+<header class="header header--app">
+    <div class="container header__container header__container--app">
+        <div class="header__brand">
+            <h1 class="header__logo">HotDesk</h1>
+        </div>
+
+        <nav class="header__nav desktop-only">
+            <a href="dashboard" class="nav-link <?= strpos($uri, 'dashboard') !== false ? 'nav-link--active' : '' ?>">Floor Map</a>
+            <a href="bookings" class="nav-link <?= strpos($uri, 'bookings') !== false ? 'nav-link--active' : '' ?>">My Bookings</a>
+            <a href="users" class="nav-link <?= strpos($uri, 'users') !== false ? 'nav-link--active' : '' ?>">Users</a>
+        </nav>
+
+        <div class="header__user desktop-only">
+            <div class="user-info">
+                <!-- Możemy to później zaciągać z danych sesji, na razie zostawiamy mocka -->
+                <span class="user-info__name">Welcome, Alex</span>
+                <span class="user-info__role">UX Designer</span>
+            </div>
+            <div class="avatar-initials avatar-initials--secondary">AL</div>
+            <a class="btn btn--secondary btn--small" href="login">
+                <span class="material-symbols-outlined">logout</span>
+                Logout
+            </a>
+        </div>
+
+        <button class="btn-icon mobile-only" aria-label="Open menu">
+            <span class="material-symbols-outlined">menu</span>
+        </button>
     </div>
-</nav>
+</header>

@@ -333,6 +333,7 @@ body {
     font-weight: 700;
     cursor: pointer;
     transition: background-color 0.2s, transform 0.1s, box-shadow 0.2s;
+    text-decoration: none;
 }
 
 .btn:active {
