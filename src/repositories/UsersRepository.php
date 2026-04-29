@@ -32,16 +32,16 @@ class UsersRepository extends Repository {
     public function createUser(
         string $email,
         string $hashedPassword,
-        string $userName
+        string $fullName
     ) {
         $query = $this->database->connect()->prepare(
             "
-            INSERT INTO users (username, email, password)
+            INSERT INTO users (full_name, email, password)
             VALUES (?, ?, ?);
             "
         );
         $query->execute([
-            $userName,
+            $fullName,
             $email, 
             $hashedPassword
         ]);

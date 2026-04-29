@@ -45,9 +45,9 @@ class SecurityController extends AppController {
         $email = trim($_POST['email'] ?? '');
         $password = $_POST['password'] ?? '';
         $password2 = $_POST['confirm-password'] ?? '';
-        $userName = $_POST['user-name'] ?? '';
+        $fullName = $_POST['full-name'] ?? '';
 
-        if (empty($email) || empty($password) || empty($password2) || empty($userName)) {
+        if (empty($email) || empty($password) || empty($password2) || empty($fullName)) {
             return $this->render('register', ['messages' => 'Fill all fields']);
         }
 
@@ -63,7 +63,7 @@ class SecurityController extends AppController {
         
         $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
 
-        $usersRepository->createUser($email, $hashedPassword, $userName);
+        $usersRepository->createUser($email, $hashedPassword, $fullName);
 
         $url = "http://$_SERVER[HTTP_HOST]";
         header("Location: {$url}/login");
