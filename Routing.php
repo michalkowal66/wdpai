@@ -36,6 +36,10 @@ class Routing {
             "controller" => "SecurityController",
             "action" => "logout"
         ],
+        "inactive" => [
+            "controller" => "SecurityController",
+            "action" => "inactive"
+        ],
         "" => [
             "controller" => "SecurityController",
             "action" => "login"

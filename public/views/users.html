@@ -64,6 +64,7 @@
                                             data-jobtitle="<?= htmlspecialchars($u['job_title'] ?? '') ?>"
                                             data-email="<?= htmlspecialchars($u['email']) ?>"
                                             data-role="<?= htmlspecialchars($u['role']) ?>"
+                                            data-active="<?= $u['is_active'] ? '1' : '0' ?>"
                                         ><span class="material-symbols-outlined">edit</span></button>
                                     </td>
                                 </tr>
@@ -91,6 +92,7 @@
                                 data-jobtitle="<?= htmlspecialchars($u['job_title'] ?? '') ?>"
                                 data-email="<?= htmlspecialchars($u['email']) ?>"
                                 data-role="<?= htmlspecialchars($u['role']) ?>"
+                                data-active="<?= $u['is_active'] ? '1' : '0' ?>"
                             ><span class="material-symbols-outlined">edit</span></button>
                             <div class="user-card__header">
                                 <span class="user-card__name"><?= htmlspecialchars($u['full_name']) ?></span>
@@ -139,11 +141,11 @@
                                 </select>
                             </div>
                             
-                            <div class="status-box" style="margin-top: 1rem;">
-                                <span class="status-box__label">Account Status</span>
-                                <div class="status-box__value">
-                                    <span class="status-box__dot"></span> Active & Verified
-                                </div>
+                            <div class="form__group">
+                                <label class="checkbox" for="edit-active">
+                                    <input type="checkbox" id="edit-active" class="checkbox__input">
+                                    <span class="checkbox__label">Account Active & Verified</span>
+                                </label>
                             </div>
                         </form>
                     </div>

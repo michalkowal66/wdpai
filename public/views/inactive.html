@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <?php include __DIR__ . '/partials/head.html'; ?>
+    <title>HotDesk - Account Pending</title>
+</head>
+<body class="page">
+    <header class="header">
+        <div class="container header__container">
+            <h1 class="header__logo">HotDesk</h1>
+        </div>
+    </header>
+
+    <main class="main">
+        <article class="auth-card">
+            <header class="auth-card__header">
+                <h2 class="auth-card__title">Account Pending Activation</h2>
+                <p class="auth-card__subtitle">Your account has been created successfully, but it's currently awaiting administrator approval.</p>
+            </header>
+
+            <div style="text-align: center; margin-top: 1.5rem; color: var(--color-text-muted); font-size: 0.875rem;">
+                <p>You will be able to log in once an admin activates your account. Please check back later.</p>
+            </div>
+
+            <div style="text-align: center; margin-top: 2rem;">
+                <a href="login" class="btn btn--secondary btn--full">Back to Login</a>
+            </div>
+        </article>
+    </main>
+</body>
+</html>

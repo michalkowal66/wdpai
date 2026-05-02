@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const inputJobTitle = document.getElementById('edit-jobtitle');
     const inputEmail = document.getElementById('edit-email');
     const inputRole = document.getElementById('edit-role');
+    const inputActive = document.getElementById('edit-active');
 
     const openPanel = (event) => {
         // Find the button that was clicked
@@ -21,12 +22,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const jobTitle = btn.getAttribute('data-jobtitle');
         const email = btn.getAttribute('data-email');
         const role = btn.getAttribute('data-role');
+        const isActive = btn.getAttribute('data-active') === '1';
 
         // Populate the form
         if (inputFullName) inputFullName.value = fullName || '';
         if (inputJobTitle) inputJobTitle.value = jobTitle || '';
         if (inputEmail) inputEmail.value = email || '';
         if (inputRole) inputRole.value = role || 'EMPLOYEE';
+        if (inputActive) inputActive.checked = isActive;
 
         // Show the panel
         if (panel) panel.classList.add('side-panel--active');

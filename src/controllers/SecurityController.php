@@ -29,6 +29,12 @@ class SecurityController extends AppController {
             return $this->render('login', ['messages' => 'Wrong password']);
         }
 
+        if (!$user['is_active']) {
+            $url = "http://$_SERVER[HTTP_HOST]";
+            header("Location: {$url}/inactive");
+            exit();
+        }
+
         $_SESSION['user'] = [
             'id' => $user['id'],
             'email' => $user['email'],
@@ -48,6 +54,11 @@ class SecurityController extends AppController {
         $url = "http://$_SERVER[HTTP_HOST]";
         header("Location: {$url}/login");
         return;
+    }
+
+    public function inactive()
+    {
+        return $this->render('inactive');
     }
 
     public function register()

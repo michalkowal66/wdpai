@@ -9,7 +9,7 @@ CREATE TABLE users (
     job_title VARCHAR(255),
     role user_role DEFAULT 'EMPLOYEE',
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    is_active BOOLEAN DEFAULT TRUE
+    is_active BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE floors (
