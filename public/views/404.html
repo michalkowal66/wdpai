@@ -1,13 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Not Found</title>
+    <?php include __DIR__ . '/partials/head.html'; ?>
+    <title>HotDesk - 404 Not Found</title>
 </head>
-<body>
-    <h1>
-        404
-    </h1>
+<body class="page">
+    <header class="header">
+        <div class="container header__container">
+            <h1 class="header__logo">HotDesk</h1>
+        </div>
+    </header>
+
+    <main class="main">
+        <article class="auth-card">
+            <header class="auth-card__header">
+                <h2 class="auth-card__title" style="font-size: 5rem; margin-bottom: 0;">404</h2>
+                <p class="auth-card__subtitle">Oops! We can't find the page you're looking for.</p>
+            </header>
+
+            <div style="text-align: center; margin-top: 2rem;">
+                <a href="dashboard" class="btn btn--primary btn--full">Back to Dashboard</a>
+            </div>
+        </article>
+    </main>
 </body>
 </html>
