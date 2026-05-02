@@ -36,54 +36,33 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr class="data-table tr--selected">
-                                    <td>
-                                        <div class="user-cell">
-                                            <div class="avatar-initials">SJ</div>
-                                            <div class="user-cell__details">
-                                                <span class="user-cell__name">Sarah Jenkins</span>
-                                                <span class="user-cell__role">UX Designer</span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>sarah@example.com</td>
-                                    <td><span class="badge badge--success">Admin</span></td>
-                                    <td style="text-align: right;">
-                                        <button class="btn-icon"><span class="material-symbols-outlined">edit</span></button>
-                                    </td>
-                                </tr>
+                                <?php foreach($users as $u): 
+                                    $nameParts = explode(' ', trim($u['full_name']));
+                                    $initials = substr($nameParts[0], 0, 1);
+                                    if (count($nameParts) > 1) {
+                                        $initials .= substr(end($nameParts), 0, 1);
+                                    }
+                                    $initials = strtoupper($initials);
+                                    $roleClass = $u['role'] === 'ADMIN' ? 'badge--success' : '';
+                                    $roleStyle = $u['role'] !== 'ADMIN' ? 'style="background: var(--color-bg-input); color: var(--color-text-muted);"' : '';
+                                ?>
                                 <tr>
                                     <td>
                                         <div class="user-cell">
-                                            <div class="avatar-initials avatar-initials--secondary">MB</div>
+                                            <div class="avatar-initials <?= $u['role'] !== 'ADMIN' ? 'avatar-initials--secondary' : '' ?>"><?= htmlspecialchars($initials) ?></div>
                                             <div class="user-cell__details">
-                                                <span class="user-cell__name">Marcus Bennett</span>
-                                                <span class="user-cell__role">Product Manager</span>
+                                                <span class="user-cell__name"><?= htmlspecialchars($u['full_name']) ?></span>
+                                                <span class="user-cell__role"><?= htmlspecialchars($u['job_title'] ?? 'Employee') ?></span>
                                             </div>
                                         </div>
                                     </td>
-                                    <td>m.bennett@example.com</td>
-                                    <td><span class="badge" style="background: var(--color-bg-input); color: var(--color-text-muted);">Employee</span></td>
+                                    <td><?= htmlspecialchars($u['email']) ?></td>
+                                    <td><span class="badge <?= $roleClass ?>" <?= $roleStyle ?>><?= htmlspecialchars($u['role']) ?></span></td>
                                     <td style="text-align: right;">
                                         <button class="btn-icon"><span class="material-symbols-outlined">edit</span></button>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td>
-                                        <div class="user-cell">
-                                            <div class="avatar-initials avatar-initials--secondary">AL</div>
-                                            <div class="user-cell__details">
-                                                <span class="user-cell__name">Aria Lawson</span>
-                                                <span class="user-cell__role">Frontend Developer</span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>aria.l@example.com</td>
-                                    <td><span class="badge" style="background: var(--color-bg-input); color: var(--color-text-muted);">Employee</span></td>
-                                    <td style="text-align: right;">
-                                        <button class="btn-icon"><span class="material-symbols-outlined">edit</span></button>
-                                    </td>
-                                </tr>
+                                <?php endforeach; ?>
                             </tbody>
                         </table>
                         <footer class="pagination">
@@ -97,29 +76,22 @@
 
                     <!-- Mobile View: Cards -->
                     <section class="user-cards-list mobile-only">
+                        <?php foreach($users as $u): 
+                            $roleClass = $u['role'] === 'ADMIN' ? 'badge--success' : '';
+                            $roleStyle = $u['role'] !== 'ADMIN' ? 'style="background: var(--color-bg-input); color: var(--color-text-muted);"' : '';
+                        ?>
                         <article class="user-card">
                             <button class="btn-icon user-card__edit"><span class="material-symbols-outlined">edit</span></button>
                             <div class="user-card__header">
-                                <span class="user-card__name">Alex Rivera</span>
-                                <span class="user-card__title">UX Designer</span>
-                                <span class="user-card__email">alex.rivera@hotdesk.io</span>
+                                <span class="user-card__name"><?= htmlspecialchars($u['full_name']) ?></span>
+                                <span class="user-card__title"><?= htmlspecialchars($u['job_title'] ?? 'Employee') ?></span>
+                                <span class="user-card__email"><?= htmlspecialchars($u['email']) ?></span>
                             </div>
                             <div class="user-card__footer">
-                                <span class="badge badge--success">Admin</span>
+                                <span class="badge <?= $roleClass ?>" <?= $roleStyle ?>><?= htmlspecialchars($u['role']) ?></span>
                             </div>
                         </article>
-
-                        <article class="user-card">
-                            <button class="btn-icon user-card__edit"><span class="material-symbols-outlined">edit</span></button>
-                            <div class="user-card__header">
-                                <span class="user-card__name">Sarah Jenkins</span>
-                                <span class="user-card__title">Frontend Lead</span>
-                                <span class="user-card__email">s.jenkins@hotdesk.io</span>
-                            </div>
-                            <div class="user-card__footer">
-                                <span class="badge" style="background: var(--color-bg-input); color: var(--color-text-muted);">Employee</span>
-                            </div>
-                        </article>
+                        <?php endforeach; ?>
                     </section>
                 </div>
 
