@@ -46,4 +46,21 @@ class UsersRepository extends Repository {
             $hashedPassword
         ]);
     }
+
+    public function updateUser(int $id, string $fullName, string $jobTitle, string $role, bool $isActive)
+    {
+        $query = $this->database->connect()->prepare(
+            "
+            UPDATE users 
+            SET full_name = :full_name, job_title = :job_title, role = :role::user_role, is_active = :is_active
+            WHERE id = :id
+            "
+        );
+        $query->bindParam(':full_name', $fullName);
+        $query->bindParam(':job_title', $jobTitle);
+        $query->bindParam(':role', $role);
+        $query->bindParam(':is_active', $isActive, PDO::PARAM_BOOL);
+        $query->bindParam(':id', $id, PDO::PARAM_INT);
+        $query->execute();
+    }
 }

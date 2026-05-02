@@ -28,6 +28,10 @@ class Routing {
             "controller" => "AdminController",
             "action" => "users"
         ],
+        "updateUser" => [
+            "controller" => "AdminController",
+            "action" => "updateUser"
+        ],
         "register" => [
             "controller" => "SecurityController",
             "action" => "register"
