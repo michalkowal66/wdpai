@@ -8,21 +8,33 @@
         <nav class="header__nav desktop-only">
             <a href="dashboard" class="nav-link <?= strpos($uri, 'dashboard') !== false ? 'nav-link--active' : '' ?>">Floor Map</a>
             <a href="bookings" class="nav-link <?= strpos($uri, 'bookings') !== false ? 'nav-link--active' : '' ?>">My Bookings</a>
+            <?php if (isset($user) && $user['role'] === 'ADMIN'): ?>
             <a href="users" class="nav-link <?= strpos($uri, 'users') !== false ? 'nav-link--active' : '' ?>">Users</a>
+            <?php endif; ?>
         </nav>
 
+        <?php if (isset($user)): ?>
         <div class="header__user desktop-only">
             <div class="user-info">
-                <!-- Możemy to później zaciągać z danych sesji, na razie zostawiamy mocka -->
-                <span class="user-info__name">Welcome, Alex</span>
-                <span class="user-info__role">UX Designer</span>
+                <?php
+                    $firstName = explode(' ', trim($user['full_name']))[0] ?? 'User';
+                    $initials = substr($user['full_name'], 0, 1);
+                    $nameParts = explode(' ', trim($user['full_name']));
+                    if (count($nameParts) > 1) {
+                        $initials .= substr(end($nameParts), 0, 1);
+                    }
+                    $initials = strtoupper($initials);
+                ?>
+                <span class="user-info__name">Welcome, <?= htmlspecialchars($firstName) ?></span>
+                <span class="user-info__role"><?= htmlspecialchars($user['job_title'] ?? 'Employee') ?></span>
             </div>
-            <div class="avatar-initials avatar-initials--secondary">AL</div>
-            <a class="btn btn--secondary btn--small" href="login">
+            <div class="avatar-initials avatar-initials--secondary"><?= htmlspecialchars($initials) ?></div>
+            <a class="btn btn--secondary btn--small" href="logout">
                 <span class="material-symbols-outlined">logout</span>
                 Logout
             </a>
         </div>
+        <?php endif; ?>
 
         <button class="btn-icon mobile-only" aria-label="Open menu">
             <span class="material-symbols-outlined">menu</span>
