@@ -22,7 +22,7 @@
                 </div>
             </header>
             
-            <div class="dashboard-grid dashboard-grid--with-sidebar">
+            <div class="dashboard-grid" id="users-grid">
                 <div class="dashboard-grid__main">
                     <!-- Desktop View: Table -->
                     <section class="data-table-wrapper desktop-only">
@@ -59,7 +59,12 @@
                                     <td><?= htmlspecialchars($u['email']) ?></td>
                                     <td><span class="badge <?= $roleClass ?>" <?= $roleStyle ?>><?= htmlspecialchars($u['role']) ?></span></td>
                                     <td style="text-align: right;">
-                                        <button class="btn-icon"><span class="material-symbols-outlined">edit</span></button>
+                                        <button class="btn-icon js-edit-user-btn"
+                                            data-fullname="<?= htmlspecialchars($u['full_name']) ?>"
+                                            data-jobtitle="<?= htmlspecialchars($u['job_title'] ?? '') ?>"
+                                            data-email="<?= htmlspecialchars($u['email']) ?>"
+                                            data-role="<?= htmlspecialchars($u['role']) ?>"
+                                        ><span class="material-symbols-outlined">edit</span></button>
                                     </td>
                                 </tr>
                                 <?php endforeach; ?>
@@ -81,7 +86,12 @@
                             $roleStyle = $u['role'] !== 'ADMIN' ? 'style="background: var(--color-bg-input); color: var(--color-text-muted);"' : '';
                         ?>
                         <article class="user-card">
-                            <button class="btn-icon user-card__edit"><span class="material-symbols-outlined">edit</span></button>
+                            <button class="btn-icon user-card__edit js-edit-user-btn"
+                                data-fullname="<?= htmlspecialchars($u['full_name']) ?>"
+                                data-jobtitle="<?= htmlspecialchars($u['job_title'] ?? '') ?>"
+                                data-email="<?= htmlspecialchars($u['email']) ?>"
+                                data-role="<?= htmlspecialchars($u['role']) ?>"
+                            ><span class="material-symbols-outlined">edit</span></button>
                             <div class="user-card__header">
                                 <span class="user-card__name"><?= htmlspecialchars($u['full_name']) ?></span>
                                 <span class="user-card__title"><?= htmlspecialchars($u['job_title'] ?? 'Employee') ?></span>
@@ -96,36 +106,36 @@
                 </div>
 
                 <!-- Sidebar / Bottom Sheet -->
-                <aside class="side-panel side-panel--active">
+                <div class="side-panel-backdrop mobile-only" id="side-panel-backdrop"></div>
+                <aside class="side-panel" id="edit-user-panel">
                     <div class="side-panel__handle mobile-only"></div>
                     <header class="side-panel__header">
                         <h2 class="side-panel__title">Edit User</h2>
-                        <button class="btn-icon desktop-only" aria-label="Close panel"><span class="material-symbols-outlined">close</span></button>
+                        <button class="btn-icon desktop-only" id="close-panel-btn" aria-label="Close panel"><span class="material-symbols-outlined">close</span></button>
                     </header>
                     
                     <div class="side-panel__content">
                         <form class="form">
                             <div class="form__group">
                                 <label class="form__label">Full Name</label>
-                                <input type="text" class="form__input" value="Sarah Jenkins">
+                                <input type="text" class="form__input" id="edit-fullname" value="">
                             </div>
                             <div class="form__group">
                                 <label class="form__label">Job Title</label>
-                                <input type="text" class="form__input" value="UX Designer">
+                                <input type="text" class="form__input" id="edit-jobtitle" value="">
                             </div>
                             <div class="form__group">
                                 <label class="form__label">Email Address</label>
                                 <div class="form__input-wrapper">
-                                    <input type="email" class="form__input" value="sarah@example.com" disabled readonly style="background: var(--color-bg-input); color: var(--color-text-muted);">
+                                    <input type="email" class="form__input" id="edit-email" value="" disabled readonly style="background: var(--color-bg-input); color: var(--color-text-muted);">
                                     <span class="material-symbols-outlined form__icon" style="right: 1rem;">lock</span>
                                 </div>
                             </div>
                             <div class="form__group">
                                 <label class="form__label">Role</label>
-                                <select class="form__input">
-                                    <option selected>Admin</option>
-                                    <option>Employee</option>
-                                    <option>Manager</option>
+                                <select class="form__input" id="edit-role">
+                                    <option value="ADMIN">Admin</option>
+                                    <option value="EMPLOYEE">Employee</option>
                                 </select>
                             </div>
                             
@@ -141,15 +151,16 @@
                     <footer class="side-panel__footer">
                         <button class="btn btn--primary btn--full btn--large">
                             Save Changes
-                            <span class="material-symbols-outlined mobile-only">arrow_forward</span>
                         </button>
-                        <button class="btn btn--text btn--full text-error mobile-only">Cancel</button>
-                        <button class="btn btn--text btn--full text-error desktop-only" style="color: var(--color-danger);">Delete User</button>
+                        <button type="button" class="btn btn--text btn--full text-error mobile-only" id="cancel-panel-btn">Cancel</button>
+                        <button type="button" class="btn btn--text btn--full text-error desktop-only" style="color: var(--color-danger);">Delete User</button>
                     </footer>
                 </aside>
             </div>
         </div>
 
     </main>
+
+    <script src="/public/scripts/users.js" defer></script>
 </body>
 </html>
