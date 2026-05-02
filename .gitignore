@@ -1,4 +1,10 @@
 .vscode
 .vs
-config.php
+
 .idea
+
+# Environment variables
+.env
+
+# Database seed script (local only)
+docker/db/init/seed.sql
