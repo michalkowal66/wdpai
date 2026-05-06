@@ -1,12 +1,9 @@
 <?php
 
 require_once 'src/controllers/SecurityController.php';
-require_once 'src/controllers/DashboardController.php';
+require_once 'src/controllers/MapController.php';
 require_once 'src/controllers/AdminController.php';
 
-// TODO 2 /dashboard -- wszystkie dnae
-// /dashboard/12234 -- wyciagnie nam jakis element o wskaznaym ID 12234
-// REGEX
 class Routing {
 
     private static $instances = [];
@@ -16,12 +13,12 @@ class Routing {
             "controller" => "SecurityController",
             "action" => "login"
         ],
-        "dashboard" => [
-            "controller" => "DashboardController",
+        "map" => [
+            "controller" => "MapController",
             "action" => "index"
         ],
         "bookings" => [
-            "controller" => "DashboardController",
+            "controller" => "MapController",
             "action" => "bookings"
         ],
         "users" => [

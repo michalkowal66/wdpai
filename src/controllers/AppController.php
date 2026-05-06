@@ -4,14 +4,23 @@ class AppController {
 
     public function __construct()
     {
-        // Protected routes check
-        $protectedRoutes = ['dashboard', 'bookings', 'users'];
         $path = trim($_SERVER["REQUEST_URI"], '/');
         $path = parse_url($path, PHP_URL_PATH) ?: '';
+
+        // Protected routes check
+        $protectedRoutes = ['map', 'bookings', 'users'];
 
         if (in_array($path, $protectedRoutes) && !isset($_SESSION['user'])) {
             $url = "http://$_SERVER[HTTP_HOST]";
             header("Location: {$url}/login");
+            exit();
+        }
+
+        // Redirect logged-in users away from public auth pages
+        $publicPages = ['login', 'register', ''];
+        if (in_array($path, $publicPages) && isset($_SESSION['user'])) {
+            $url = "http://$_SERVER[HTTP_HOST]";
+            header("Location: {$url}/map");
             exit();
         }
     }
