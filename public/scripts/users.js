@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const inputRole = document.getElementById('edit-role');
     const inputActive = document.getElementById('edit-active');
     const saveBtn = document.getElementById('save-user-btn');
+    const deleteBtn = document.getElementById('delete-user-btn');
 
     let currentUserId = null;
 
@@ -60,12 +61,34 @@ document.addEventListener('DOMContentLoaded', () => {
         fetch('/updateUser', {
             method: 'POST',
             body: data
-        }).then(response => {
+        }).then(async response => {
             if (response.ok) {
                 // Success - reload the page to show updated data
                 window.location.reload();
             } else {
-                alert('Failed to update user.');
+                const result = await response.json();
+                alert(result.message || 'Failed to update user.');
+            }
+        });
+    };
+
+    const deleteUser = () => {
+        if (!confirm('Are you sure you want to delete this user? This action cannot be undone.')) {
+            return;
+        }
+
+        const data = new URLSearchParams();
+        data.append('id', currentUserId);
+
+        fetch('/deleteUser', {
+            method: 'POST',
+            body: data
+        }).then(async response => {
+            if (response.ok) {
+                window.location.reload();
+            } else {
+                const result = await response.json();
+                alert(result.message || 'Failed to delete user.');
             }
         });
     };
@@ -75,8 +98,9 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.addEventListener('click', openPanel);
     });
 
-    // Attach save event
+    // Attach save and delete events
     if (saveBtn) saveBtn.addEventListener('click', saveChanges);
+    if (deleteBtn) deleteBtn.addEventListener('click', deleteUser);
 
     // Attach close events
     if (closeBtn) closeBtn.addEventListener('click', closePanel);

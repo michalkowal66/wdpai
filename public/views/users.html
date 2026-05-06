@@ -15,11 +15,6 @@
                     <h2 class="dashboard-header__title">User Management</h2>
                     <p class="dashboard-header__subtitle desktop-only">Manage system users and their roles.</p>
                 </div>
-                <div class="dashboard-header__actions">
-                    <button class="btn btn--primary">
-                        <span class="material-symbols-outlined">add</span> Add User
-                    </button>
-                </div>
             </header>
             
             <div class="dashboard-grid" id="users-grid">
@@ -157,7 +152,7 @@
                             Save Changes
                         </button>
                         <button type="button" class="btn btn--text btn--full text-error mobile-only" id="cancel-panel-btn">Cancel</button>
-                        <button type="button" class="btn btn--text btn--full text-error desktop-only" style="color: var(--color-danger);">Delete User</button>
+                        <button type="button" id="delete-user-btn" class="btn btn--text btn--full text-error desktop-only" style="color: var(--color-danger);">Delete User</button>
                     </footer>
                 </aside>
             </div>

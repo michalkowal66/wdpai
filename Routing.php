@@ -32,6 +32,10 @@ class Routing {
             "controller" => "AdminController",
             "action" => "updateUser"
         ],
+        "deleteUser" => [
+            "controller" => "AdminController",
+            "action" => "deleteUser"
+        ],
         "register" => [
             "controller" => "SecurityController",
             "action" => "register"

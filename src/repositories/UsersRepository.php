@@ -29,6 +29,29 @@ class UsersRepository extends Repository {
         return $user;
     }
 
+    public function getUserById(int $id) {
+        $query = $this->database->connect()->prepare(
+            "
+            SELECT * FROM users WHERE id = :id
+            "
+        );
+        $query->bindParam(':id', $id, PDO::PARAM_INT);
+        $query->execute();
+
+        $user = $query->fetch(PDO::FETCH_ASSOC);
+        return $user;
+    }
+
+    public function getAdminCount(): int {
+        $query = $this->database->connect()->prepare(
+            "
+            SELECT count(*) FROM users WHERE role = 'ADMIN' AND is_active = true
+            "
+        );
+        $query->execute();
+        return (int)$query->fetchColumn();
+    }
+
     public function createUser(
         string $email,
         string $hashedPassword,
@@ -60,6 +83,17 @@ class UsersRepository extends Repository {
         $query->bindParam(':job_title', $jobTitle);
         $query->bindParam(':role', $role);
         $query->bindParam(':is_active', $isActive, PDO::PARAM_BOOL);
+        $query->bindParam(':id', $id, PDO::PARAM_INT);
+        $query->execute();
+    }
+
+    public function deleteUser(int $id)
+    {
+        $query = $this->database->connect()->prepare(
+            "
+            DELETE FROM users WHERE id = :id
+            "
+        );
         $query->bindParam(':id', $id, PDO::PARAM_INT);
         $query->execute();
     }
