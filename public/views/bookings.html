@@ -16,125 +16,109 @@
                     <p class="dashboard-header__subtitle desktop-only">Manage your upcoming and past desk reservations.</p>
                 </div>
                 <div class="dashboard-header__actions">
-                    <button class="btn btn--primary btn--full">
+                    <a href="map" class="btn btn--primary btn--full">
                         <span class="material-symbols-outlined">add</span> Book New Desk
-                    </button>
+                    </a>
                 </div>
             </header>
 
             <nav class="tabs">
-                <a href="#" class="tabs__link tabs__link--active">Upcoming</a>
-                <a href="#" class="tabs__link">History</a>
-                <a href="#" class="tabs__link">Cancelled</a>
+                <a href="?tab=upcoming" class="tabs__link <?= $tab === 'upcoming' ? 'tabs__link--active' : '' ?>">Upcoming</a>
+                <a href="?tab=history" class="tabs__link <?= $tab === 'history' ? 'tabs__link--active' : '' ?>">History</a>
+                <a href="?tab=cancelled" class="tabs__link <?= $tab === 'cancelled' ? 'tabs__link--active' : '' ?>">Cancelled</a>
             </nav>
 
             <section class="bookings-list">
                 
-                <!-- Booking Card 1 (Upcoming - Confirmed) -->
-                <article class="booking-card">
-                    <figure class="booking-card__image-wrapper">
-                        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBiz0PJsq_cYV7rQHxNQoYc29x6SCc15vcJuzFgZ4Xp_-x1ySBbaRXKmIj7_QdPb5lLpVhkyxR54gm5YH9B-unG52lVnKeXBAyLsxvlfw5_1ZEG7zciejLWb14kVHqE-PZWQvwCHiRjzbTRjsKGRKDpwnZ2LiqYNm2EjHJu_ehDIHFu0yq18oPI4K9tuRFhwE5GBkk0FZ7cMiZg4lwVKA3YPb_2MNa1Zz93smzBy2qkZElgClahgK-grb29ds91XxFD9lCdB0aS1c8" alt="Modern office desk setup with natural light" class="booking-card__image">
-                        <span class="booking-card__badge booking-card__badge--success desktop-only">Confirmed</span>
-                    </figure>
-                    <div class="booking-card__content">
-                        <header class="booking-card__header">
-                            <div class="booking-card__date">
-                                <span class="material-symbols-outlined">calendar_month</span>
-                                <span>Monday, Oct 24, 2023</span>
-                            </div>
-                            <h3 class="booking-card__title">Desk 42 - Quiet Zone</h3>
-                            <div class="booking-card__details">
-                                <span class="feature-tag"><span class="material-symbols-outlined">schedule</span> All Day</span>
-                                <span class="feature-tag"><span class="material-symbols-outlined">location_on</span> Floor 3, East Wing</span>
-                            </div>
-                        </header>
-                        <footer class="booking-card__footer">
-                            <div class="booking-card__status">
-                                <span class="status-dot status-dot--success"></span>
-                                <span class="status-text">Checked In</span>
-                            </div>
-                            <div class="booking-card__actions">
-                                <button class="btn btn--secondary btn--danger btn--full">
-                                    <span class="material-symbols-outlined desktop-only">cancel</span> Cancel Reservation
-                                </button>
-                            </div>
-                        </footer>
+                <?php if(empty($displayBookings)): ?>
+                    <div style="text-align: center; padding: 3rem 0; color: var(--color-text-muted);">
+                        <span class="material-symbols-outlined" style="font-size: 3rem; opacity: 0.5;">calendar_today</span>
+                        <p style="margin-top: 1rem; font-weight: 500;">No bookings found in this category.</p>
                     </div>
-                </article>
+                <?php endif; ?>
 
-                <!-- Booking Card 2 (Upcoming - Pending) -->
-                <article class="booking-card">
+                <?php foreach($displayBookings as $b): 
+                    $isPast = $b['booking_date'] < date('Y-m-d');
+                    
+                    // Determine Badge
+                    $badgeClass = '';
+                    $badgeText = '';
+                    $statusDotClass = '';
+                    $statusText = '';
+                    
+                    if ($b['status'] === 'CANCELLED' || $b['status'] === 'NO_SHOW') {
+                        $badgeClass = 'booking-card__badge--neutral';
+                        $badgeText = $b['status'];
+                        $statusDotClass = 'status-dot--neutral';
+                        $statusText = $b['status'];
+                    } elseif ($b['status'] === 'CHECKED_IN') {
+                        $badgeClass = $isPast ? 'booking-card__badge--neutral' : 'booking-card__badge--success';
+                        $badgeText = $isPast ? 'Completed' : 'Checked In';
+                        $statusDotClass = $isPast ? 'status-dot--neutral' : 'status-dot--success';
+                        $statusText = $isPast ? 'Completed' : 'Checked In';
+                    } else { // ACTIVE
+                        $badgeClass = 'booking-card__badge--info';
+                        $badgeText = 'Upcoming';
+                        $statusDotClass = 'status-dot--warning';
+                        $statusText = 'Pending Check-in';
+                    }
+                ?>
+                <article class="booking-card <?= $isPast ? 'booking-card--past' : '' ?>">
                     <figure class="booking-card__image-wrapper">
-                        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDhr-3ssa_umDQ6DjyEDn1V5kCq2lE3-qcGS7190N4OJ2Vg6_s9ydfOg7t_QSq46-B5-uHuOwGRY_YggG8RyqWpYUjSl48hUo6MV3Sk52hZIOGYmXHI8viaRsHlMfdYStmvl2_BOu2mKuz2WcX0b4wrnk5giUh10atsZMPw-Yu79K-APV5hFrfapDOsT63cwJ8zjXTZZg8HOHe6ybxTsEjV1sVDUWO9bhzaOgki4lvjHPMOx13JeIGxgPnEA988iQd-ZMzlPhsxnLU" alt="Collaborative workspace area with multiple chairs" class="booking-card__image">
-                        <span class="booking-card__badge booking-card__badge--info desktop-only">Upcoming</span>
+                        <img src="<?= htmlspecialchars($b['floor_map_url']) ?>" alt="<?= htmlspecialchars($b['floor_name']) ?>" class="booking-card__image" style="object-position: top center;">
+                        <span class="booking-card__badge <?= $badgeClass ?> desktop-only"><?= $badgeText ?></span>
                     </figure>
                     <div class="booking-card__content">
                         <header class="booking-card__header">
-                            <div class="booking-card__date">
+                            <div class="booking-card__date" <?= $isPast ? 'style="color: var(--color-text-muted);"' : '' ?>>
                                 <span class="material-symbols-outlined">calendar_month</span>
-                                <span>Tuesday, Oct 25, 2023</span>
+                                <span><?= date('l, M j, Y', strtotime($b['booking_date'])) ?></span>
                             </div>
-                            <h3 class="booking-card__title">Desk 15 - Collaboration Hub</h3>
+                            <h3 class="booking-card__title">Desk <?= htmlspecialchars($b['desk_identifier']) ?></h3>
                             <div class="booking-card__details">
                                 <span class="feature-tag"><span class="material-symbols-outlined">schedule</span> All Day</span>
-                                <span class="feature-tag"><span class="material-symbols-outlined">location_on</span> Floor 2, Central Area</span>
+                                <span class="feature-tag"><span class="material-symbols-outlined">location_on</span> <?= htmlspecialchars($b['floor_name']) ?></span>
                             </div>
                         </header>
                         <footer class="booking-card__footer">
                             <div class="booking-card__status">
-                                <span class="status-dot status-dot--warning"></span>
-                                <span class="status-text">Pending Check-in</span>
+                                <span class="status-dot <?= $statusDotClass ?>"></span>
+                                <span class="status-text"><?= $statusText ?></span>
                             </div>
-                            <div class="booking-card__actions">
-                                <button class="btn btn--secondary btn--danger btn--full">
-                                    <span class="material-symbols-outlined desktop-only">cancel</span> Cancel Reservation
-                                </button>
-                            </div>
-                        </footer>
-                    </div>
-                </article>
-
-                <!-- Booking Card 3 (Past - Completed) -->
-                <article class="booking-card booking-card--past">
-                    <figure class="booking-card__image-wrapper">
-                        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAoXOognIG4i4CDv96EPumNTUQp7FaYjf-dMzbGL9Xik5tYsXjrOLBIbh_ZRHkA4FtNUU7fbM_x8ptHyrqFgTtUEpOxhs9uVqSs0060iP37Mg6aNaNhOGimtxh1IdaVAOooaXDIgZSkx5uzcu5TmqUV_Og0VlFpcV7VM9I7I1dtLxuzVuBwk5y2EcFQPwACcZ2ZNLLJ-mHXRqz6aVYePNwFh13HIjDMJbD-nTYSnuYKrXGLsOjgJ_p7kU4TCcMMUr9y4Zsy_cceO4Q" alt="Minimalist desk with plant and laptop" class="booking-card__image">
-                        <span class="booking-card__badge booking-card__badge--neutral desktop-only">Completed</span>
-                    </figure>
-                    <div class="booking-card__content">
-                        <header class="booking-card__header">
-                            <div class="booking-card__date" style="color: var(--color-text-muted);">
-                                <span class="material-symbols-outlined">calendar_month</span>
-                                <span>Friday, Oct 20, 2023</span>
-                            </div>
-                            <h3 class="booking-card__title">Desk 08 - Window View</h3>
-                            <div class="booking-card__details">
-                                <span class="feature-tag"><span class="material-symbols-outlined">schedule</span> All Day</span>
-                                <span class="feature-tag"><span class="material-symbols-outlined">location_on</span> Floor 4, North Side</span>
-                            </div>
-                        </header>
-                        <footer class="booking-card__footer">
-                            <div class="booking-card__status">
-                                <span class="status-dot status-dot--neutral"></span>
-                                <span class="status-text">Completed</span>
-                            </div>
-                            <div class="booking-card__actions" style="margin-left: auto;">
-                                <button class="btn btn--link">
-                                    Book Again <span class="material-symbols-outlined">arrow_forward</span>
-                                </button>
+                            <div class="booking-card__actions" <?= $isPast ? 'style="margin-left: auto;"' : '' ?>>
+                                <?php if (!$isPast && $b['status'] === 'ACTIVE'): ?>
+                                    <?php if ($b['booking_date'] === date('Y-m-d')): ?>
+                                        <button class="btn btn--primary btn--small" onclick="checkInBooking(<?= $b['id'] ?>)">
+                                            <span class="material-symbols-outlined desktop-only">check_circle</span> Check In
+                                        </button>
+                                    <?php endif; ?>
+                                    <button class="btn btn--secondary btn--danger <?= $b['booking_date'] === date('Y-m-d') ? 'btn--small' : 'btn--full' ?>" onclick="cancelBooking(<?= $b['id'] ?>)">
+                                        <span class="material-symbols-outlined desktop-only">cancel</span> Cancel
+                                    </button>
+                                <?php elseif ($isPast || $b['status'] === 'CHECKED_IN' || $b['status'] === 'CANCELLED' || $b['status'] === 'NO_SHOW'): ?>
+                                    <a href="/map?floor=<?= $b['floor_level'] ?>&date=<?= date('Y-m-d', strtotime('+1 day')) ?>" class="btn btn--link">
+                                        Book Again <span class="material-symbols-outlined">arrow_forward</span>
+                                    </a>
+                                <?php endif; ?>
                             </div>
                         </footer>
                     </div>
                 </article>
+                <?php endforeach; ?>
 
             </section>
             
+            <?php if(!empty($displayBookings)): ?>
             <div class="load-more">
                 <button class="btn btn--text">
                     Load more history <span class="material-symbols-outlined">expand_more</span>
                 </button>
             </div>
+            <?php endif; ?>
 
         </div>
     </main>
+
+    <script src="/public/scripts/bookings.js" defer></script>
 </body>
 </html>

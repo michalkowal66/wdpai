@@ -29,6 +29,14 @@ class Routing {
             "controller" => "MapController",
             "action" => "bookDesk"
         ],
+        "cancelBooking" => [
+            "controller" => "MapController",
+            "action" => "cancelBooking"
+        ],
+        "checkInBooking" => [
+            "controller" => "MapController",
+            "action" => "checkInBooking"
+        ],
         "users" => [
             "controller" => "AdminController",
             "action" => "users"
