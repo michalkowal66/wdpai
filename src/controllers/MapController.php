@@ -137,6 +137,13 @@ class MapController extends AppController {
             return;
         }
 
+        // Prevent booking in the past
+        if ($date < date('Y-m-d')) {
+            http_response_code(400);
+            echo json_encode(['status' => 'error', 'message' => 'You cannot book a desk in the past.']);
+            return;
+        }
+
         $bookingRepo = new BookingRepository();
         $result = $bookingRepo->bookDesk($userId, $deskId, $date);
 
