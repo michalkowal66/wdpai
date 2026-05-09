@@ -15,12 +15,23 @@ document.addEventListener('DOMContentLoaded', () => {
     const uiDeskName = document.getElementById('detail-desk-name');
     const uiDeskBadge = document.getElementById('detail-desk-badge');
     const uiDeskFeatures = document.getElementById('detail-desk-features');
+    
+    // Booking Alerts elements
+    const uiAlertBox = document.getElementById('detail-desk-alert');
+    const uiAlertTitle = document.getElementById('alert-title');
+    const uiAlertText = document.getElementById('alert-text');
+    const uiAlertIcon = document.querySelector('.alert-box__icon');
+
+    const mapContainer = document.getElementById('map-container');
+    const hasBookingToday = mapContainer ? mapContainer.getAttribute('data-has-booking') === 'true' : false;
+    const bookedDeskId = mapContainer ? mapContainer.getAttribute('data-booked-desk') : null;
 
     let currentSelectedMarker = null;
     let currentDeskId = null;
     let isDeskAvailable = false;
 
-    // Get selected date from the UI (the date picker is readonly for now, but we'll extract it)
+    // Get selected date from the UI
+// ... [rest of variables]
     const dateInput = document.querySelector('.control-input__select[type="date"]');
     const selectedDate = dateInput ? dateInput.value : new Date().toISOString().split('T')[0];
 
@@ -62,40 +73,42 @@ document.addEventListener('DOMContentLoaded', () => {
         updateURL();
     };
 
-    filterBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            const status = btn.getAttribute('data-status');
-            
-            if (status === 'all') {
-                activeFilters = ['all'];
-            } else {
-                // Remove 'all' if present
-                activeFilters = activeFilters.filter(f => f !== 'all');
+    if (filterBtns.length > 0) {
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const status = btn.getAttribute('data-status');
                 
-                // Toggle current status
-                if (activeFilters.includes(status)) {
-                    activeFilters = activeFilters.filter(f => f !== status);
-                } else {
-                    activeFilters.push(status);
-                }
-                
-                // If all 3 are selected or none are selected, revert to 'all'
-                if (activeFilters.length === 3 || activeFilters.length === 0) {
+                if (status === 'all') {
                     activeFilters = ['all'];
+                } else {
+                    // Remove 'all' if present
+                    activeFilters = activeFilters.filter(f => f !== 'all');
+                    
+                    // Toggle current status
+                    if (activeFilters.includes(status)) {
+                        activeFilters = activeFilters.filter(f => f !== status);
+                    } else {
+                        activeFilters.push(status);
+                    }
+                    
+                    // If all 3 are selected or none are selected, revert to 'all'
+                    if (activeFilters.length === 3 || activeFilters.length === 0) {
+                        activeFilters = ['all'];
+                    }
                 }
-            }
-            
-            // clear selection if we hide the selected marker
-            if (currentSelectedMarker && currentSelectedMarker.style.display === 'none') {
-                closePanel();
-            }
+                
+                // clear selection if we hide the selected marker
+                if (currentSelectedMarker && currentSelectedMarker.style.display === 'none') {
+                    closePanel();
+                }
 
-            applyFilters();
+                applyFilters();
+            });
         });
-    });
-
-    // Initialize filters on load
-    applyFilters();
+        
+        // Initialize filters on load
+        applyFilters();
+    }
 
     const clearSelection = () => {
         if (currentSelectedMarker) {
@@ -104,7 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         currentDeskId = null;
         isDeskAvailable = false;
-        confirmBtn.disabled = true;
+        if (confirmBtn) confirmBtn.disabled = true;
     };
 
     const populatePanel = (deskData) => {
@@ -144,16 +157,42 @@ document.addEventListener('DOMContentLoaded', () => {
         uiDeskBadge.textContent = status;
         uiDeskBadge.className = `badge desktop-only ${badgeClass}`;
 
-        // Enable or disable the confirm button based on availability
-        confirmBtn.disabled = !isDeskAvailable;
-        if (!isDeskAvailable) {
-            confirmBtn.style.opacity = '0.5';
-            confirmBtn.style.cursor = 'not-allowed';
-            confirmBtn.textContent = 'Desk Unavailable';
+        // Setup Alert Box based on booking status
+        if (hasBookingToday) {
+            uiAlertBox.style.display = 'flex';
+            if (String(currentDeskId) === bookedDeskId) {
+                uiAlertBox.style.background = '#f0fdf4';
+                uiAlertBox.style.borderColor = '#bbf7d0';
+                uiAlertIcon.style.color = 'var(--color-success)';
+                uiAlertIcon.textContent = 'check_circle';
+                uiAlertTitle.style.color = 'var(--color-success)';
+                uiAlertTitle.textContent = 'Your Workspace';
+                uiAlertText.textContent = 'You have successfully booked this desk for the selected date.';
+            } else {
+                uiAlertBox.style.background = '#fff7ed';
+                uiAlertBox.style.borderColor = '#ffedd5';
+                uiAlertIcon.style.color = 'var(--color-warning)';
+                uiAlertIcon.textContent = 'warning';
+                uiAlertTitle.style.color = 'var(--color-warning)';
+                uiAlertTitle.textContent = 'Booking Exists';
+                uiAlertText.textContent = 'You already have a desk reserved for this day. Manage your bookings to change it.';
+            }
         } else {
-            confirmBtn.style.opacity = '1';
-            confirmBtn.style.cursor = 'pointer';
-            confirmBtn.textContent = 'Confirm Booking';
+            uiAlertBox.style.display = 'none';
+        }
+
+        // Enable or disable the confirm button based on availability
+        if (confirmBtn) {
+            confirmBtn.disabled = !isDeskAvailable;
+            if (!isDeskAvailable) {
+                confirmBtn.style.opacity = '0.5';
+                confirmBtn.style.cursor = 'not-allowed';
+                confirmBtn.textContent = 'Desk Unavailable';
+            } else {
+                confirmBtn.style.opacity = '1';
+                confirmBtn.style.cursor = 'pointer';
+                confirmBtn.textContent = 'Confirm Booking';
+            }
         }
 
         // Features
@@ -189,7 +228,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const bookDesk = async () => {
-        if (!currentDeskId || !isDeskAvailable) return;
+        if (!currentDeskId || !isDeskAvailable || !confirmBtn) return;
 
         confirmBtn.disabled = true;
         confirmBtn.textContent = 'Booking...';

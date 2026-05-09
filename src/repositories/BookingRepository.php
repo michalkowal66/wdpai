@@ -3,7 +3,7 @@
 require_once 'Repository.php';
 
 class BookingRepository extends Repository {
-    public function bookDesk(int $userId, int $deskId, string $date): bool {
+    public function bookDesk(int $userId, int $deskId, string $date): string|bool {
         try {
             $stmt = $this->database->connect()->prepare('
                 INSERT INTO bookings (user_id, desk_id, booking_date)
@@ -12,11 +12,14 @@ class BookingRepository extends Repository {
             $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
             $stmt->bindParam(':desk_id', $deskId, PDO::PARAM_INT);
             $stmt->bindParam(':booking_date', $date);
-            return $stmt->execute();
+            $stmt->execute();
+            return true;
         } catch (PDOException $e) {
-            // Check if it's a unique constraint violation (code 23505)
             if ($e->getCode() === '23505') {
-                return false;
+                if (strpos($e->getMessage(), 'unique_active_user_booking') !== false) {
+                    return 'user_limit';
+                }
+                return 'desk_taken';
             }
             throw $e;
         }

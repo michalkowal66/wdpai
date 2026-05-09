@@ -61,7 +61,7 @@
                             <div class="legend__item"><span class="legend__dot legend__dot--warning"></span> Maintenance</div>
                         </div>
 
-                        <div class="map-placeholder" id="map-container">
+                        <div class="map-placeholder" id="map-container" data-has-booking="<?= $hasBookingToday ? 'true' : 'false' ?>" data-booked-desk="<?= htmlspecialchars($bookedDeskId ?? '') ?>">
                             <?php if ($currentFloor): ?>
                                 <img src="<?= $currentFloor['map_image_url'] ?>" alt="<?= htmlspecialchars($currentFloor['name']) ?>" class="map-image">
                                 
@@ -129,6 +129,14 @@
                                 </div>
                             </div>
 
+                            <div class="alert-box" id="detail-desk-alert" style="display: none;">
+                                <span class="material-symbols-outlined alert-box__icon">warning</span>
+                                <div class="alert-box__content">
+                                    <span class="alert-box__title" id="alert-title">Attention</span>
+                                    <p class="alert-box__text" id="alert-text">Message goes here.</p>
+                                </div>
+                            </div>
+
                             <div class="policy-box">
                                 <span class="material-symbols-outlined policy-box__icon">info</span>
                                 <div class="policy-box__content">
@@ -146,9 +154,15 @@
                     </div>
 
                     <footer class="side-panel__footer" id="panel-actions" style="display: none;">
-                        <button class="btn btn--primary btn--full btn--large" id="confirm-booking-btn">
-                            Confirm Booking
-                        </button>
+                        <?php if ($hasBookingToday): ?>
+                            <a href="/bookings" class="btn btn--secondary btn--full btn--large" style="justify-content: center;">
+                                Manage Bookings
+                            </a>
+                        <?php else: ?>
+                            <button class="btn btn--primary btn--full btn--large" id="confirm-booking-btn">
+                                Confirm Booking
+                            </button>
+                        <?php endif; ?>
                         <button class="btn btn--text btn--full mobile-only" id="cancel-panel-btn">Cancel</button>
                     </footer>
                 </aside>

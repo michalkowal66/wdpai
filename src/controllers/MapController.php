@@ -24,12 +24,29 @@ class MapController extends AppController {
 
         $desks = $currentFloor ? $deskRepository->getDesksByFloor($currentFloor['id'], $date) : [];
 
+        // Check if user has an active booking for the selected date
+        $hasBookingToday = false;
+        $bookedDeskId = null;
+        if (isset($_SESSION['user'])) {
+            $bookingRepo = new BookingRepository();
+            $userBookings = $bookingRepo->getUserBookings($_SESSION['user']['id']);
+            foreach ($userBookings as $b) {
+                if ($b['booking_date'] === $date && in_array($b['status'], ['ACTIVE', 'CHECKED_IN'])) {
+                    $hasBookingToday = true;
+                    $bookedDeskId = $b['desk_id'];
+                    break;
+                }
+            }
+        }
+
         return $this->render("map", [
             "title" => "HotDesk - Floor Map",
             "allFloors" => $allFloors,
             "currentFloor" => $currentFloor,
             "desks" => $desks,
-            "selectedDate" => $date
+            "selectedDate" => $date,
+            "hasBookingToday" => $hasBookingToday,
+            "bookedDeskId" => $bookedDeskId
         ]);
     }
 
@@ -121,14 +138,17 @@ class MapController extends AppController {
         }
 
         $bookingRepo = new BookingRepository();
-        $success = $bookingRepo->bookDesk($userId, $deskId, $date);
+        $result = $bookingRepo->bookDesk($userId, $deskId, $date);
 
-        if ($success) {
+        if ($result === true) {
             http_response_code(200);
             echo json_encode(['status' => 'success']);
         } else {
             http_response_code(400);
-            echo json_encode(['status' => 'error', 'message' => 'This desk is already booked for the selected date.']);
+            $message = $result === 'user_limit' 
+                ? 'You already have an active booking for this date.' 
+                : 'This desk is already booked for the selected date.';
+            echo json_encode(['status' => 'error', 'message' => $message]);
         }
     }
 

@@ -61,6 +61,8 @@ CREATE TABLE bookings (
     booking_date DATE NOT NULL,
     status booking_status DEFAULT 'ACTIVE',
     checked_in_at TIMESTAMP WITH TIME ZONE,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE (desk_id, booking_date)
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE UNIQUE INDEX unique_active_desk_booking ON bookings (desk_id, booking_date) WHERE status IN ('ACTIVE', 'CHECKED_IN');
+CREATE UNIQUE INDEX unique_active_user_booking ON bookings (user_id, booking_date) WHERE status IN ('ACTIVE', 'CHECKED_IN');
