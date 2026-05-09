@@ -48,9 +48,10 @@
                     
                     if ($b['status'] === 'CANCELLED' || $b['status'] === 'NO_SHOW') {
                         $badgeClass = 'booking-card__badge--neutral';
-                        $badgeText = $b['status'];
+                        $friendlyText = $b['status'] === 'CANCELLED' ? 'Cancelled' : 'No Show';
+                        $badgeText = $friendlyText;
                         $statusDotClass = 'status-dot--neutral';
-                        $statusText = $b['status'];
+                        $statusText = $friendlyText;
                     } elseif ($b['status'] === 'CHECKED_IN') {
                         $badgeClass = $isPast ? 'booking-card__badge--neutral' : 'booking-card__badge--success';
                         $badgeText = $isPast ? 'Completed' : 'Checked In';
