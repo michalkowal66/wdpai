@@ -62,4 +62,27 @@ class BookingRepository extends Repository {
         $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
         return $stmt->execute() && $stmt->rowCount() > 0;
     }
+
+    public function autoCancelNoShows(): int {
+        $stmt = $this->database->connect()->prepare("
+            UPDATE bookings 
+            SET status = 'NO_SHOW' 
+            WHERE status = 'ACTIVE' 
+            AND (
+                -- Przeterminowane z poprzednich dni
+                booking_date < CURRENT_DATE
+                OR
+                -- Przeterminowane dzisiejsze (15 min po 8:00 ALBO 15 min po utworzeniu)
+                (
+                    booking_date = CURRENT_DATE 
+                    AND CURRENT_TIMESTAMP > GREATEST(
+                        created_at, 
+                        CURRENT_DATE + TIME '08:00:00'
+                    ) + INTERVAL '15 minutes'
+                )
+            )
+        ");
+        $stmt->execute();
+        return $stmt->rowCount();
+    }
 }

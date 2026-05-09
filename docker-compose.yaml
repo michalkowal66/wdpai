@@ -49,6 +49,18 @@ services:
     networks:
       - pg-network
   
+  cron:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+    networks:
+      - pg-network
+    command: sh -c "while true; do php /app/cron/cleanup.php; sleep 60; done"
+  
 networks:
   pg-network:
 
