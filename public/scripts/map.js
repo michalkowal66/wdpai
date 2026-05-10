@@ -245,16 +245,16 @@ document.addEventListener('DOMContentLoaded', () => {
             const result = await response.json();
 
             if (response.ok) {
-                alert('Booking successful!');
-                window.location.reload();
+                Toast.show('Booking successful!');
+                setTimeout(() => window.location.reload(), 1000);
             } else {
-                alert(result.message || 'Failed to book desk.');
+                Toast.show(result.message || 'Failed to book desk.', 'error');
                 confirmBtn.disabled = false;
                 confirmBtn.textContent = 'Confirm Booking';
             }
         } catch (error) {
             console.error(error);
-            alert('An error occurred while booking the desk.');
+            Toast.show('An error occurred while booking the desk.', 'error');
             confirmBtn.disabled = false;
             confirmBtn.textContent = 'Confirm Booking';
         }

@@ -63,33 +63,32 @@ document.addEventListener('DOMContentLoaded', () => {
             body: data
         }).then(async response => {
             if (response.ok) {
-                // Success - reload the page to show updated data
-                window.location.reload();
+                Toast.show('User updated successfully!');
+                setTimeout(() => window.location.reload(), 1000);
             } else {
                 const result = await response.json();
-                alert(result.message || 'Failed to update user.');
+                Toast.show(result.message || 'Failed to update user.', 'error');
             }
         });
     };
 
     const deleteUser = () => {
-        if (!confirm('Are you sure you want to delete this user? This action cannot be undone.')) {
-            return;
-        }
+        Modal.confirm('Delete User', 'Are you sure you want to delete this user? This action cannot be undone.', () => {
+            const data = new URLSearchParams();
+            data.append('id', currentUserId);
 
-        const data = new URLSearchParams();
-        data.append('id', currentUserId);
-
-        fetch('/deleteUser', {
-            method: 'POST',
-            body: data
-        }).then(async response => {
-            if (response.ok) {
-                window.location.reload();
-            } else {
-                const result = await response.json();
-                alert(result.message || 'Failed to delete user.');
-            }
+            fetch('/deleteUser', {
+                method: 'POST',
+                body: data
+            }).then(async response => {
+                if (response.ok) {
+                    Toast.show('User deleted successfully!');
+                    setTimeout(() => window.location.reload(), 1000);
+                } else {
+                    const result = await response.json();
+                    Toast.show(result.message || 'Failed to delete user.', 'error');
+                }
+            });
         });
     };
 
