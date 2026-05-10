@@ -1543,3 +1543,92 @@ body {
     background-color: #dc2626; 
     box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2); 
 }
+
+/* --- Mobile Navigation Menu --- */
+.mobile-nav-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 10000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    backdrop-filter: blur(2px);
+}
+
+.mobile-nav-overlay--active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.mobile-nav {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 85%;
+    max-width: 320px;
+    background: var(--color-bg-surface);
+    box-shadow: var(--shadow-sheet);
+    transform: translateX(100%);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    display: flex;
+    flex-direction: column;
+}
+
+.mobile-nav-overlay--active .mobile-nav {
+    transform: translateX(0);
+}
+
+.mobile-nav__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.mobile-nav__title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: -0.05em;
+    color: var(--color-text-main);
+}
+
+.mobile-nav__user {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.5rem;
+    background-color: var(--color-bg-input);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.mobile-nav__links {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 0;
+    flex: 1;
+    overflow-y: auto;
+}
+
+.mobile-nav__links .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+    border-bottom: none;
+    border-left: 4px solid transparent;
+}
+
+.mobile-nav__links .nav-link:hover,
+.mobile-nav__links .nav-link--active {
+    background-color: var(--color-primary-light);
+    border-left-color: var(--color-primary);
+}
+
+.mobile-nav__footer {
+    padding: 1.5rem;
+    border-top: 1px solid var(--color-border);
+}

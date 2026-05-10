@@ -64,3 +64,27 @@ window.Modal = {
         });
     }
 };
+
+// --- Mobile Navigation Logic ---
+document.addEventListener('DOMContentLoaded', () => {
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileNavOverlay = document.getElementById('mobile-nav-overlay');
+    const mobileMenuCloseBtn = document.getElementById('mobile-menu-close');
+
+    if (mobileMenuBtn && mobileNavOverlay && mobileMenuCloseBtn) {
+        const openNav = () => {
+            mobileNavOverlay.classList.add('mobile-nav-overlay--active');
+        };
+
+        const closeNav = (e) => {
+            // Close if X button clicked OR click was on the overlay background (not the menu itself)
+            if (e.currentTarget === mobileMenuCloseBtn || e.target === mobileNavOverlay) {
+                mobileNavOverlay.classList.remove('mobile-nav-overlay--active');
+            }
+        };
+
+        mobileMenuBtn.addEventListener('click', openNav);
+        mobileMenuCloseBtn.addEventListener('click', closeNav);
+        mobileNavOverlay.addEventListener('click', closeNav);
+    }
+});

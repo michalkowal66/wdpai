@@ -36,8 +36,53 @@
         </div>
         <?php endif; ?>
 
-        <button class="btn-icon mobile-only" aria-label="Open menu">
+        <button class="btn-icon mobile-only" id="mobile-menu-btn" aria-label="Open menu">
             <span class="material-symbols-outlined">menu</span>
         </button>
     </div>
 </header>
+
+<!-- Mobile Navigation Overlay -->
+<div class="mobile-nav-overlay" id="mobile-nav-overlay">
+    <div class="mobile-nav" id="mobile-nav">
+        <div class="mobile-nav__header">
+            <h2 class="mobile-nav__title">HotDesk</h2>
+            <button class="btn-icon" id="mobile-menu-close" aria-label="Close menu">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+        
+        <?php if (isset($user)): ?>
+        <div class="mobile-nav__user">
+            <div class="avatar-initials avatar-initials--secondary"><?= htmlspecialchars($initials) ?></div>
+            <div class="user-info" style="align-items: flex-start;">
+                <span class="user-info__name"><?= htmlspecialchars($user['full_name']) ?></span>
+                <span class="user-info__role"><?= htmlspecialchars($user['job_title'] ?? 'Employee') ?></span>
+            </div>
+        </div>
+        <?php endif; ?>
+
+        <nav class="mobile-nav__links">
+            <a href="map" class="nav-link <?= strpos($uri, 'map') !== false ? 'nav-link--active' : '' ?>">
+                <span class="material-symbols-outlined">map</span> Floor Map
+            </a>
+            <a href="bookings" class="nav-link <?= strpos($uri, 'bookings') !== false ? 'nav-link--active' : '' ?>">
+                <span class="material-symbols-outlined">event_note</span> My Bookings
+            </a>
+            <?php if (isset($user) && $user['role'] === 'ADMIN'): ?>
+            <a href="users" class="nav-link <?= strpos($uri, 'users') !== false ? 'nav-link--active' : '' ?>">
+                <span class="material-symbols-outlined">group</span> Users
+            </a>
+            <?php endif; ?>
+        </nav>
+
+        <?php if (isset($user)): ?>
+        <div class="mobile-nav__footer">
+            <a class="btn btn--secondary btn--full" href="logout">
+                <span class="material-symbols-outlined">logout</span>
+                Logout
+            </a>
+        </div>
+        <?php endif; ?>
+    </div>
+</div>
