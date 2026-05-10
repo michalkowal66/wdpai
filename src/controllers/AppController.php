@@ -8,11 +8,27 @@ class AppController {
         $path = parse_url($path, PHP_URL_PATH) ?: '';
 
         // Protected routes check
-        $protectedRoutes = ['map', 'bookings', 'users'];
+        $protectedRoutes = ['map', 'bookings'];
 
         if (in_array($path, $protectedRoutes) && !isset($_SESSION['user'])) {
             $url = "http://$_SERVER[HTTP_HOST]";
             header("Location: {$url}/login");
+            exit();
+        }
+
+        // Admin routes check
+        $adminRoutes = ['users'];
+        $adminApiRoutes = ['updateUser', 'deleteUser'];
+        
+        if (in_array($path, $adminRoutes) && (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'ADMIN')) {
+            $url = "http://$_SERVER[HTTP_HOST]";
+            header("Location: {$url}/map");
+            exit();
+        }
+
+        if (in_array($path, $adminApiRoutes) && (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'ADMIN')) {
+            http_response_code(403);
+            echo json_encode(['status' => 'error', 'message' => 'Forbidden: Admin access required']);
             exit();
         }
 
