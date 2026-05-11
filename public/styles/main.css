@@ -277,6 +277,24 @@ body {
     box-shadow: 0 0 0 2px var(--color-border-focus);
 }
 
+.form__input--error {
+    border-color: var(--color-danger);
+}
+.form__input--error:focus {
+    box-shadow: 0 0 0 2px var(--color-danger-border);
+}
+
+.form__error {
+    font-size: 0.75rem;
+    color: var(--color-danger);
+    font-weight: 500;
+    margin-top: 0.25rem;
+    display: none;
+}
+.form__error--visible {
+    display: block;
+}
+
 .form__input--with-icon-right {
     padding-right: 2.5rem;
 }

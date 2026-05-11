@@ -15,18 +15,14 @@ class SecurityController extends AppController {
         $password = $_POST["password"] ?? '';
 
         if (empty($email) || empty($password)) {
-            return $this->render('login', ['messages' => 'Fill all fields']);
+            return $this->render('login', ['messages' => 'Invalid email or password']);
         }
 
         $usersRepository = new UsersRepository();
         $user = $usersRepository->getUserByEmail($email);
       
-        if (!$user) {
-            return $this->render('login', ['messages' => 'User not found']);
-        }
-
-        if (!password_verify($password, $user['password'])) {
-            return $this->render('login', ['messages' => 'Wrong password']);
+        if (!$user || !password_verify($password, $user['password'])) {
+            return $this->render('login', ['messages' => 'Invalid email or password']);
         }
 
         if (!$user['is_active']) {
@@ -70,20 +66,40 @@ class SecurityController extends AppController {
         $email = trim($_POST['email'] ?? '');
         $password = $_POST['password'] ?? '';
         $password2 = $_POST['confirm-password'] ?? '';
-        $fullName = $_POST['full-name'] ?? '';
+        $fullName = trim($_POST['full-name'] ?? '');
 
-        if (empty($email) || empty($password) || empty($password2) || empty($fullName)) {
-            return $this->render('register', ['messages' => 'Fill all fields']);
+        $errors = [];
+
+        if (empty($fullName)) {
+            $errors['full-name'] = 'Full name is required';
         }
 
-        if ($password !== $password2) {
-            return $this->render('register', ['messages' => 'Passwords don\'t match']);
+        if (empty($email)) {
+            $errors['email'] = 'Email is required';
+        } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $errors['email'] = 'Invalid email format';
+        }
+
+        if (empty($password)) {
+            $errors['password'] = 'Password is required';
+        } elseif (strlen($password) < 8) {
+            $errors['password'] = 'Password must be at least 8 characters long';
+        }
+
+        if (empty($password2)) {
+            $errors['confirm-password'] = 'Please confirm your password';
+        } elseif ($password !== $password2) {
+            $errors['confirm-password'] = 'Passwords do not match';
+        }
+
+        if (!empty($errors)) {
+            return $this->render('register', ['errors' => $errors]);
         }
 
         $usersRepository = new UsersRepository();
         $user = $usersRepository->getUserByEmail($email);
         if ($user) {
-            return $this->render('register', ['messages' => 'Email already in use.']);
+            return $this->render('register', ['errors' => ['email' => 'Email already in use']]);
         }
         
         $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
