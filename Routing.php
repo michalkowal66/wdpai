@@ -37,6 +37,10 @@ class Routing {
             "controller" => "MapController",
             "action" => "checkInBooking"
         ],
+        "getBookingsData" => [
+            "controller" => "MapController",
+            "action" => "getBookingsData"
+        ],
         "users" => [
             "controller" => "AdminController",
             "action" => "users"

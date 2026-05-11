@@ -8,11 +8,24 @@ class AdminController extends AppController {
     public function users() {
         $title = "HotDesk - User Management";
         $usersRepository = new UsersRepository();
-        $usersList = $usersRepository->getUsers();
+        
+        $limit = 5;
+        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        if ($page < 1) $page = 1;
+        $offset = ($page - 1) * $limit;
+
+        $totalUsers = $usersRepository->getUsersCount();
+        $usersList = $usersRepository->getUsers($limit, $offset);
+        $totalPages = ceil($totalUsers / $limit);
 
         return $this->render("users", [
             "title" => $title,
-            "users" => $usersList
+            "users" => $usersList,
+            "currentPage" => $page,
+            "totalPages" => $totalPages,
+            "totalUsers" => $totalUsers,
+            "limit" => $limit,
+            "offset" => $offset
         ]);
     }
 

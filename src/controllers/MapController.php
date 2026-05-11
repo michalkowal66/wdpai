@@ -79,19 +79,81 @@ class MapController extends AppController {
         }
 
         $tab = isset($_GET['tab']) ? $_GET['tab'] : 'upcoming';
-        $displayBookings = [];
+        $limit = isset($_GET['limit']) ? (int)$_GET['limit'] : 5;
+        
+        $sourceArray = [];
         if ($tab === 'history') {
-            $displayBookings = $history;
+            $sourceArray = $history;
         } elseif ($tab === 'cancelled') {
-            $displayBookings = $cancelled;
+            $sourceArray = $cancelled;
         } else {
-            $displayBookings = $upcoming;
+            $sourceArray = $upcoming;
         }
+
+        $totalCount = count($sourceArray);
+        $displayBookings = array_slice($sourceArray, 0, $limit);
+        $remainingCount = max(0, $totalCount - $limit);
 
         return $this->render("bookings", [
             "title" => "HotDesk - My Bookings",
             "tab" => $tab,
-            "displayBookings" => $displayBookings
+            "displayBookings" => $displayBookings,
+            "limit" => $limit,
+            "remainingCount" => $remainingCount,
+            "totalCount" => $totalCount
+        ]);
+    }
+
+    public function getBookingsData() {
+        if (!isset($_SESSION['user'])) {
+            http_response_code(401);
+            echo json_encode(['error' => 'Unauthorized']);
+            return;
+        }
+
+        $userId = $_SESSION['user']['id'];
+        $bookingRepo = new BookingRepository();
+        $allBookings = $bookingRepo->getUserBookings($userId);
+
+        $today = date('Y-m-d');
+        $upcoming = [];
+        $history = [];
+        $cancelled = [];
+
+        foreach ($allBookings as $b) {
+            $isPast = $b['booking_date'] < $today;
+            
+            if ($b['status'] === 'CANCELLED' || $b['status'] === 'NO_SHOW' || ($isPast && $b['status'] === 'ACTIVE')) {
+                $cancelled[] = $b;
+            } elseif ($isPast && $b['status'] === 'CHECKED_IN') {
+                $history[] = $b;
+            } else {
+                $upcoming[] = $b;
+            }
+        }
+
+        $tab = isset($_GET['tab']) ? $_GET['tab'] : 'upcoming';
+        $limit = isset($_GET['limit']) ? (int)$_GET['limit'] : 5;
+        $offset = isset($_GET['offset']) ? (int)$_GET['offset'] : 0;
+        
+        $sourceArray = [];
+        if ($tab === 'history') {
+            $sourceArray = $history;
+        } elseif ($tab === 'cancelled') {
+            $sourceArray = $cancelled;
+        } else {
+            $sourceArray = $upcoming;
+        }
+
+        $displayBookings = array_slice($sourceArray, $offset, $limit);
+        $totalCount = count($sourceArray);
+        $remainingCount = max(0, $totalCount - ($offset + $limit));
+
+        header('Content-Type: application/json');
+        echo json_encode([
+            'bookings' => $displayBookings,
+            'remainingCount' => $remainingCount,
+            'today' => $today
         ]);
     }
 

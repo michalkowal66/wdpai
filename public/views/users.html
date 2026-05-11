@@ -68,10 +68,14 @@
                             </tbody>
                         </table>
                         <footer class="pagination">
-                            <span class="pagination__info">Showing 1 to 3 of 24 users</span>
+                            <?php 
+                                $startRecord = min($offset + 1, $totalUsers);
+                                $endRecord = min($offset + $limit, $totalUsers);
+                            ?>
+                            <span class="pagination__info">Showing <?= $startRecord ?> to <?= $endRecord ?> of <?= $totalUsers ?> users</span>
                             <div class="pagination__actions">
-                                <button class="btn btn--secondary btn--small" disabled><span class="material-symbols-outlined">chevron_left</span></button>
-                                <button class="btn btn--secondary btn--small"><span class="material-symbols-outlined">chevron_right</span></button>
+                                <a href="?page=<?= $currentPage - 1 ?>" class="btn btn--secondary btn--small" <?= $currentPage <= 1 ? 'disabled style="pointer-events: none; opacity: 0.5;"' : '' ?>><span class="material-symbols-outlined">chevron_left</span></a>
+                                <a href="?page=<?= $currentPage + 1 ?>" class="btn btn--secondary btn--small" <?= $currentPage >= $totalPages ? 'disabled style="pointer-events: none; opacity: 0.5;"' : '' ?>><span class="material-symbols-outlined">chevron_right</span></a>
                             </div>
                         </footer>
                     </section>

@@ -3,17 +3,29 @@
 require_once 'Repository.php';
 
 class UsersRepository extends Repository {
-    public function getUsers(): ?array 
+    public function getUsers(int $limit = 10, int $offset = 0): ?array 
     {
         $query = $this->database->connect()->prepare(
             "
-            SELECT * FROM users;
+            SELECT * FROM users 
+            ORDER BY id ASC
+            LIMIT :limit OFFSET :offset;
             "
         );
+        $query->bindParam(':limit', $limit, PDO::PARAM_INT);
+        $query->bindParam(':offset', $offset, PDO::PARAM_INT);
         $query->execute();
 
-        $users = $query->fetchAll(PDO::FETCH_ASSOC);
-        return $users;
+        return $query->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getUsersCount(): int 
+    {
+        $query = $this->database->connect()->prepare(
+            "SELECT COUNT(*) FROM users;"
+        );
+        $query->execute();
+        return (int)$query->fetchColumn();
     }
 
     public function getUserByEmail(string $email) {

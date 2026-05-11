@@ -23,15 +23,15 @@
             </header>
 
             <nav class="tabs">
-                <a href="?tab=upcoming" class="tabs__link <?= $tab === 'upcoming' ? 'tabs__link--active' : '' ?>">Upcoming</a>
-                <a href="?tab=history" class="tabs__link <?= $tab === 'history' ? 'tabs__link--active' : '' ?>">History</a>
-                <a href="?tab=cancelled" class="tabs__link <?= $tab === 'cancelled' ? 'tabs__link--active' : '' ?>">Cancelled</a>
+                <a href="?tab=upcoming" class="tabs__link <?= $tab === 'upcoming' ? 'tabs__link--active' : '' ?>" data-tab="upcoming">Upcoming</a>
+                <a href="?tab=history" class="tabs__link <?= $tab === 'history' ? 'tabs__link--active' : '' ?>" data-tab="history">History</a>
+                <a href="?tab=cancelled" class="tabs__link <?= $tab === 'cancelled' ? 'tabs__link--active' : '' ?>" data-tab="cancelled">Cancelled</a>
             </nav>
 
-            <section class="bookings-list">
+            <section class="bookings-list" id="bookings-list-container">
                 
                 <?php if(empty($displayBookings)): ?>
-                    <div style="text-align: center; padding: 3rem 0; color: var(--color-text-muted);">
+                    <div style="text-align: center; padding: 3rem 0; color: var(--color-text-muted);" id="empty-state">
                         <span class="material-symbols-outlined" style="font-size: 3rem; opacity: 0.5;">calendar_today</span>
                         <p style="margin-top: 1rem; font-weight: 500;">No bookings found in this category.</p>
                     </div>
@@ -109,13 +109,9 @@
 
             </section>
             
-            <?php if(!empty($displayBookings)): ?>
-            <div class="load-more">
-                <button class="btn btn--text">
-                    Load more history <span class="material-symbols-outlined">expand_more</span>
-                </button>
+            <div class="load-more" id="load-more-container" <?= $remainingCount > 0 ? '' : 'style="display: none;"' ?>>
+                <button id="load-more-btn" class="btn btn--text" data-offset="<?= $limit ?>" data-tab="<?= $tab ?>">Load more history<span id="remaining-count">(<?= $remainingCount ?></span> remaining) <span class="material-symbols-outlined">expand_more</span></button>
             </div>
-            <?php endif; ?>
 
         </div>
     </main>
