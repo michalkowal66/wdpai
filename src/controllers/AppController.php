@@ -17,8 +17,8 @@ class AppController {
         }
 
         // Admin routes check
-        $adminRoutes = ['users', 'dashboard'];
-        $adminApiRoutes = ['updateUser', 'deleteUser'];
+        $adminRoutes = ['users', 'dashboard', 'desks'];
+        $adminApiRoutes = ['updateUser', 'deleteUser', 'setMaintenance'];
         
         if (in_array($path, $adminRoutes) && (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'ADMIN')) {
             $url = "http://$_SERVER[HTTP_HOST]";

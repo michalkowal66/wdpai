@@ -11,6 +11,7 @@
             <?php if (isset($user) && $user['role'] === 'ADMIN'): ?>
             <a href="dashboard" class="nav-link <?= strpos($uri, 'dashboard') !== false ? 'nav-link--active' : '' ?>">Dashboard</a>
             <a href="users" class="nav-link <?= strpos($uri, 'users') !== false ? 'nav-link--active' : '' ?>">Users</a>
+            <a href="desks" class="nav-link <?= strpos($uri, 'desks') !== false ? 'nav-link--active' : '' ?>">Desks</a>
             <?php endif; ?>
         </nav>
 
@@ -76,6 +77,9 @@
             </a>
             <a href="users" class="nav-link <?= strpos($uri, 'users') !== false ? 'nav-link--active' : '' ?>">
                 <span class="material-symbols-outlined">group</span> Users
+            </a>
+            <a href="desks" class="nav-link <?= strpos($uri, 'desks') !== false ? 'nav-link--active' : '' ?>">
+                <span class="material-symbols-outlined">build</span> Desks
             </a>
             <?php endif; ?>
         </nav>

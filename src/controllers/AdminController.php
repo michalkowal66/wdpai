@@ -117,4 +117,65 @@ class AdminController extends AppController {
         http_response_code(200);
         echo json_encode(['status' => 'success']);
     }
+
+    public function desks() {
+        $title = "HotDesk - Desk Management";
+        require_once __DIR__.'/../repositories/DeskRepository.php';
+        $deskRepository = new DeskRepository();
+        
+        $limit = 10;
+        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        if ($page < 1) $page = 1;
+        $offset = ($page - 1) * $limit;
+
+        $totalDesks = $deskRepository->getDesksCount();
+        $desksList = $deskRepository->getAllDesks($limit, $offset);
+        $totalPages = ceil($totalDesks / $limit);
+
+        return $this->render("desks", [
+            "title" => $title,
+            "desks" => $desksList,
+            "currentPage" => $page,
+            "totalPages" => $totalPages,
+            "totalDesks" => $totalDesks,
+            "limit" => $limit,
+            "offset" => $offset
+        ]);
+    }
+
+    public function setMaintenance() {
+        if (!$this->isPost()) {
+            return;
+        }
+
+        $deskId = isset($_POST['desk_id']) ? (int)$_POST['desk_id'] : null;
+        $startDate = $_POST['start_date'] ?? null;
+        $endDate = $_POST['end_date'] ?? null;
+        $reason = $_POST['reason'] ?? '';
+
+        if (!$deskId || !$startDate || !$endDate) {
+            http_response_code(400);
+            echo json_encode(['status' => 'error', 'message' => 'Missing required fields.']);
+            return;
+        }
+
+        if ($startDate > $endDate) {
+            http_response_code(400);
+            echo json_encode(['status' => 'error', 'message' => 'End date cannot be before start date.']);
+            return;
+        }
+
+        require_once __DIR__.'/../repositories/DeskRepository.php';
+        $deskRepository = new DeskRepository();
+        
+        $success = $deskRepository->setMaintenance($deskId, $startDate, $endDate, $reason);
+
+        if ($success) {
+            http_response_code(200);
+            echo json_encode(['status' => 'success']);
+        } else {
+            http_response_code(400);
+            echo json_encode(['status' => 'error', 'message' => 'Failed to set maintenance. Date range might be invalid or conflict exists.']);
+        }
+    }
 }

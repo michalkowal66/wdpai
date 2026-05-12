@@ -57,6 +57,14 @@ class Routing {
             "controller" => "AdminController",
             "action" => "deleteUser"
         ],
+        "desks" => [
+            "controller" => "AdminController",
+            "action" => "desks"
+        ],
+        "setMaintenance" => [
+            "controller" => "AdminController",
+            "action" => "setMaintenance"
+        ],
         "register" => [
             "controller" => "SecurityController",
             "action" => "register"

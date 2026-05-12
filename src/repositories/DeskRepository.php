@@ -52,4 +52,40 @@ class DeskRepository extends Repository {
         }
         return $desk;
     }
+
+    public function getAllDesks(int $limit = 10, int $offset = 0): array {
+        $stmt = $this->database->connect()->prepare('
+            SELECT d.*, f.name as floor_name
+            FROM desks d
+            JOIN floors f ON d.floor_id = f.id
+            ORDER BY f.level ASC, d.identifier ASC
+            LIMIT :limit OFFSET :offset
+        ');
+        $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+        $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getDesksCount(): int {
+        $stmt = $this->database->connect()->prepare('SELECT COUNT(*) FROM desks');
+        $stmt->execute();
+        return (int)$stmt->fetchColumn();
+    }
+
+    public function setMaintenance(int $deskId, string $startDate, string $endDate, string $reason): bool {
+        try {
+            $stmt = $this->database->connect()->prepare('
+                INSERT INTO desk_maintenances (desk_id, start_date, end_date, reason)
+                VALUES (:desk_id, :start_date, :end_date, :reason)
+            ');
+            $stmt->bindParam(':desk_id', $deskId, PDO::PARAM_INT);
+            $stmt->bindParam(':start_date', $startDate);
+            $stmt->bindParam(':end_date', $endDate);
+            $stmt->bindParam(':reason', $reason);
+            return $stmt->execute();
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
 }

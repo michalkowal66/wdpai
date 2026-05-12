@@ -67,17 +67,6 @@
                                 <?php endforeach; ?>
                             </tbody>
                         </table>
-                        <footer class="pagination">
-                            <?php 
-                                $startRecord = min($offset + 1, $totalUsers);
-                                $endRecord = min($offset + $limit, $totalUsers);
-                            ?>
-                            <span class="pagination__info">Showing <?= $startRecord ?> to <?= $endRecord ?> of <?= $totalUsers ?> users</span>
-                            <div class="pagination__actions">
-                                <a href="?page=<?= $currentPage - 1 ?>" class="btn btn--secondary btn--small" <?= $currentPage <= 1 ? 'disabled style="pointer-events: none; opacity: 0.5;"' : '' ?>><span class="material-symbols-outlined">chevron_left</span></a>
-                                <a href="?page=<?= $currentPage + 1 ?>" class="btn btn--secondary btn--small" <?= $currentPage >= $totalPages ? 'disabled style="pointer-events: none; opacity: 0.5;"' : '' ?>><span class="material-symbols-outlined">chevron_right</span></a>
-                            </div>
-                        </footer>
                     </section>
 
                     <!-- Mobile View: Cards -->
@@ -106,6 +95,18 @@
                         </article>
                         <?php endforeach; ?>
                     </section>
+
+                    <footer class="pagination" style="border-radius: var(--radius-xl); margin-top: 1rem;">
+                        <?php 
+                            $startRecord = min($offset + 1, $totalUsers);
+                            $endRecord = min($offset + $limit, $totalUsers);
+                        ?>
+                        <span class="pagination__info">Showing <?= $startRecord ?> to <?= $endRecord ?> of <?= $totalUsers ?> users</span>
+                        <div class="pagination__actions">
+                            <a href="?page=<?= $currentPage - 1 ?>" class="btn btn--secondary btn--small" <?= $currentPage <= 1 ? 'disabled style="pointer-events: none; opacity: 0.5;"' : '' ?>><span class="material-symbols-outlined">chevron_left</span></a>
+                            <a href="?page=<?= $currentPage + 1 ?>" class="btn btn--secondary btn--small" <?= $currentPage >= $totalPages ? 'disabled style="pointer-events: none; opacity: 0.5;"' : '' ?>><span class="material-symbols-outlined">chevron_right</span></a>
+                        </div>
+                    </footer>
                 </div>
 
                 <!-- Sidebar / Bottom Sheet -->
