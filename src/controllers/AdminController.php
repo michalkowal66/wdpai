@@ -2,8 +2,43 @@
 
 require_once 'AppController.php';
 require_once __DIR__.'/../repositories/UsersRepository.php';
+require_once __DIR__.'/../repositories/StatisticsRepository.php';
 
 class AdminController extends AppController {
+
+    public function dashboard() {
+        $statsRepo = new StatisticsRepository();
+        
+        $utilization = $statsRepo->getTodayUtilization();
+        $topDesks = $statsRepo->getTopDesks(5);
+        $topUsers = $statsRepo->getUserLeaderboard(5);
+        $topFeatures = $statsRepo->getFeaturePopularity();
+        $globalStats = $statsRepo->getGlobalStats();
+
+        // Calculate No-Show Rate
+        $noShowRate = 0;
+        if ($globalStats['total_reservations'] > 0) {
+            $noShowRate = round(($globalStats['total_no_shows'] / $globalStats['total_reservations']) * 100, 1);
+        }
+
+        // Calculate Utilization Rate
+        $utilizationRate = 0;
+        if ($utilization['total_desks'] > 0) {
+            $utilizationRate = round(($utilization['booked_desks'] / $utilization['total_desks']) * 100, 1);
+        }
+
+        return $this->render("dashboard", [
+            "title" => "HotDesk - Admin Dashboard",
+            "utilizationRate" => $utilizationRate,
+            "bookedDesks" => $utilization['booked_desks'],
+            "totalDesks" => $utilization['total_desks'],
+            "noShowRate" => $noShowRate,
+            "totalNoShows" => $globalStats['total_no_shows'],
+            "topDesks" => $topDesks,
+            "topUsers" => $topUsers,
+            "topFeatures" => $topFeatures
+        ]);
+    }
 
     public function users() {
         $title = "HotDesk - User Management";

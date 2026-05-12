@@ -17,7 +17,7 @@ class AppController {
         }
 
         // Admin routes check
-        $adminRoutes = ['users'];
+        $adminRoutes = ['users', 'dashboard'];
         $adminApiRoutes = ['updateUser', 'deleteUser'];
         
         if (in_array($path, $adminRoutes) && (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'ADMIN')) {

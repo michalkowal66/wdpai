@@ -9,6 +9,7 @@
             <a href="map" class="nav-link <?= strpos($uri, 'map') !== false ? 'nav-link--active' : '' ?>">Floor Map</a>
             <a href="bookings" class="nav-link <?= strpos($uri, 'bookings') !== false ? 'nav-link--active' : '' ?>">My Bookings</a>
             <?php if (isset($user) && $user['role'] === 'ADMIN'): ?>
+            <a href="dashboard" class="nav-link <?= strpos($uri, 'dashboard') !== false ? 'nav-link--active' : '' ?>">Dashboard</a>
             <a href="users" class="nav-link <?= strpos($uri, 'users') !== false ? 'nav-link--active' : '' ?>">Users</a>
             <?php endif; ?>
         </nav>
@@ -70,6 +71,9 @@
                 <span class="material-symbols-outlined">event_note</span> My Bookings
             </a>
             <?php if (isset($user) && $user['role'] === 'ADMIN'): ?>
+            <a href="dashboard" class="nav-link <?= strpos($uri, 'dashboard') !== false ? 'nav-link--active' : '' ?>">
+                <span class="material-symbols-outlined">dashboard</span> Dashboard
+            </a>
             <a href="users" class="nav-link <?= strpos($uri, 'users') !== false ? 'nav-link--active' : '' ?>">
                 <span class="material-symbols-outlined">group</span> Users
             </a>

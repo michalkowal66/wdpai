@@ -66,3 +66,54 @@ CREATE TABLE bookings (
 
 CREATE UNIQUE INDEX unique_active_desk_booking ON bookings (desk_id, booking_date) WHERE status IN ('ACTIVE', 'CHECKED_IN');
 CREATE UNIQUE INDEX unique_active_user_booking ON bookings (user_id, booking_date) WHERE status IN ('ACTIVE', 'CHECKED_IN');
+
+-- =========================================
+-- DATABASE VIEWS (Analytics)
+-- =========================================
+
+-- 1. View: Desk Popularity
+CREATE VIEW view_desk_popularity AS
+SELECT 
+    d.id AS desk_id,
+    d.identifier,
+    f.name AS floor_name,
+    COUNT(b.id) AS total_bookings,
+    COUNT(CASE WHEN b.status = 'CHECKED_IN' THEN 1 END) AS successful_bookings
+FROM desks d
+JOIN floors f ON d.floor_id = f.id
+LEFT JOIN bookings b ON d.id = b.desk_id
+GROUP BY d.id, d.identifier, f.name
+ORDER BY total_bookings DESC;
+
+-- 2. View: User Attendance and Reliability
+CREATE VIEW view_user_attendance AS
+SELECT 
+    u.id AS user_id,
+    u.full_name,
+    u.job_title,
+    COUNT(b.id) AS total_reservations,
+    COUNT(CASE WHEN b.status = 'CHECKED_IN' THEN 1 END) AS check_ins,
+    COUNT(CASE WHEN b.status = 'CANCELLED' THEN 1 END) AS cancellations,
+    COUNT(CASE WHEN b.status = 'NO_SHOW' THEN 1 END) AS no_shows,
+    CASE 
+        WHEN COUNT(b.id) > 0 THEN 
+            ROUND((COUNT(CASE WHEN b.status = 'CHECKED_IN' THEN 1 END)::numeric / COUNT(b.id)::numeric) * 100, 2)
+        ELSE 0 
+    END AS reliability_score
+FROM users u
+LEFT JOIN bookings b ON u.id = b.user_id
+GROUP BY u.id, u.full_name, u.job_title
+ORDER BY check_ins DESC;
+
+-- 3. View: Feature Popularity
+CREATE VIEW view_feature_popularity AS
+SELECT 
+    f.id AS feature_id,
+    f.name AS feature_name,
+    f.icon_name,
+    COUNT(b.id) AS total_bookings
+FROM features f
+JOIN desk_features df ON f.id = df.feature_id
+JOIN bookings b ON df.desk_id = b.desk_id
+GROUP BY f.id, f.name, f.icon_name
+ORDER BY total_bookings DESC;
