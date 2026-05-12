@@ -74,8 +74,12 @@ class DeskRepository extends Repository {
     }
 
     public function setMaintenance(int $deskId, string $startDate, string $endDate, string $reason): bool {
+        $conn = $this->database->connect();
         try {
-            $stmt = $this->database->connect()->prepare('
+            $conn->beginTransaction();
+
+            // 1. Insert the maintenance block
+            $stmt = $conn->prepare('
                 INSERT INTO desk_maintenances (desk_id, start_date, end_date, reason)
                 VALUES (:desk_id, :start_date, :end_date, :reason)
             ');
@@ -83,8 +87,26 @@ class DeskRepository extends Repository {
             $stmt->bindParam(':start_date', $startDate);
             $stmt->bindParam(':end_date', $endDate);
             $stmt->bindParam(':reason', $reason);
-            return $stmt->execute();
+            $stmt->execute();
+
+            // 2. Automatically cancel any ACTIVE bookings within this date range
+            $cancelStmt = $conn->prepare("
+                UPDATE bookings 
+                SET status = 'CANCELLED' 
+                WHERE desk_id = :desk_id 
+                  AND booking_date >= :start_date 
+                  AND booking_date <= :end_date
+                  AND status = 'ACTIVE'
+            ");
+            $cancelStmt->bindParam(':desk_id', $deskId, PDO::PARAM_INT);
+            $cancelStmt->bindParam(':start_date', $startDate);
+            $cancelStmt->bindParam(':end_date', $endDate);
+            $cancelStmt->execute();
+
+            $conn->commit();
+            return true;
         } catch (PDOException $e) {
+            $conn->rollBack();
             return false;
         }
     }
