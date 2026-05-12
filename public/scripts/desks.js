@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const inputEnd = document.getElementById('mnt-end');
     const inputReason = document.getElementById('mnt-reason');
     const titleDeskName = document.getElementById('panel-title');
+    const grid = document.getElementById('desks-grid');
 
     let currentDeskId = null;
 
@@ -46,12 +47,14 @@ document.addEventListener('DOMContentLoaded', () => {
         // Show the panel
         if (panel) panel.classList.add('side-panel--active');
         if (backdrop) backdrop.classList.add('side-panel-backdrop--active');
+        if (grid) grid.classList.add('dashboard-grid--with-sidebar');
     };
 
     const closePanel = () => {
         currentDeskId = null;
         if (panel) panel.classList.remove('side-panel--active');
         if (backdrop) backdrop.classList.remove('side-panel-backdrop--active');
+        if (grid) grid.classList.remove('dashboard-grid--with-sidebar');
     };
 
     const saveMaintenance = () => {
