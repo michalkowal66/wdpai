@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <?php include __DIR__ . '/partials/head.html'; ?>
+    <title><?= $title ?? 'System Settings - HotDesk'; ?></title>
+    <style>
+        .settings-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+        @media (min-width: 1024px) {
+            .settings-grid { grid-template-columns: 1fr 1fr; }
+        }
+        .feature-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 1rem;
+            background: var(--color-bg-input);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            margin-bottom: 0.5rem;
+        }
+        .feature-item__info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+    </style>
+</head>
+<body class="page page--dashboard">
+    <?php include __DIR__ . '/partials/nav.html'; ?>
+
+    <main class="main main--dashboard">
+        <div class="container dashboard-container">
+            <header class="dashboard-header">
+                <div class="dashboard-header__text">
+                    <h2 class="dashboard-header__title">System Settings</h2>
+                    <p class="dashboard-header__subtitle desktop-only">Manage building floors and global desk features.</p>
+                </div>
+            </header>
+
+            <div class="settings-grid">
+                
+                <!-- Floors Management -->
+                <section>
+                    <article class="auth-card" style="padding: 1.5rem; max-width: none;">
+                        <header style="margin-bottom: 1.5rem;">
+                            <h3 style="font-size: 1.25rem; font-weight: 700;">Floors Management</h3>
+                            <p style="color: var(--color-text-muted); font-size: 0.875rem;">Upload new office floor maps.</p>
+                        </header>
+
+                        <form class="form" id="add-floor-form">
+                            <div class="form__group">
+                                <label for="floor-name" class="form__label">Floor Name</label>
+                                <input type="text" id="floor-name" name="name" class="form__input" placeholder="e.g. South Wing" required>
+                            </div>
+                            <div class="form__group">
+                                <label for="floor-level" class="form__label">Level Number</label>
+                                <input type="number" id="floor-level" name="level" class="form__input" placeholder="e.g. 3" required min="1">
+                            </div>
+                            <div class="form__group">
+                                <label for="map_image" class="form__label">Map Image (PNG, JPG, WEBP)</label>
+                                <input type="file" id="map_image" name="map_image" class="form__input" accept="image/png, image/jpeg, image/webp" required style="padding: 0.5rem;">
+                            </div>
+                            <button type="submit" class="btn btn--primary btn--full">Upload Floor Map</button>
+                        </form>
+
+                        <div style="margin-top: 2rem;">
+                            <h4 style="font-size: 1rem; font-weight: 600; margin-bottom: 1rem;">Existing Floors</h4>
+                            <div id="floors-list-container">
+                                <!-- Populated by JS -->
+                            </div>
+                            <div id="floors-pagination" class="pagination__actions" style="justify-content: center; margin-top: 1rem;"></div>
+                        </div>
+                    </article>
+                </section>
+
+                <!-- Features Management -->
+                <section>
+                    <article class="auth-card" style="padding: 1.5rem; max-width: none;">
+                        <header style="margin-bottom: 1.5rem;">
+                            <h3 style="font-size: 1.25rem; font-weight: 700;">Global Desk Features</h3>
+                            <p style="color: var(--color-text-muted); font-size: 0.875rem;">Manage tags available for desks.</p>
+                        </header>
+
+                        <form class="form" id="add-feature-form" style="display: grid; grid-template-columns: 1fr 100px auto; gap: 0.5rem; align-items: flex-end; margin-bottom: 2rem;">
+                            <div class="form__group" style="margin-bottom: 0;">
+                                <label for="feature-name" class="form__label">Feature Name</label>
+                                <input type="text" id="feature-name" class="form__input" placeholder="e.g. Standing Desk" required>
+                            </div>
+                            <div class="form__group" style="margin-bottom: 0;">
+                                <label for="feature-icon" class="form__label">Icon</label>
+                                <input type="text" id="feature-icon" class="form__input" placeholder="e.g. height" required>
+                            </div>
+                            <button type="submit" class="btn btn--primary" style="height: 2.75rem; padding: 0 1rem;">Add</button>
+                        </form>
+
+                        <div id="features-list-container">
+                            <!-- Populated by JS -->
+                        </div>
+                        <div id="features-pagination" class="pagination__actions" style="justify-content: center; margin-top: 1rem;"></div>
+                    </article>
+                </section>
+
+                <script>
+                    const INITIAL_FLOORS = <?= json_encode($floors) ?>;
+                    const INITIAL_FEATURES = <?= json_encode($features) ?>;
+                </script>
+
+            </div>
+        </div>
+    </main>
+
+    <script src="/public/scripts/settings.js" defer></script>
+</body>
+</html>

@@ -3,6 +3,7 @@
 require_once 'src/controllers/SecurityController.php';
 require_once 'src/controllers/MapController.php';
 require_once 'src/controllers/AdminController.php';
+require_once 'src/controllers/SettingsController.php';
 
 class Routing {
 
@@ -64,6 +65,22 @@ class Routing {
         "setMaintenance" => [
             "controller" => "AdminController",
             "action" => "setMaintenance"
+        ],
+        "settings" => [
+            "controller" => "SettingsController",
+            "action" => "settings"
+        ],
+        "addFloor" => [
+            "controller" => "SettingsController",
+            "action" => "addFloor"
+        ],
+        "addFeature" => [
+            "controller" => "SettingsController",
+            "action" => "addFeature"
+        ],
+        "deleteFeature" => [
+            "controller" => "SettingsController",
+            "action" => "deleteFeature"
         ],
         "register" => [
             "controller" => "SecurityController",

@@ -20,4 +20,19 @@ class FloorRepository extends Repository {
         $floor = $stmt->fetch(PDO::FETCH_ASSOC);
         return $floor ?: null;
     }
+
+    public function createFloor(string $name, int $level, string $imageUrl): bool {
+        try {
+            $stmt = $this->database->connect()->prepare('
+                INSERT INTO floors (name, level, map_image_url)
+                VALUES (:name, :level, :map_image_url)
+            ');
+            $stmt->bindParam(':name', $name);
+            $stmt->bindParam(':level', $level, PDO::PARAM_INT);
+            $stmt->bindParam(':map_image_url', $imageUrl);
+            return $stmt->execute();
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
 }
