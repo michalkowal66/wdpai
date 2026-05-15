@@ -10,8 +10,9 @@
             <a href="bookings" class="nav-link <?= strpos($uri, 'bookings') !== false ? 'nav-link--active' : '' ?>">My Bookings</a>
             <?php if (isset($user) && $user['role'] === 'ADMIN'): ?>
             <a href="dashboard" class="nav-link <?= strpos($uri, 'dashboard') !== false ? 'nav-link--active' : '' ?>">Dashboard</a>
+            <a href="editor" class="nav-link <?= strpos($uri, 'editor') !== false ? 'nav-link--active' : '' ?>">Desk Editor</a>
             <a href="users" class="nav-link <?= strpos($uri, 'users') !== false ? 'nav-link--active' : '' ?>">Users</a>
-            <a href="desks" class="nav-link <?= strpos($uri, 'desks') !== false ? 'nav-link--active' : '' ?>">Desks</a>
+            <a href="desks" class="nav-link <?= strpos($uri, 'desks') !== false ? 'nav-link--active' : '' ?>">Maintenance</a>
             <a href="settings" class="nav-link <?= strpos($uri, 'settings') !== false ? 'nav-link--active' : '' ?>">Settings</a>
             <?php endif; ?>
         </nav>
@@ -76,11 +77,14 @@
             <a href="dashboard" class="nav-link <?= strpos($uri, 'dashboard') !== false ? 'nav-link--active' : '' ?>">
                 <span class="material-symbols-outlined">dashboard</span> Dashboard
             </a>
+            <a href="editor" class="nav-link <?= strpos($uri, 'editor') !== false ? 'nav-link--active' : '' ?>">
+                <span class="material-symbols-outlined">edit_location</span> Desk Editor
+            </a>
             <a href="users" class="nav-link <?= strpos($uri, 'users') !== false ? 'nav-link--active' : '' ?>">
                 <span class="material-symbols-outlined">group</span> Users
             </a>
             <a href="desks" class="nav-link <?= strpos($uri, 'desks') !== false ? 'nav-link--active' : '' ?>">
-                <span class="material-symbols-outlined">build</span> Desks
+                <span class="material-symbols-outlined">build</span> Maintenance
             </a>
             <a href="settings" class="nav-link <?= strpos($uri, 'settings') !== false ? 'nav-link--active' : '' ?>">
                 <span class="material-symbols-outlined">settings</span> Settings

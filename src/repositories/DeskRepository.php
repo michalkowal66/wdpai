@@ -26,6 +26,17 @@ class DeskRepository extends Repository {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function getAllDesksByFloor(int $floorId): array {
+        $stmt = $this->database->connect()->prepare('
+            SELECT d.* 
+            FROM desks d
+            WHERE d.floor_id = :floorId
+        ');
+        $stmt->bindParam(':floorId', $floorId, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function getDeskWithFeatures(int $deskId): ?array {
         $stmt = $this->database->connect()->prepare('
             SELECT d.*, f.name as feature_name, f.icon_name
@@ -107,6 +118,99 @@ class DeskRepository extends Repository {
             return true;
         } catch (PDOException $e) {
             $conn->rollBack();
+            return false;
+        }
+    }
+
+    public function saveDesk(?int $id, int $floorId, string $identifier, string $description, float $posX, float $posY, array $features): bool {
+        $conn = $this->database->connect();
+        try {
+            $conn->beginTransaction();
+
+            if ($id) {
+                // Update existing desk
+                $stmt = $conn->prepare('
+                    UPDATE desks 
+                    SET identifier = :identifier, description = :description, floor_id = :floor_id, pos_x = :pos_x, pos_y = :pos_y 
+                    WHERE id = :id
+                ');
+                $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            } else {
+                // Insert new desk
+                $stmt = $conn->prepare('
+                    INSERT INTO desks (identifier, description, floor_id, pos_x, pos_y) 
+                    VALUES (:identifier, :description, :floor_id, :pos_x, :pos_y) 
+                    RETURNING id
+                ');
+            }
+
+            $stmt->bindParam(':identifier', $identifier);
+            $stmt->bindParam(':description', $description);
+            $stmt->bindParam(':floor_id', $floorId, PDO::PARAM_INT);
+            $stmt->bindParam(':pos_x', $posX);
+            $stmt->bindParam(':pos_y', $posY);
+            $stmt->execute();
+
+            if (!$id) {
+                $id = (int)$stmt->fetchColumn();
+            }
+
+            // Clear old features
+            $delStmt = $conn->prepare('DELETE FROM desk_features WHERE desk_id = :desk_id');
+            $delStmt->bindParam(':desk_id', $id, PDO::PARAM_INT);
+            $delStmt->execute();
+
+            // Insert new features
+            if (!empty($features)) {
+                $featStmt = $conn->prepare('INSERT INTO desk_features (desk_id, feature_id) VALUES (:desk_id, :feature_id)');
+                foreach ($features as $fId) {
+                    $featStmt->bindValue(':desk_id', $id, PDO::PARAM_INT);
+                    $featStmt->bindValue(':feature_id', (int)$fId, PDO::PARAM_INT);
+                    $featStmt->execute();
+                }
+            }
+
+            $conn->commit();
+            return true;
+        } catch (PDOException $e) {
+            $conn->rollBack();
+            return false;
+        }
+    }
+
+    public function deactivateDesk(int $id): bool {
+        $conn = $this->database->connect();
+        try {
+            $conn->beginTransaction();
+
+            // Soft delete the desk
+            $stmt = $conn->prepare('UPDATE desks SET is_active = FALSE WHERE id = :id');
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            $stmt->execute();
+
+            // Cancel any future active bookings for this desk
+            $cancelStmt = $conn->prepare("
+                UPDATE bookings 
+                SET status = 'CANCELLED' 
+                WHERE desk_id = :desk_id AND booking_date >= CURRENT_DATE AND status = 'ACTIVE'
+            ");
+            $cancelStmt->bindParam(':desk_id', $id, PDO::PARAM_INT);
+            $cancelStmt->execute();
+
+            $conn->commit();
+            return true;
+        } catch (PDOException $e) {
+            $conn->rollBack();
+            return false;
+        }
+    }
+
+    public function reactivateDesk(int $id): bool {
+        try {
+            $stmt = $this->database->connect()->prepare('UPDATE desks SET is_active = TRUE WHERE id = :id');
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            return $stmt->execute();
+        } catch (PDOException $e) {
             return false;
         }
     }

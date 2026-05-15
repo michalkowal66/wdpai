@@ -82,6 +82,22 @@ class Routing {
             "controller" => "SettingsController",
             "action" => "deleteFeature"
         ],
+        "editor" => [
+            "controller" => "AdminController",
+            "action" => "editor"
+        ],
+        "saveDesk" => [
+            "controller" => "AdminController",
+            "action" => "saveDesk"
+        ],
+        "deactivateDesk" => [
+            "controller" => "AdminController",
+            "action" => "deactivateDesk"
+        ],
+        "reactivateDesk" => [
+            "controller" => "AdminController",
+            "action" => "reactivateDesk"
+        ],
         "register" => [
             "controller" => "SecurityController",
             "action" => "register"

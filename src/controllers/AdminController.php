@@ -178,4 +178,115 @@ class AdminController extends AppController {
             echo json_encode(['status' => 'error', 'message' => 'Failed to set maintenance. Date range might be invalid or conflict exists.']);
         }
     }
+
+    public function editor() {
+        require_once __DIR__.'/../repositories/FloorRepository.php';
+        require_once __DIR__.'/../repositories/DeskRepository.php';
+        require_once __DIR__.'/../repositories/FeatureRepository.php';
+
+        $floorLevel = isset($_GET['floor']) ? (int)$_GET['floor'] : 1;
+
+        $floorRepository = new FloorRepository();
+        $deskRepository = new DeskRepository();
+        $featureRepo = new FeatureRepository();
+
+        $allFloors = $floorRepository->getFloors();
+        $currentFloor = $floorRepository->getFloorByLevel($floorLevel);
+
+        if (!$currentFloor && count($allFloors) > 0) {
+            $currentFloor = $allFloors[0];
+        }
+
+        // For the editor, we fetch all desks including deactivated ones.
+        $desks = [];
+        if ($currentFloor) {
+            $desks = $deskRepository->getAllDesksByFloor($currentFloor['id']);
+        }
+        
+        $features = $featureRepo->getAllFeatures();
+
+        return $this->render("editor", [
+            "title" => "HotDesk - Visual Desk Editor",
+            "allFloors" => $allFloors,
+            "currentFloor" => $currentFloor,
+            "desks" => $desks,
+            "features" => $features
+        ]);
+    }
+
+    public function saveDesk() {
+        if (!$this->isPost()) return;
+
+        $id = isset($_POST['id']) && $_POST['id'] !== '' ? (int)$_POST['id'] : null;
+        $floorId = (int)($_POST['floor_id'] ?? 0);
+        $identifier = trim($_POST['identifier'] ?? '');
+        $description = trim($_POST['description'] ?? '');
+        $posX = (float)($_POST['pos_x'] ?? 0);
+        $posY = (float)($_POST['pos_y'] ?? 0);
+        
+        // Handle features array
+        $features = [];
+        if (isset($_POST['features']) && trim($_POST['features']) !== '') {
+            $features = explode(',', trim($_POST['features']));
+        }
+
+        if (!$floorId || empty($identifier) || $posX <= 0 || $posY <= 0) {
+            http_response_code(400);
+            echo json_encode(['message' => 'Missing required fields.']);
+            return;
+        }
+
+        require_once __DIR__.'/../repositories/DeskRepository.php';
+        $deskRepo = new DeskRepository();
+
+        if ($deskRepo->saveDesk($id, $floorId, $identifier, $description, $posX, $posY, $features)) {
+            http_response_code(200);
+            echo json_encode(['status' => 'success']);
+        } else {
+            http_response_code(400);
+            echo json_encode(['message' => 'Failed to save desk. Identifier might not be unique on this floor.']);
+        }
+    }
+
+    public function deactivateDesk() {
+        if (!$this->isPost()) return;
+
+        $id = (int)($_POST['id'] ?? 0);
+        if (!$id) {
+            http_response_code(400);
+            return;
+        }
+
+        require_once __DIR__.'/../repositories/DeskRepository.php';
+        $deskRepo = new DeskRepository();
+
+        if ($deskRepo->deactivateDesk($id)) {
+            http_response_code(200);
+            echo json_encode(['status' => 'success']);
+        } else {
+            http_response_code(400);
+            echo json_encode(['message' => 'Failed to deactivate desk.']);
+        }
+    }
+
+    public function reactivateDesk() {
+        if (!$this->isPost()) return;
+
+        $id = (int)($_POST['id'] ?? 0);
+        if (!$id) {
+            http_response_code(400);
+            return;
+        }
+
+        require_once __DIR__.'/../repositories/DeskRepository.php';
+        $deskRepo = new DeskRepository();
+
+        if ($deskRepo->reactivateDesk($id)) {
+            http_response_code(200);
+            echo json_encode(['status' => 'success']);
+        } else {
+            http_response_code(400);
+            echo json_encode(['message' => 'Failed to reactivate desk.']);
+        }
+    }
 }

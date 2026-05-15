@@ -1650,3 +1650,30 @@ body {
     padding: 1.5rem;
     border-top: 1px solid var(--color-border);
 }
+
+/* =========================================
+   Editor
+   ========================================= */
+.editor-map-wrapper {
+    position: relative;
+    width: 100%;
+    background-color: var(--color-bg-input);
+    border: 2px dashed var(--color-border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    cursor: crosshair;
+    user-select: none; /* Prevent blue highlight on drag */
+    -webkit-user-select: none;
+}
+
+.editor-map-wrapper img {
+    width: 100%;
+    display: block;
+    pointer-events: none; /* Prevent image dragging */
+}
+
+.desk-marker--ghost {
+    opacity: 0.6;
+    border-style: dashed;
+    animation: pulse 1s infinite alternate;
+}
