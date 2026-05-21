@@ -74,6 +74,14 @@ class Routing {
             "controller" => "SettingsController",
             "action" => "addFloor"
         ],
+        "updateFloor" => [
+            "controller" => "SettingsController",
+            "action" => "updateFloor"
+        ],
+        "deleteFloor" => [
+            "controller" => "SettingsController",
+            "action" => "deleteFloor"
+        ],
         "addFeature" => [
             "controller" => "SettingsController",
             "action" => "addFeature"
@@ -97,6 +105,10 @@ class Routing {
         "reactivateDesk" => [
             "controller" => "AdminController",
             "action" => "reactivateDesk"
+        ],
+        "hardDeleteDesk" => [
+            "controller" => "AdminController",
+            "action" => "hardDeleteDesk"
         ],
         "register" => [
             "controller" => "SecurityController",

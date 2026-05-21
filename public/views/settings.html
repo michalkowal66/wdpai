@@ -52,6 +52,7 @@
                         </header>
 
                         <form class="form" id="add-floor-form">
+                            <input type="hidden" id="floor-id" name="id" value="">
                             <div class="form__group">
                                 <label for="floor-name" class="form__label">Floor Name</label>
                                 <input type="text" id="floor-name" name="name" class="form__input" placeholder="e.g. South Wing" required>
@@ -63,8 +64,12 @@
                             <div class="form__group">
                                 <label for="map_image" class="form__label">Map Image (PNG, JPG, WEBP)</label>
                                 <input type="file" id="map_image" name="map_image" class="form__input" accept="image/png, image/jpeg, image/webp" required style="padding: 0.5rem;">
+                                <small id="floor-edit-notice" style="display:none; color:var(--color-warning); font-weight: 500; margin-top: 0.25rem;">Warning: Changing the map image will not reposition existing desks automatically.</small>
                             </div>
-                            <button type="submit" class="btn btn--primary btn--full">Upload Floor Map</button>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <button type="submit" id="submit-floor-btn" class="btn btn--primary btn--full">Upload Floor Map</button>
+                                <button type="button" id="cancel-edit-floor-btn" class="btn btn--secondary" style="display:none; width: 100%; height: 3rem;">Cancel Edit</button>
+                            </div>
                         </form>
 
                         <div style="margin-top: 2rem;">

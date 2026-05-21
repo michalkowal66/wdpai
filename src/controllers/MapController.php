@@ -164,15 +164,16 @@ class MapController extends AppController {
             return;
         }
 
-        $deskId = (int)$_GET['id'];
+        $id = (int)$_GET['id'];
         $deskRepository = new DeskRepository();
-        $desk = $deskRepository->getDeskWithFeatures($deskId);
-
+        $desk = $deskRepository->getDeskWithFeatures($id);
         if (!$desk) {
             http_response_code(404);
             echo json_encode(['error' => 'Desk not found']);
             return;
         }
+
+        $desk['has_bookings'] = $deskRepository->hasBookingHistory($id);
 
         header('Content-Type: application/json');
         echo json_encode($desk);

@@ -214,4 +214,25 @@ class DeskRepository extends Repository {
             return false;
         }
     }
+
+    public function hasBookingHistory(int $deskId): bool {
+        $stmt = $this->database->connect()->prepare('SELECT COUNT(*) FROM bookings WHERE desk_id = :deskId');
+        $stmt->bindParam(':deskId', $deskId, PDO::PARAM_INT);
+        $stmt->execute();
+        return (int)$stmt->fetchColumn() > 0;
+    }
+
+    public function hardDeleteDesk(int $id): bool {
+        if ($this->hasBookingHistory($id)) {
+            return false;
+        }
+        
+        try {
+            $stmt = $this->database->connect()->prepare('DELETE FROM desks WHERE id = :id');
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            return $stmt->execute();
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
 }

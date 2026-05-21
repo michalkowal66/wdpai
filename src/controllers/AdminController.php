@@ -289,4 +289,25 @@ class AdminController extends AppController {
             echo json_encode(['message' => 'Failed to reactivate desk.']);
         }
     }
+
+    public function hardDeleteDesk() {
+        if (!$this->isPost()) return;
+
+        $id = (int)($_POST['id'] ?? 0);
+        if (!$id) {
+            http_response_code(400);
+            return;
+        }
+
+        require_once __DIR__.'/../repositories/DeskRepository.php';
+        $deskRepo = new DeskRepository();
+
+        if ($deskRepo->hardDeleteDesk($id)) {
+            http_response_code(200);
+            echo json_encode(['status' => 'success']);
+        } else {
+            http_response_code(400);
+            echo json_encode(['message' => 'Cannot delete this desk because it has booking history. Please use Deactivate instead.']);
+        }
+    }
 }

@@ -112,9 +112,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     <span class="badge badge--info">Level ${f.level}</span>
                     <span class="font-bold">${f.name}</span>
                 </div>
-                <a href="${f.map_image_url}" target="_blank" class="btn-icon" aria-label="View Map">
-                    <span class="material-symbols-outlined">visibility</span>
-                </a>
+                <div style="display: flex; gap: 0.25rem;">
+                    <a href="${f.map_image_url}" target="_blank" class="btn-icon" aria-label="View Map">
+                        <span class="material-symbols-outlined">visibility</span>
+                    </a>
+                    <button class="btn-icon js-edit-floor" data-id="${f.id}" data-name="${f.name}" data-level="${f.level}" aria-label="Edit Floor">
+                        <span class="material-symbols-outlined">edit</span>
+                    </button>
+                    <button class="btn-icon text-error js-delete-floor" data-id="${f.id}" data-name="${f.name}" aria-label="Delete Floor">
+                        <span class="material-symbols-outlined">delete</span>
+                    </button>
+                </div>
             `;
             floorsContainer.appendChild(item);
         });
@@ -122,6 +130,60 @@ document.addEventListener('DOMContentLoaded', () => {
         createPaginationUI(floorsPagination, currentFloorPage, totalPages, (dir) => {
             currentFloorPage += dir;
             renderFloors();
+        });
+
+        attachFloorListeners();
+    };
+
+    const attachFloorListeners = () => {
+        document.querySelectorAll('.js-edit-floor').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const id = btn.getAttribute('data-id');
+                const name = btn.getAttribute('data-name');
+                const level = btn.getAttribute('data-level');
+
+                document.getElementById('floor-id').value = id;
+                document.getElementById('floor-name').value = name;
+                document.getElementById('floor-level').value = level;
+                
+                // Make image upload optional during edit
+                document.getElementById('map_image').required = false;
+                document.getElementById('floor-edit-notice').style.display = 'block';
+                
+                document.getElementById('submit-floor-btn').textContent = 'Update Floor';
+                document.getElementById('cancel-edit-floor-btn').style.display = 'block';
+
+                // Scroll to top
+                document.querySelector('.dashboard-container').scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+
+        document.querySelectorAll('.js-delete-floor').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const id = btn.getAttribute('data-id');
+                const name = btn.getAttribute('data-name');
+
+                Modal.confirm('Delete Floor', `Are you sure you want to delete the floor "${name}"? This is only possible if there are no desks on this floor.`, () => {
+                    const data = new URLSearchParams();
+                    data.append('id', id);
+
+                    fetch('/deleteFloor', {
+                        method: 'POST',
+                        body: data
+                    }).then(async response => {
+                        if (response.ok) {
+                            Toast.show('Floor deleted successfully!');
+                            floorsData = floorsData.filter(f => f.id != id);
+                            renderFloors();
+                        } else {
+                            const result = await response.json();
+                            Toast.show(result.message || 'Failed to delete floor.', 'error');
+                        }
+                    }).catch(error => {
+                        Toast.show('Network error occurred.', 'error');
+                    });
+                });
+            });
         });
     };
 
@@ -193,20 +255,22 @@ document.addEventListener('DOMContentLoaded', () => {
             const submitBtn = addFloorForm.querySelector('button[type="submit"]');
             const origText = submitBtn.textContent;
             submitBtn.disabled = true;
-            submitBtn.textContent = 'Uploading...';
+            submitBtn.textContent = 'Saving...';
 
             const formData = new FormData(addFloorForm);
+            const isEdit = document.getElementById('floor-id').value !== '';
+            const endpoint = isEdit ? '/updateFloor' : '/addFloor';
 
-            fetch('/addFloor', {
+            fetch(endpoint, {
                 method: 'POST',
                 body: formData
             }).then(async response => {
                 if (response.ok) {
-                    Toast.show('Floor map uploaded successfully!');
+                    Toast.show(`Floor ${isEdit ? 'updated' : 'added'} successfully!`);
                     setTimeout(() => window.location.reload(), 1000);
                 } else {
                     const result = await response.json();
-                    Toast.show(result.message || 'Failed to upload floor map.', 'error');
+                    Toast.show(result.message || `Failed to ${isEdit ? 'update' : 'add'} floor.`, 'error');
                     submitBtn.disabled = false;
                     submitBtn.textContent = origText;
                 }
@@ -216,6 +280,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 submitBtn.textContent = origText;
             });
         });
+
+        const cancelBtn = document.getElementById('cancel-edit-floor-btn');
+        if (cancelBtn) {
+            cancelBtn.addEventListener('click', () => {
+                document.getElementById('floor-id').value = '';
+                document.getElementById('floor-name').value = '';
+                document.getElementById('floor-level').value = '';
+                document.getElementById('map_image').value = '';
+                document.getElementById('map_image').required = true;
+                
+                document.getElementById('floor-edit-notice').style.display = 'none';
+                document.getElementById('submit-floor-btn').textContent = 'Upload Floor Map';
+                cancelBtn.style.display = 'none';
+            });
+        }
     }
 
     // Initial render

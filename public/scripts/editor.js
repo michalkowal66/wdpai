@@ -27,6 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const saveBtn = document.getElementById('save-desk-btn');
     const deactivateBtn = document.getElementById('deactivate-desk-btn');
     const reactivateBtn = document.getElementById('reactivate-desk-btn');
+    const hardDeleteBtn = document.getElementById('hard-delete-desk-btn');
 
     let currentMarker = null;
     let ghostMarker = null;
@@ -293,6 +294,13 @@ document.addEventListener('DOMContentLoaded', () => {
                         inputIdentifier.value = deskData.identifier;
                         inputDescription.value = deskData.description || '';
                         
+                        // Toggle Hard Delete button based on booking history
+                        if (deskData.has_bookings) {
+                            hardDeleteBtn.style.display = 'none';
+                        } else {
+                            hardDeleteBtn.style.display = 'flex';
+                        }
+                        
                         activeFeatures.clear();
                         if (deskData.features && featureSelect) {
                             deskData.features.forEach(f => {
@@ -418,6 +426,30 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }).catch(error => {
                 Toast.show('Network error.', 'error');
+            });
+        });
+    }
+
+    if (hardDeleteBtn) {
+        hardDeleteBtn.addEventListener('click', () => {
+            Modal.confirm('Delete Desk Permanently', 'Are you absolutely sure? This desk has no booking history and will be PERMANENTLY deleted from the database. This action cannot be undone.', () => {
+                const params = new URLSearchParams();
+                params.append('id', inputId.value);
+
+                fetch('/hardDeleteDesk', {
+                    method: 'POST',
+                    body: params
+                }).then(async response => {
+                    if (response.ok) {
+                        Toast.show('Desk deleted permanently!');
+                        setTimeout(() => window.location.reload(), 1000);
+                    } else {
+                        const result = await response.json();
+                        Toast.show(result.message || 'Failed to delete desk.', 'error');
+                    }
+                }).catch(error => {
+                    Toast.show('Network error.', 'error');
+                });
             });
         });
     }
