@@ -8,12 +8,21 @@
         <nav class="header__nav desktop-only">
             <a href="map" class="nav-link <?= strpos($uri, 'map') !== false ? 'nav-link--active' : '' ?>">Floor Map</a>
             <a href="bookings" class="nav-link <?= strpos($uri, 'bookings') !== false ? 'nav-link--active' : '' ?>">My Bookings</a>
+            
             <?php if (isset($user) && $user['role'] === 'ADMIN'): ?>
-            <a href="dashboard" class="nav-link <?= strpos($uri, 'dashboard') !== false ? 'nav-link--active' : '' ?>">Dashboard</a>
-            <a href="editor" class="nav-link <?= strpos($uri, 'editor') !== false ? 'nav-link--active' : '' ?>">Desk Editor</a>
-            <a href="users" class="nav-link <?= strpos($uri, 'users') !== false ? 'nav-link--active' : '' ?>">Users</a>
-            <a href="desks" class="nav-link <?= strpos($uri, 'desks') !== false ? 'nav-link--active' : '' ?>">Maintenance</a>
-            <a href="settings" class="nav-link <?= strpos($uri, 'settings') !== false ? 'nav-link--active' : '' ?>">Settings</a>
+            <?php $isAdminActive = preg_match('/dashboard|editor|users|desks|settings/', $uri); ?>
+            <div class="dropdown">
+                <span class="nav-link dropdown__toggle <?= $isAdminActive ? 'nav-link--active' : '' ?>">
+                    Administration <span class="material-symbols-outlined" style="font-size: 1.125rem;">expand_more</span>
+                </span>
+                <div class="dropdown__content">
+                    <a href="dashboard" class="nav-link <?= strpos($uri, 'dashboard') !== false ? 'nav-link--active' : '' ?>">Dashboard</a>
+                    <a href="editor" class="nav-link <?= strpos($uri, 'editor') !== false ? 'nav-link--active' : '' ?>">Desk Editor</a>
+                    <a href="users" class="nav-link <?= strpos($uri, 'users') !== false ? 'nav-link--active' : '' ?>">Users</a>
+                    <a href="desks" class="nav-link <?= strpos($uri, 'desks') !== false ? 'nav-link--active' : '' ?>">Maintenance</a>
+                    <a href="settings" class="nav-link <?= strpos($uri, 'settings') !== false ? 'nav-link--active' : '' ?>">Settings</a>
+                </div>
+            </div>
             <?php endif; ?>
         </nav>
 
@@ -74,6 +83,7 @@
                 <span class="material-symbols-outlined">event_note</span> My Bookings
             </a>
             <?php if (isset($user) && $user['role'] === 'ADMIN'): ?>
+            <div class="mobile-nav__section-title">Administration</div>
             <a href="dashboard" class="nav-link <?= strpos($uri, 'dashboard') !== false ? 'nav-link--active' : '' ?>">
                 <span class="material-symbols-outlined">dashboard</span> Dashboard
             </a>

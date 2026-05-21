@@ -1677,3 +1677,68 @@ body {
     border-style: dashed;
     animation: pulse 1s infinite alternate;
 }
+
+/* =========================================
+   Navigation Grouping (Dropdown & Mobile Sections)
+   ========================================= */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown__toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    cursor: pointer;
+}
+
+.dropdown__content {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--color-bg-surface);
+    min-width: 220px;
+    box-shadow: var(--shadow-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    z-index: 100;
+    padding: 0.5rem 0;
+}
+
+.dropdown:hover .dropdown__content {
+    display: flex;
+    flex-direction: column;
+}
+
+.dropdown__content .nav-link {
+    padding: 0.75rem 1rem;
+    border-bottom: none;
+    border-left: 3px solid transparent;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.dropdown__content .nav-link:hover,
+.dropdown__content .nav-link--active {
+    background-color: var(--color-bg-input);
+    border-left-color: var(--color-primary);
+}
+
+.dropdown__content .material-symbols-outlined {
+    font-size: 1.25rem;
+}
+
+.mobile-nav__section-title {
+    font-size: 0.6875rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-muted);
+    padding: 1.5rem 1.5rem 0.5rem 1.5rem;
+    border-top: 1px solid var(--color-border);
+    margin-top: 0.5rem;
+}
