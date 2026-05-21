@@ -37,7 +37,7 @@
                 <div class="dashboard-grid__main">
                     <section class="map-section">
                         <header class="map-section__controls">
-                            <form action="/map" method="GET" class="control-group" id="floor-select-form" style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                            <form action="/map" method="GET" class="control-group flex-row flex-row--wrap gap-md" id="floor-select-form">
                                 <label class="control-input">
                                     <span class="material-symbols-outlined control-input__icon">layers</span>
                                     <select name="floor" class="control-input__select" onchange="this.form.submit()">
@@ -146,8 +146,8 @@
                             </div>
                         </div>
                         
-                        <div id="desk-empty-state">
-                            <p style="color: var(--color-text-muted); text-align: center; margin-top: 2rem;">
+                        <div id="desk-empty-state" class="empty-state">
+                            <p class="empty-state__text">
                                 Click on a desk marker to view its features and availability.
                             </p>
                         </div>
@@ -155,7 +155,7 @@
 
                     <footer class="side-panel__footer" id="panel-actions" style="display: none;">
                         <?php if ($hasBookingToday): ?>
-                            <a href="/bookings" class="btn btn--secondary btn--full btn--large" style="justify-content: center;">
+                            <a href="/bookings" class="btn btn--secondary btn--full btn--large justify-center">
                                 Manage Bookings
                             </a>
                         <?php else: ?>

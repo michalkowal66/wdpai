@@ -25,7 +25,7 @@
 
             <form class="form" action="register" method="POST" id="register-form" novalidate>
                 <?php if (isset($messages) && is_string($messages)): ?>
-                    <div class="form__error form__error--visible" style="text-align: center; font-size: 0.875rem; margin-bottom: -0.5rem;">
+                    <div class="form__error form__error--visible text-center mb-0" style="font-size: 0.875rem;">
                         <?= htmlspecialchars($messages) ?>
                     </div>
                 <?php endif; ?>
@@ -72,7 +72,7 @@
                     <span class="form__error <?= isset($errors['confirm-password']) ? 'form__error--visible' : '' ?>"><?= htmlspecialchars($errors['confirm-password'] ?? '') ?></span>
                 </div>
 
-                <button type="submit" class="btn btn--primary btn--full" style="margin-top: 0.5rem;">Sign Up</button>
+                <button type="submit" class="btn btn--primary btn--full mt-sm">Sign Up</button>
             </form>
 
             <footer class="auth-card__footer">

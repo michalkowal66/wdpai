@@ -17,48 +17,48 @@
             </header>
 
             <!-- KPI Cards -->
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
-                <article class="auth-card" style="padding: 1.5rem;">
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
-                        <span style="font-size: 0.875rem; font-weight: 600; color: var(--color-text-muted); text-transform: uppercase; letter-spacing: 0.05em;">Today's Utilization</span>
-                        <span class="material-symbols-outlined" style="color: var(--color-primary); padding: 0.5rem; background: var(--color-primary-light); border-radius: 50%;">pie_chart</span>
+            <div class="stats-grid">
+                <article class="stat-card">
+                    <div class="stat-card__header">
+                        <span class="stat-card__title">Today's Utilization</span>
+                        <span class="material-symbols-outlined stat-card__icon">pie_chart</span>
                     </div>
-                    <div style="font-size: 2.5rem; font-weight: 800; color: var(--color-text-main); line-height: 1;">
+                    <div class="stat-card__value">
                         <?= $utilizationRate ?>%
                     </div>
-                    <p style="font-size: 0.875rem; color: var(--color-text-muted); margin-top: 0.5rem;">
+                    <p class="stat-card__subtitle">
                         <?= $bookedDesks ?> of <?= $totalDesks ?> desks booked
                     </p>
                 </article>
 
-                <article class="auth-card" style="padding: 1.5rem;">
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
-                        <span style="font-size: 0.875rem; font-weight: 600; color: var(--color-text-muted); text-transform: uppercase; letter-spacing: 0.05em;">Global No-Show Rate</span>
-                        <span class="material-symbols-outlined" style="color: var(--color-danger); padding: 0.5rem; background: var(--color-danger-bg); border-radius: 50%;">person_off</span>
+                <article class="stat-card">
+                    <div class="stat-card__header">
+                        <span class="stat-card__title">Global No-Show Rate</span>
+                        <span class="material-symbols-outlined stat-card__icon stat-card__icon--danger">person_off</span>
                     </div>
-                    <div style="font-size: 2.5rem; font-weight: 800; color: var(--color-text-main); line-height: 1;">
+                    <div class="stat-card__value">
                         <?= $noShowRate ?>%
                     </div>
-                    <p style="font-size: 0.875rem; color: var(--color-text-muted); margin-top: 0.5rem;">
+                    <p class="stat-card__subtitle">
                         <?= $totalNoShows ?> total missed bookings
                     </p>
                 </article>
             </div>
 
             <!-- Tables Section -->
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+            <div class="tables-grid">
                 
                 <!-- Top Users -->
-                <div class="data-table-wrapper" style="display: block !important;">
-                    <header style="padding: 1.5rem; border-bottom: 1px solid var(--color-border); background: var(--color-bg-surface);">
-                        <h3 style="font-size: 1.125rem; font-weight: 700;">Top Office Users</h3>
+                <div class="data-table-wrapper">
+                    <header class="data-table-header">
+                        <h3 class="data-table-header__title">Top Office Users</h3>
                     </header>
                     <table class="data-table">
                         <thead>
                             <tr>
                                 <th>User</th>
-                                <th style="text-align: right;">Check-ins</th>
-                                <th style="text-align: right;">Reliability</th>
+                                <th class="text-right">Check-ins</th>
+                                <th class="text-right">Reliability</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -72,45 +72,44 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td style="text-align: right; font-weight: 600;"><?= $user['check_ins'] ?></td>
-                                <td style="text-align: right;">
-                                    <span class="badge <?= $user['reliability_score'] > 80 ? 'badge--success' : ($user['reliability_score'] > 50 ? '' : 'badge--neutral') ?>" 
-                                          <?= $user['reliability_score'] > 50 && $user['reliability_score'] <= 80 ? 'style="background: var(--color-warning); color: #fff;"' : '' ?>>
+                                <td class="text-right font-semibold"><?= $user['check_ins'] ?></td>
+                                <td class="text-right">
+                                    <span class="badge <?= $user['reliability_score'] > 80 ? 'badge--success' : ($user['reliability_score'] > 50 ? 'badge--warning' : 'badge--neutral') ?>">
                                         <?= $user['reliability_score'] ?>%
                                     </span>
                                 </td>
                             </tr>
                             <?php endforeach; ?>
                             <?php if (empty($topUsers)): ?>
-                                <tr><td colspan="3" style="text-align: center; color: var(--color-text-muted);">No attendance data available.</td></tr>
+                                <tr><td colspan="3" class="text-center text-muted">No attendance data available.</td></tr>
                             <?php endif; ?>
                         </tbody>
                     </table>
                 </div>
 
                 <!-- Top Desks -->
-                <div class="data-table-wrapper" style="display: block !important;">
-                    <header style="padding: 1.5rem; border-bottom: 1px solid var(--color-border); background: var(--color-bg-surface);">
-                        <h3 style="font-size: 1.125rem; font-weight: 700;">Most Popular Desks</h3>
+                <div class="data-table-wrapper">
+                    <header class="data-table-header">
+                        <h3 class="data-table-header__title">Most Popular Desks</h3>
                     </header>
                     <table class="data-table">
                         <thead>
                             <tr>
                                 <th>Desk</th>
                                 <th>Floor</th>
-                                <th style="text-align: right;">Bookings</th>
+                                <th class="text-right">Bookings</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php foreach($topDesks as $desk): ?>
                             <tr>
                                 <td><span class="font-bold text-primary">Desk <?= htmlspecialchars($desk['identifier']) ?></span></td>
-                                <td style="color: var(--color-text-muted);"><?= htmlspecialchars($desk['floor_name']) ?></td>
-                                <td style="text-align: right; font-weight: 600;"><?= $desk['successful_bookings'] ?></td>
+                                <td class="text-muted"><?= htmlspecialchars($desk['floor_name']) ?></td>
+                                <td class="text-right font-semibold"><?= $desk['successful_bookings'] ?></td>
                             </tr>
                             <?php endforeach; ?>
                             <?php if (empty($topDesks)): ?>
-                                <tr><td colspan="3" style="text-align: center; color: var(--color-text-muted);">No desk data available.</td></tr>
+                                <tr><td colspan="3" class="text-center text-muted">No desk data available.</td></tr>
                             <?php endif; ?>
                         </tbody>
                     </table>
@@ -118,19 +117,19 @@
             </div>
 
             <!-- Features -->
-            <h3 style="font-size: 1.125rem; font-weight: 700; margin-bottom: 1rem;">Most Desired Desk Features</h3>
-            <div style="display: flex; flex-wrap: wrap; gap: 1rem;">
+            <h3 class="section-title">Most Desired Desk Features</h3>
+            <div class="features-list">
                 <?php foreach($topFeatures as $feature): ?>
-                <div style="display: flex; align-items: center; gap: 0.75rem; padding: 1rem 1.5rem; background: var(--color-bg-surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm);">
-                    <span class="material-symbols-outlined" style="color: var(--color-primary);"><?= htmlspecialchars($feature['icon_name']) ?></span>
+                <div class="feature-stat-card">
+                    <span class="material-symbols-outlined feature-stat-card__icon"><?= htmlspecialchars($feature['icon_name']) ?></span>
                     <div>
-                        <span style="display: block; font-weight: 700;"><?= htmlspecialchars($feature['feature_name']) ?></span>
-                        <span style="font-size: 0.75rem; color: var(--color-text-muted);"><?= $feature['total_bookings'] ?> bookings</span>
+                        <span class="feature-stat-card__name"><?= htmlspecialchars($feature['feature_name']) ?></span>
+                        <span class="feature-stat-card__count"><?= $feature['total_bookings'] ?> bookings</span>
                     </div>
                 </div>
                 <?php endforeach; ?>
                 <?php if (empty($topFeatures)): ?>
-                    <p style="color: var(--color-text-muted);">No feature data available.</p>
+                    <p class="text-muted">No feature data available.</p>
                 <?php endif; ?>
             </div>
 

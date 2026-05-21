@@ -31,9 +31,9 @@
             <section class="bookings-list" id="bookings-list-container">
                 
                 <?php if(empty($displayBookings)): ?>
-                    <div style="text-align: center; padding: 3rem 0; color: var(--color-text-muted);" id="empty-state">
-                        <span class="material-symbols-outlined" style="font-size: 3rem; opacity: 0.5;">calendar_today</span>
-                        <p style="margin-top: 1rem; font-weight: 500;">No bookings found in this category.</p>
+                    <div class="empty-state" id="empty-state">
+                        <span class="material-symbols-outlined empty-state__icon">calendar_today</span>
+                        <p class="empty-state__text">No bookings found in this category.</p>
                     </div>
                 <?php endif; ?>
 
@@ -66,12 +66,12 @@
                 ?>
                 <article class="booking-card <?= $isPast ? 'booking-card--past' : '' ?>">
                     <figure class="booking-card__image-wrapper">
-                        <img src="<?= htmlspecialchars($b['floor_map_url']) ?>" alt="<?= htmlspecialchars($b['floor_name']) ?>" class="booking-card__image" style="object-position: top center;">
+                        <img src="<?= htmlspecialchars($b['floor_map_url']) ?>" alt="<?= htmlspecialchars($b['floor_name']) ?>" class="booking-card__image object-top">
                         <span class="booking-card__badge <?= $badgeClass ?> desktop-only"><?= $badgeText ?></span>
                     </figure>
                     <div class="booking-card__content">
                         <header class="booking-card__header">
-                            <div class="booking-card__date" <?= $isPast ? 'style="color: var(--color-text-muted);"' : '' ?>>
+                            <div class="booking-card__date <?= $isPast ? 'text-muted' : '' ?>">
                                 <span class="material-symbols-outlined">calendar_month</span>
                                 <span><?= date('l, M j, Y', strtotime($b['booking_date'])) ?></span>
                             </div>
@@ -86,7 +86,7 @@
                                 <span class="status-dot <?= $statusDotClass ?>"></span>
                                 <span class="status-text"><?= $statusText ?></span>
                             </div>
-                            <div class="booking-card__actions" <?= $isPast ? 'style="margin-left: auto;"' : '' ?>>
+                            <div class="booking-card__actions <?= $isPast ? 'ml-auto' : '' ?>">
                                 <?php if (!$isPast && $b['status'] === 'ACTIVE'): ?>
                                     <?php if ($b['booking_date'] === date('Y-m-d')): ?>
                                         <button class="btn btn--primary btn--small" onclick="checkInBooking(<?= $b['id'] ?>)">
@@ -109,7 +109,7 @@
 
             </section>
             
-            <div class="load-more" id="load-more-container" <?= $remainingCount > 0 ? '' : 'style="display: none;"' ?>>
+            <div class="load-more <?= $remainingCount > 0 ? '' : 'is-hidden' ?>" id="load-more-container">
                 <button id="load-more-btn" class="btn btn--text" data-offset="<?= $limit ?>" data-tab="<?= $tab ?>">Load more history<span id="remaining-count">(<?= $remainingCount ?></span> remaining) <span class="material-symbols-outlined">expand_more</span></button>
             </div>
 

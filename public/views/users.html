@@ -27,7 +27,7 @@
                                     <th>Name</th>
                                     <th>Email</th>
                                     <th>Role</th>
-                                    <th style="text-align: right;">Actions</th>
+                                    <th class="text-right">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -38,8 +38,7 @@
                                         $initials .= substr(end($nameParts), 0, 1);
                                     }
                                     $initials = strtoupper($initials);
-                                    $roleClass = $u['role'] === 'ADMIN' ? 'badge--success' : '';
-                                    $roleStyle = $u['role'] !== 'ADMIN' ? 'style="background: var(--color-bg-input); color: var(--color-text-muted);"' : '';
+                                    $roleClass = $u['role'] === 'ADMIN' ? 'badge--success' : 'badge--secondary';
                                 ?>
                                 <tr>
                                     <td>
@@ -52,8 +51,8 @@
                                         </div>
                                     </td>
                                     <td><?= htmlspecialchars($u['email']) ?></td>
-                                    <td><span class="badge <?= $roleClass ?>" <?= $roleStyle ?>><?= htmlspecialchars($u['role']) ?></span></td>
-                                    <td style="text-align: right;">
+                                    <td><span class="badge <?= $roleClass ?>"><?= htmlspecialchars($u['role']) ?></span></td>
+                                    <td class="text-right">
                                         <button class="btn-icon js-edit-user-btn"
                                             data-id="<?= $u['id'] ?>"
                                             data-fullname="<?= htmlspecialchars($u['full_name']) ?>"
@@ -72,8 +71,7 @@
                     <!-- Mobile View: Cards -->
                     <section class="user-cards-list mobile-only">
                         <?php foreach($users as $u): 
-                            $roleClass = $u['role'] === 'ADMIN' ? 'badge--success' : '';
-                            $roleStyle = $u['role'] !== 'ADMIN' ? 'style="background: var(--color-bg-input); color: var(--color-text-muted);"' : '';
+                            $roleClass = $u['role'] === 'ADMIN' ? 'badge--success' : 'badge--secondary';
                         ?>
                         <article class="user-card">
                             <button class="btn-icon user-card__edit js-edit-user-btn"
@@ -90,7 +88,7 @@
                                 <span class="user-card__email"><?= htmlspecialchars($u['email']) ?></span>
                             </div>
                             <div class="user-card__footer">
-                                <span class="badge <?= $roleClass ?>" <?= $roleStyle ?>><?= htmlspecialchars($u['role']) ?></span>
+                                <span class="badge <?= $roleClass ?>"><?= htmlspecialchars($u['role']) ?></span>
                             </div>
                         </article>
                         <?php endforeach; ?>
@@ -103,8 +101,8 @@
                         ?>
                         <span class="pagination__info">Showing <?= $startRecord ?> to <?= $endRecord ?> of <?= $totalUsers ?> users</span>
                         <div class="pagination__actions">
-                            <a href="?page=<?= $currentPage - 1 ?>" class="btn btn--secondary btn--small" <?= $currentPage <= 1 ? 'disabled style="pointer-events: none; opacity: 0.5;"' : '' ?>><span class="material-symbols-outlined">chevron_left</span></a>
-                            <a href="?page=<?= $currentPage + 1 ?>" class="btn btn--secondary btn--small" <?= $currentPage >= $totalPages ? 'disabled style="pointer-events: none; opacity: 0.5;"' : '' ?>><span class="material-symbols-outlined">chevron_right</span></a>
+                            <a href="?page=<?= $currentPage - 1 ?>" class="btn btn--secondary btn--small <?= $currentPage <= 1 ? 'is-disabled' : '' ?>"><span class="material-symbols-outlined">chevron_left</span></a>
+                            <a href="?page=<?= $currentPage + 1 ?>" class="btn btn--secondary btn--small <?= $currentPage >= $totalPages ? 'is-disabled' : '' ?>"><span class="material-symbols-outlined">chevron_right</span></a>
                         </div>
                     </footer>
                 </div>
@@ -131,8 +129,8 @@
                             <div class="form__group">
                                 <label class="form__label">Email Address</label>
                                 <div class="form__input-wrapper">
-                                    <input type="email" class="form__input" id="edit-email" value="" disabled readonly style="background: var(--color-bg-input); color: var(--color-text-muted);">
-                                    <span class="material-symbols-outlined form__icon" style="right: 1rem;">lock</span>
+                                    <input type="email" class="form__input form__input--readonly" id="edit-email" value="" disabled readonly>
+                                    <span class="material-symbols-outlined form__icon form__icon--right-inset">lock</span>
                                 </div>
                             </div>
                             <div class="form__group">
@@ -156,8 +154,8 @@
                         <button type="button" id="save-user-btn" class="btn btn--primary btn--full btn--large">
                             Save Changes
                         </button>
-                        <button type="button" id="delete-user-btn" class="btn btn--text btn--full text-error" style="color: var(--color-danger);">Delete User</button>
-                        <button type="button" class="btn btn--text btn--full text-error mobile-only" id="cancel-panel-btn">Cancel</button>
+                        <button type="button" id="delete-user-btn" class="btn btn--text btn--full text-danger">Delete User</button>
+                        <button type="button" class="btn btn--text btn--full text-danger mobile-only" id="cancel-panel-btn">Cancel</button>
                     </footer>
                 </aside>
             </div>

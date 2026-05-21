@@ -27,7 +27,7 @@
                                     <th>Desk</th>
                                     <th>Description</th>
                                     <th>Floor</th>
-                                    <th style="text-align: right;">Actions</th>
+                                    <th class="text-right">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -36,11 +36,11 @@
                                     <td><span class="font-bold text-primary">Desk <?= htmlspecialchars($d['identifier']) ?></span></td>
                                     <td><?= htmlspecialchars($d['description']) ?></td>
                                     <td><?= htmlspecialchars($d['floor_name']) ?></td>
-                                    <td style="text-align: right;">
+                                    <td class="text-right">
                                         <button class="btn btn--secondary btn--small js-edit-maintenance-btn" 
                                             data-id="<?= $d['id'] ?>"
                                             data-identifier="<?= htmlspecialchars($d['identifier']) ?>">
-                                            <span class="material-symbols-outlined" style="font-size: 1.25rem;">build</span> Set Maintenance
+                                            <span class="material-symbols-outlined icon-md">build</span> Set Maintenance
                                         </button>
                                     </td>
                                 </tr>
@@ -52,7 +52,7 @@
                     <!-- Mobile View: Cards -->
                     <section class="user-cards-list mobile-only">
                         <?php foreach($desks as $d): ?>
-                        <article class="user-card" style="display: flex; justify-content: space-between; align-items: center;">
+                        <article class="user-card user-card--flex">
                             <div>
                                 <div class="user-card__name">Desk <?= htmlspecialchars($d['identifier']) ?></div>
                                 <div class="user-card__title"><?= htmlspecialchars($d['description']) ?></div>
@@ -67,15 +67,15 @@
                         <?php endforeach; ?>
                     </section>
 
-                    <footer class="pagination" style="border-radius: var(--radius-xl); margin-top: 1rem;">
+                    <footer class="pagination pagination--rounded mt-md">
                         <?php 
                             $startRecord = min($offset + 1, $totalDesks);
                             $endRecord = min($offset + $limit, $totalDesks);
                         ?>
                         <span class="pagination__info">Showing <?= $startRecord ?> to <?= $endRecord ?> of <?= $totalDesks ?> desks</span>
                         <div class="pagination__actions">
-                            <a href="?page=<?= $currentPage - 1 ?>" class="btn btn--secondary btn--small" <?= $currentPage <= 1 ? 'disabled style="pointer-events: none; opacity: 0.5;"' : '' ?>><span class="material-symbols-outlined">chevron_left</span></a>
-                            <a href="?page=<?= $currentPage + 1 ?>" class="btn btn--secondary btn--small" <?= $currentPage >= $totalPages ? 'disabled style="pointer-events: none; opacity: 0.5;"' : '' ?>><span class="material-symbols-outlined">chevron_right</span></a>
+                            <a href="?page=<?= $currentPage - 1 ?>" class="btn btn--secondary btn--small <?= $currentPage <= 1 ? 'is-disabled' : '' ?>"><span class="material-symbols-outlined">chevron_left</span></a>
+                            <a href="?page=<?= $currentPage + 1 ?>" class="btn btn--secondary btn--small <?= $currentPage >= $totalPages ? 'is-disabled' : '' ?>"><span class="material-symbols-outlined">chevron_right</span></a>
                         </div>
                     </footer>
                 </div>
@@ -107,13 +107,13 @@
                             </div>
                             <div class="form__group">
                                 <label class="form__label">Reason</label>
-                                <textarea class="form__input" id="mnt-reason" rows="3" placeholder="e.g. Broken monitor replacement" style="height: auto; padding-top: 0.75rem; resize: vertical;"></textarea>
+                                <textarea class="form__input form__textarea" id="mnt-reason" rows="3" placeholder="e.g. Broken monitor replacement"></textarea>
                             </div>
                         </form>
                     </div>
 
                     <footer class="side-panel__footer">
-                        <button type="button" id="save-mnt-btn" class="btn btn--primary btn--warning btn--full btn--large" style="background-color: var(--color-warning);">
+                        <button type="button" id="save-mnt-btn" class="btn btn--primary btn--warning btn--full btn--large bg-warning">
                             Save Schedule
                         </button>
                         <button type="button" class="btn btn--text btn--full text-error mobile-only" id="cancel-panel-btn">Cancel</button>

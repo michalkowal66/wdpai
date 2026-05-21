@@ -68,7 +68,7 @@
         <?php if (isset($user)): ?>
         <div class="mobile-nav__user">
             <div class="avatar-initials avatar-initials--secondary"><?= htmlspecialchars($initials) ?></div>
-            <div class="user-info" style="align-items: flex-start;">
+            <div class="user-info user-info--left">
                 <span class="user-info__name"><?= htmlspecialchars($user['full_name']) ?></span>
                 <span class="user-info__role"><?= htmlspecialchars($user['job_title'] ?? 'Employee') ?></span>
             </div>

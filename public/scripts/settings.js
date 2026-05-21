@@ -148,10 +148,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 // Make image upload optional during edit
                 document.getElementById('map_image').required = false;
-                document.getElementById('floor-edit-notice').style.display = 'block';
+                document.getElementById('floor-edit-notice').classList.remove('is-hidden');
                 
                 document.getElementById('submit-floor-btn').textContent = 'Update Floor';
-                document.getElementById('cancel-edit-floor-btn').style.display = 'block';
+                document.getElementById('cancel-edit-floor-btn').classList.remove('is-hidden');
 
                 // Scroll to top
                 document.querySelector('.dashboard-container').scrollIntoView({ behavior: 'smooth' });
@@ -290,9 +290,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('map_image').value = '';
                 document.getElementById('map_image').required = true;
                 
-                document.getElementById('floor-edit-notice').style.display = 'none';
+                document.getElementById('floor-edit-notice').classList.add('is-hidden');
                 document.getElementById('submit-floor-btn').textContent = 'Upload Floor Map';
-                cancelBtn.style.display = 'none';
+                cancelBtn.classList.add('is-hidden');
             });
         }
     }

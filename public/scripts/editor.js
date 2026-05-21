@@ -247,19 +247,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (isNew) {
             panelTitle.textContent = 'Add New Desk';
-            deactivateBtn.style.display = 'none';
-            reactivateBtn.style.display = 'none';
+            deactivateBtn.classList.add('is-hidden');
+            reactivateBtn.classList.add('is-hidden');
+            hardDeleteBtn.classList.add('is-hidden');
         } else {
             panelTitle.textContent = 'Edit Desk';
             
             // Check status of current marker to toggle buttons
             const status = currentMarker.getAttribute('data-status');
             if (status === 'deactivated') {
-                deactivateBtn.style.display = 'none';
-                reactivateBtn.style.display = 'flex';
+                deactivateBtn.classList.add('is-hidden');
+                reactivateBtn.classList.remove('is-hidden');
             } else {
-                deactivateBtn.style.display = 'flex';
-                reactivateBtn.style.display = 'none';
+                deactivateBtn.classList.remove('is-hidden');
+                reactivateBtn.classList.add('is-hidden');
             }
         }
     };
@@ -296,9 +297,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         
                         // Toggle Hard Delete button based on booking history
                         if (deskData.has_bookings) {
-                            hardDeleteBtn.style.display = 'none';
+                            hardDeleteBtn.classList.add('is-hidden');
                         } else {
-                            hardDeleteBtn.style.display = 'flex';
+                            hardDeleteBtn.classList.remove('is-hidden');
                         }
                         
                         activeFeatures.clear();
