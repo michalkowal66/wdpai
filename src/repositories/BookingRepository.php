@@ -1,6 +1,11 @@
 <?php
 
 require_once 'Repository.php';
+require_once __DIR__.'/../models/Booking.php';
+require_once __DIR__.'/../dto/BookingDetailsDTO.php';
+
+use Models\Booking;
+use DTO\BookingDetailsDTO;
 
 class BookingRepository extends Repository {
     public function bookDesk(int $userId, int $deskId, string $date): string|bool {
@@ -41,7 +46,14 @@ class BookingRepository extends Repository {
         ');
         $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
         $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $dtos = [];
+        foreach ($results as $row) {
+            $booking = new Booking($row['id'], $row['user_id'], $row['desk_id'], $row['booking_date'], $row['status'], $row['created_at']);
+            $dtos[] = new BookingDetailsDTO($booking, $row['desk_identifier'], $row['floor_name'], $row['floor_map_url'], $row['floor_level']);
+        }
+        return $dtos;
     }
 
     public function cancelBooking(int $id, int $userId): bool {

@@ -21,23 +21,17 @@ class SecurityController extends AppController {
         $usersRepository = new UsersRepository();
         $user = $usersRepository->getUserByEmail($email);
       
-        if (!$user || !password_verify($password, $user['password'])) {
-            return $this->render('login', ['messages' => 'Invalid email or password']);
+        if (!$user || !password_verify($password, $user->getPassword())) {
+            return $this->render('login', ['messages' => 'Invalid email or password.']);
         }
 
-        if (!$user['is_active']) {
+        if (!$user->isActive()) {
             $url = "http://$_SERVER[HTTP_HOST]";
             header("Location: {$url}/inactive");
-            exit();
+            return;
         }
 
-        $_SESSION['user'] = [
-            'id' => $user['id'],
-            'email' => $user['email'],
-            'full_name' => $user['full_name'],
-            'job_title' => $user['job_title'],
-            'role' => $user['role']
-        ];
+        $_SESSION['user'] = $user;
 
         $url = "http://$_SERVER[HTTP_HOST]";
         header("Location: {$url}/map");

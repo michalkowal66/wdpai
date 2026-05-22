@@ -32,34 +32,34 @@
                             </thead>
                             <tbody>
                                 <?php foreach($users as $u): 
-                                    $nameParts = explode(' ', trim($u['full_name']));
+                                    $nameParts = explode(' ', trim($u->getFullName()));
                                     $initials = substr($nameParts[0], 0, 1);
                                     if (count($nameParts) > 1) {
                                         $initials .= substr(end($nameParts), 0, 1);
                                     }
                                     $initials = strtoupper($initials);
-                                    $roleClass = $u['role'] === 'ADMIN' ? 'badge--success' : 'badge--secondary';
+                                    $roleClass = $u->getRole() === 'ADMIN' ? 'badge--success' : 'badge--secondary';
                                 ?>
                                 <tr>
                                     <td>
                                         <div class="user-cell">
-                                            <div class="avatar-initials <?= $u['role'] !== 'ADMIN' ? 'avatar-initials--secondary' : '' ?>"><?= htmlspecialchars($initials) ?></div>
+                                            <div class="avatar-initials <?= $u->getRole() !== 'ADMIN' ? 'avatar-initials--secondary' : '' ?>"><?= htmlspecialchars($initials) ?></div>
                                             <div class="user-cell__details">
-                                                <span class="user-cell__name"><?= htmlspecialchars($u['full_name']) ?></span>
-                                                <span class="user-cell__role"><?= htmlspecialchars($u['job_title'] ?? 'Employee') ?></span>
+                                                <span class="user-cell__name"><?= htmlspecialchars($u->getFullName()) ?></span>
+                                                <span class="user-cell__role"><?= htmlspecialchars($u->getJobTitle() ?? 'Employee') ?></span>
                                             </div>
                                         </div>
                                     </td>
-                                    <td><?= htmlspecialchars($u['email']) ?></td>
-                                    <td><span class="badge <?= $roleClass ?>"><?= htmlspecialchars($u['role']) ?></span></td>
+                                    <td><?= htmlspecialchars($u->getEmail()) ?></td>
+                                    <td><span class="badge <?= $roleClass ?>"><?= htmlspecialchars($u->getRole()) ?></span></td>
                                     <td class="text-right">
                                         <button class="btn-icon js-edit-user-btn"
-                                            data-id="<?= $u['id'] ?>"
-                                            data-fullname="<?= htmlspecialchars($u['full_name']) ?>"
-                                            data-jobtitle="<?= htmlspecialchars($u['job_title'] ?? '') ?>"
-                                            data-email="<?= htmlspecialchars($u['email']) ?>"
-                                            data-role="<?= htmlspecialchars($u['role']) ?>"
-                                            data-active="<?= $u['is_active'] ? '1' : '0' ?>"
+                                            data-id="<?= $u->getId() ?>"
+                                            data-fullname="<?= htmlspecialchars($u->getFullName()) ?>"
+                                            data-jobtitle="<?= htmlspecialchars($u->getJobTitle() ?? '') ?>"
+                                            data-email="<?= htmlspecialchars($u->getEmail()) ?>"
+                                            data-role="<?= htmlspecialchars($u->getRole()) ?>"
+                                            data-active="<?= $u->isActive() ? '1' : '0' ?>"
                                         ><span class="material-symbols-outlined">edit</span></button>
                                     </td>
                                 </tr>
@@ -71,24 +71,24 @@
                     <!-- Mobile View: Cards -->
                     <section class="user-cards-list mobile-only">
                         <?php foreach($users as $u): 
-                            $roleClass = $u['role'] === 'ADMIN' ? 'badge--success' : 'badge--secondary';
+                            $roleClass = $u->getRole() === 'ADMIN' ? 'badge--success' : 'badge--secondary';
                         ?>
                         <article class="user-card">
                             <button class="btn-icon user-card__edit js-edit-user-btn"
-                                data-id="<?= $u['id'] ?>"
-                                data-fullname="<?= htmlspecialchars($u['full_name']) ?>"
-                                data-jobtitle="<?= htmlspecialchars($u['job_title'] ?? '') ?>"
-                                data-email="<?= htmlspecialchars($u['email']) ?>"
-                                data-role="<?= htmlspecialchars($u['role']) ?>"
-                                data-active="<?= $u['is_active'] ? '1' : '0' ?>"
+                                data-id="<?= $u->getId() ?>"
+                                data-fullname="<?= htmlspecialchars($u->getFullName()) ?>"
+                                data-jobtitle="<?= htmlspecialchars($u->getJobTitle() ?? '') ?>"
+                                data-email="<?= htmlspecialchars($u->getEmail()) ?>"
+                                data-role="<?= htmlspecialchars($u->getRole()) ?>"
+                                data-active="<?= $u->isActive() ? '1' : '0' ?>"
                             ><span class="material-symbols-outlined">edit</span></button>
                             <div class="user-card__header">
-                                <span class="user-card__name"><?= htmlspecialchars($u['full_name']) ?></span>
-                                <span class="user-card__title"><?= htmlspecialchars($u['job_title'] ?? 'Employee') ?></span>
-                                <span class="user-card__email"><?= htmlspecialchars($u['email']) ?></span>
+                                <span class="user-card__name"><?= htmlspecialchars($u->getFullName()) ?></span>
+                                <span class="user-card__title"><?= htmlspecialchars($u->getJobTitle() ?? 'Employee') ?></span>
+                                <span class="user-card__email"><?= htmlspecialchars($u->getEmail()) ?></span>
                             </div>
                             <div class="user-card__footer">
-                                <span class="badge <?= $roleClass ?>"><?= htmlspecialchars($u['role']) ?></span>
+                                <span class="badge <?= $roleClass ?>"><?= htmlspecialchars($u->getRole()) ?></span>
                             </div>
                         </article>
                         <?php endforeach; ?>

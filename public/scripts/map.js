@@ -201,7 +201,7 @@ document.addEventListener('DOMContentLoaded', () => {
             deskData.features.forEach(feature => {
                 const tag = document.createElement('span');
                 tag.className = 'feature-tag';
-                tag.innerHTML = `<span class="material-symbols-outlined">${feature.icon}</span> ${feature.name}`;
+                tag.innerHTML = `<span class="material-symbols-outlined">${feature.icon_name}</span> ${feature.name}`;
                 uiDeskFeatures.appendChild(tag);
             });
         } else {

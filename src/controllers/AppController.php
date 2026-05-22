@@ -20,13 +20,13 @@ class AppController {
         $adminRoutes = ['users', 'dashboard', 'desks', 'settings', 'editor'];
         $adminApiRoutes = ['updateUser', 'deleteUser', 'setMaintenance', 'addFloor', 'updateFloor', 'deleteFloor', 'addFeature', 'deleteFeature', 'saveDesk', 'deactivateDesk', 'reactivateDesk', 'hardDeleteDesk'];
         
-        if (in_array($path, $adminRoutes) && (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'ADMIN')) {
+        if (in_array($path, $adminRoutes) && (!isset($_SESSION['user']) || $_SESSION['user']->getRole() !== 'ADMIN')) {
             $url = "http://$_SERVER[HTTP_HOST]";
             header("Location: {$url}/map");
             exit();
         }
 
-        if (in_array($path, $adminApiRoutes) && (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'ADMIN')) {
+        if (in_array($path, $adminApiRoutes) && (!isset($_SESSION['user']) || $_SESSION['user']->getRole() !== 'ADMIN')) {
             http_response_code(403);
             echo json_encode(['status' => 'error', 'message' => 'Forbidden: Admin access required']);
             exit();

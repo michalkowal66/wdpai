@@ -1,24 +1,32 @@
 <?php
 
 require_once 'Repository.php';
+require_once __DIR__.'/../models/Floor.php';
+
+use Models\Floor;
 
 class FloorRepository extends Repository {
+
     public function getFloors(): array {
-        $stmt = $this->database->connect()->prepare('
-            SELECT * FROM floors ORDER BY level ASC
-        ');
+        $stmt = $this->database->connect()->prepare('SELECT * FROM floors ORDER BY level ASC');
         $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $floors = [];
+        foreach ($results as $row) {
+            $floors[] = new Floor($row['id'], $row['name'], $row['level'], $row['map_image_url']);
+        }
+        return $floors;
     }
 
-    public function getFloorByLevel(int $level): ?array {
-        $stmt = $this->database->connect()->prepare('
-            SELECT * FROM floors WHERE level = :level
-        ');
+    public function getFloorByLevel(int $level): ?Floor {
+        $stmt = $this->database->connect()->prepare('SELECT * FROM floors WHERE level = :level');
         $stmt->bindParam(':level', $level, PDO::PARAM_INT);
         $stmt->execute();
-        $floor = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $floor ?: null;
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$row) return null;
+        return new Floor($row['id'], $row['name'], $row['level'], $row['map_image_url']);
     }
 
     public function createFloor(string $name, int $level, string $mapImageUrl): bool {
@@ -81,4 +89,4 @@ class FloorRepository extends Repository {
             return false;
         }
     }
-    }
+}

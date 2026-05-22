@@ -1,4 +1,5 @@
 <?php
+require_once "src/models/User.php";
 session_start();
 
 require_once "Routing.php";

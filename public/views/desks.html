@@ -33,13 +33,13 @@
                             <tbody>
                                 <?php foreach($desks as $d): ?>
                                 <tr>
-                                    <td><span class="font-bold text-primary">Desk <?= htmlspecialchars($d['identifier']) ?></span></td>
-                                    <td><?= htmlspecialchars($d['description']) ?></td>
-                                    <td><?= htmlspecialchars($d['floor_name']) ?></td>
+                                    <td><span class="font-bold text-primary">Desk <?= htmlspecialchars($d->getIdentifier()) ?></span></td>
+                                    <td><?= htmlspecialchars($d->getDescription()) ?></td>
+                                    <td><?= htmlspecialchars($d->getFloorName()) ?></td>
                                     <td class="text-right">
                                         <button class="btn btn--secondary btn--small js-edit-maintenance-btn" 
-                                            data-id="<?= $d['id'] ?>"
-                                            data-identifier="<?= htmlspecialchars($d['identifier']) ?>">
+                                            data-id="<?= $d->getId() ?>"
+                                            data-identifier="<?= htmlspecialchars($d->getIdentifier()) ?>">
                                             <span class="material-symbols-outlined icon-md">build</span> Set Maintenance
                                         </button>
                                     </td>
@@ -54,13 +54,13 @@
                         <?php foreach($desks as $d): ?>
                         <article class="user-card user-card--flex">
                             <div>
-                                <div class="user-card__name">Desk <?= htmlspecialchars($d['identifier']) ?></div>
-                                <div class="user-card__title"><?= htmlspecialchars($d['description']) ?></div>
-                                <div class="user-card__email"><?= htmlspecialchars($d['floor_name']) ?></div>
+                                <div class="user-card__name">Desk <?= htmlspecialchars($d->getIdentifier()) ?></div>
+                                <div class="user-card__title"><?= htmlspecialchars($d->getDescription()) ?></div>
+                                <div class="user-card__email"><?= htmlspecialchars($d->getFloorName()) ?></div>
                             </div>
                             <button class="btn-icon js-edit-maintenance-btn" 
-                                data-id="<?= $d['id'] ?>"
-                                data-identifier="<?= htmlspecialchars($d['identifier']) ?>">
+                                data-id="<?= $d->getId() ?>"
+                                data-identifier="<?= htmlspecialchars($d->getIdentifier()) ?>">
                                 <span class="material-symbols-outlined">build</span>
                             </button>
                         </article>

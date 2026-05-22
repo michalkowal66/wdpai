@@ -79,7 +79,7 @@ class AdminController extends AppController {
         $user = $usersRepository->getUserById($id);
 
         // Security check: Don't allow demoting/deactivating the last admin
-        if ($user['role'] === 'ADMIN' && ($role !== 'ADMIN' || !$isActive)) {
+        if ($user && $user->getRole() === 'ADMIN' && ($role !== 'ADMIN' || !$isActive)) {
             if ($usersRepository->getAdminCount() <= 1) {
                 http_response_code(400);
                 echo json_encode(['status' => 'error', 'message' => 'Cannot demote or deactivate the last administrator.']);
@@ -104,7 +104,7 @@ class AdminController extends AppController {
         $user = $usersRepository->getUserById($id);
 
         // Security check: Don't allow deleting the last admin
-        if ($user['role'] === 'ADMIN') {
+        if ($user && $user->getRole() === 'ADMIN') {
             if ($usersRepository->getAdminCount() <= 1) {
                 http_response_code(400);
                 echo json_encode(['status' => 'error', 'message' => 'Cannot delete the last administrator.']);
@@ -200,7 +200,7 @@ class AdminController extends AppController {
         // For the editor, we fetch all desks including deactivated ones.
         $desks = [];
         if ($currentFloor) {
-            $desks = $deskRepository->getAllDesksByFloor($currentFloor['id']);
+            $desks = $deskRepository->getAllDesksByFloor($currentFloor->getId());
         }
         
         $features = $featureRepo->getAllFeatures();

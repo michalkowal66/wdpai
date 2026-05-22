@@ -42,8 +42,8 @@
                                     <span class="material-symbols-outlined control-input__icon">layers</span>
                                     <select name="floor" class="control-input__select" onchange="this.form.submit()">
                                         <?php foreach($allFloors as $f): ?>
-                                            <option value="<?= $f['level'] ?>" <?= $currentFloor['id'] === $f['id'] ? 'selected' : '' ?>>
-                                                <?= htmlspecialchars($f['name']) ?>
+                                            <option value="<?= $f->getLevel() ?>" <?= $currentFloor && $currentFloor->getId() === $f->getId() ? 'selected' : '' ?>>
+                                                <?= htmlspecialchars($f->getName()) ?>
                                             </option>
                                         <?php endforeach; ?>
                                     </select>
@@ -63,24 +63,24 @@
 
                         <div class="map-placeholder" id="map-container" data-has-booking="<?= $hasBookingToday ? 'true' : 'false' ?>" data-booked-desk="<?= htmlspecialchars($bookedDeskId ?? '') ?>">
                             <?php if ($currentFloor): ?>
-                                <img src="<?= $currentFloor['map_image_url'] ?>" alt="<?= htmlspecialchars($currentFloor['name']) ?>" class="map-image">
+                                <img src="<?= $currentFloor->getMapImageUrl() ?>" alt="<?= htmlspecialchars($currentFloor->getName()) ?>" class="map-image">
                                 
                                 <?php foreach($desks as $desk): 
                                     $statusClass = '';
                                     $icon = 'desk';
-                                    if ($desk['current_status'] === 'occupied') {
+                                    if ($desk->getCurrentStatus() === 'occupied') {
                                         $statusClass = 'desk-marker--occupied';
                                         $icon = 'person';
-                                    } elseif ($desk['current_status'] === 'maintenance') {
+                                    } elseif ($desk->getCurrentStatus() === 'maintenance') {
                                         $statusClass = 'desk-marker--maintenance';
                                         $icon = 'build';
                                     }
                                 ?>
                                     <div class="desk-marker <?= $statusClass ?>" 
-                                         style="left: <?= $desk['pos_x'] ?>%; top: <?= $desk['pos_y'] ?>%;"
-                                         data-id="<?= $desk['id'] ?>"
-                                         data-status="<?= $desk['current_status'] ?>"
-                                         title="<?= htmlspecialchars($desk['identifier']) ?> - <?= htmlspecialchars($desk['current_status']) ?>">
+                                         style="left: <?= $desk->getPosX() ?>%; top: <?= $desk->getPosY() ?>%;"
+                                         data-id="<?= $desk->getId() ?>"
+                                         data-status="<?= $desk->getCurrentStatus() ?>"
+                                         title="<?= htmlspecialchars($desk->getIdentifier()) ?> - <?= htmlspecialchars($desk->getCurrentStatus()) ?>">
                                         <span class="material-symbols-outlined desk-marker__icon"><?= $icon ?></span>
                                     </div>
                                 <?php endforeach; ?>

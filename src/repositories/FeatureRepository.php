@@ -1,12 +1,22 @@
 <?php
 
 require_once 'Repository.php';
+require_once __DIR__.'/../models/Feature.php';
+
+use Models\Feature;
 
 class FeatureRepository extends Repository {
+
     public function getAllFeatures(): array {
         $stmt = $this->database->connect()->prepare('SELECT * FROM features ORDER BY name ASC');
         $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $features = [];
+        foreach ($results as $row) {
+            $features[] = new Feature($row['id'], $row['name'], $row['icon_name']);
+        }
+        return $features;
     }
 
     public function addFeature(string $name, string $iconName): bool {

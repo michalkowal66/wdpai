@@ -1,6 +1,13 @@
 <?php
 
 require_once 'Repository.php';
+require_once __DIR__.'/../models/Desk.php';
+require_once __DIR__.'/../models/Feature.php';
+require_once __DIR__.'/../dto/DeskDetailsDTO.php';
+
+use Models\Desk;
+use Models\Feature;
+use DTO\DeskDetailsDTO;
 
 class DeskRepository extends Repository {
     public function getDesksByFloor(int $floorId, string $date): array {
@@ -23,7 +30,14 @@ class DeskRepository extends Repository {
         $stmt->bindParam(':floorId', $floorId, PDO::PARAM_INT);
         $stmt->bindParam(':date', $date);
         $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $dtos = [];
+        foreach ($results as $row) {
+            $desk = new Desk($row['id'], $row['identifier'], $row['description'], $row['floor_id'], $row['pos_x'], $row['pos_y'], $row['is_active']);
+            $dtos[] = new DeskDetailsDTO($desk, $row['current_status']);
+        }
+        return $dtos;
     }
 
     public function getAllDesksByFloor(int $floorId): array {
@@ -34,12 +48,18 @@ class DeskRepository extends Repository {
         ');
         $stmt->bindParam(':floorId', $floorId, PDO::PARAM_INT);
         $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $desks = [];
+        foreach ($results as $row) {
+            $desks[] = new Desk($row['id'], $row['identifier'], $row['description'], $row['floor_id'], $row['pos_x'], $row['pos_y'], $row['is_active']);
+        }
+        return $desks;
     }
 
-    public function getDeskWithFeatures(int $deskId): ?array {
+    public function getDeskWithFeatures(int $deskId): ?DeskDetailsDTO {
         $stmt = $this->database->connect()->prepare('
-            SELECT d.*, f.name as feature_name, f.icon_name
+            SELECT d.*, f.id as feature_id, f.name as feature_name, f.icon_name
             FROM desks d
             LEFT JOIN desk_features df ON d.id = df.desk_id
             LEFT JOIN features f ON df.feature_id = f.id
@@ -51,17 +71,19 @@ class DeskRepository extends Repository {
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
         if (!$results) return null;
 
-        $desk = $results[0];
-        $desk['features'] = [];
+        $deskRow = $results[0];
+        $desk = new Desk($deskRow['id'], $deskRow['identifier'], $deskRow['description'], $deskRow['floor_id'], $deskRow['pos_x'], $deskRow['pos_y'], $deskRow['is_active']);
+        
+        $features = [];
         foreach ($results as $row) {
             if ($row['feature_name']) {
-                $desk['features'][] = [
-                    'name' => $row['feature_name'],
-                    'icon' => $row['icon_name']
-                ];
+                $features[] = new Feature($row['feature_id'], $row['feature_name'], $row['icon_name']);
             }
         }
-        return $desk;
+        
+        $hasBookings = $this->hasBookingHistory($deskId);
+        
+        return new DeskDetailsDTO($desk, null, $features, $hasBookings);
     }
 
     public function getAllDesks(int $limit = 10, int $offset = 0): array {
@@ -75,7 +97,14 @@ class DeskRepository extends Repository {
         $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
         $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
         $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $dtos = [];
+        foreach ($results as $row) {
+            $desk = new Desk($row['id'], $row['identifier'], $row['description'], $row['floor_id'], $row['pos_x'], $row['pos_y'], $row['is_active']);
+            $dtos[] = new DeskDetailsDTO($desk, null, [], false, $row['floor_name']);
+        }
+        return $dtos;
     }
 
     public function getDesksCount(): int {
@@ -89,7 +118,6 @@ class DeskRepository extends Repository {
         try {
             $conn->beginTransaction();
 
-            // 1. Insert the maintenance block
             $stmt = $conn->prepare('
                 INSERT INTO desk_maintenances (desk_id, start_date, end_date, reason)
                 VALUES (:desk_id, :start_date, :end_date, :reason)
@@ -100,7 +128,6 @@ class DeskRepository extends Repository {
             $stmt->bindParam(':reason', $reason);
             $stmt->execute();
 
-            // 2. Automatically cancel any ACTIVE bookings within this date range
             $cancelStmt = $conn->prepare("
                 UPDATE bookings 
                 SET status = 'CANCELLED' 
@@ -128,7 +155,6 @@ class DeskRepository extends Repository {
             $conn->beginTransaction();
 
             if ($id) {
-                // Update existing desk
                 $stmt = $conn->prepare('
                     UPDATE desks 
                     SET identifier = :identifier, description = :description, floor_id = :floor_id, pos_x = :pos_x, pos_y = :pos_y 
@@ -136,7 +162,6 @@ class DeskRepository extends Repository {
                 ');
                 $stmt->bindParam(':id', $id, PDO::PARAM_INT);
             } else {
-                // Insert new desk
                 $stmt = $conn->prepare('
                     INSERT INTO desks (identifier, description, floor_id, pos_x, pos_y) 
                     VALUES (:identifier, :description, :floor_id, :pos_x, :pos_y) 
@@ -155,12 +180,10 @@ class DeskRepository extends Repository {
                 $id = (int)$stmt->fetchColumn();
             }
 
-            // Clear old features
             $delStmt = $conn->prepare('DELETE FROM desk_features WHERE desk_id = :desk_id');
             $delStmt->bindParam(':desk_id', $id, PDO::PARAM_INT);
             $delStmt->execute();
 
-            // Insert new features
             if (!empty($features)) {
                 $featStmt = $conn->prepare('INSERT INTO desk_features (desk_id, feature_id) VALUES (:desk_id, :feature_id)');
                 foreach ($features as $fId) {
@@ -183,12 +206,10 @@ class DeskRepository extends Repository {
         try {
             $conn->beginTransaction();
 
-            // Soft delete the desk
             $stmt = $conn->prepare('UPDATE desks SET is_active = FALSE WHERE id = :id');
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
             $stmt->execute();
 
-            // Cancel any future active bookings for this desk
             $cancelStmt = $conn->prepare("
                 UPDATE bookings 
                 SET status = 'CANCELLED' 

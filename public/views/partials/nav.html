@@ -9,7 +9,7 @@
             <a href="map" class="nav-link <?= strpos($uri, 'map') !== false ? 'nav-link--active' : '' ?>">Floor Map</a>
             <a href="bookings" class="nav-link <?= strpos($uri, 'bookings') !== false ? 'nav-link--active' : '' ?>">My Bookings</a>
             
-            <?php if (isset($user) && $user['role'] === 'ADMIN'): ?>
+            <?php if (isset($user) && $user->getRole() === 'ADMIN'): ?>
             <?php $isAdminActive = preg_match('/dashboard|editor|users|desks|settings/', $uri); ?>
             <div class="dropdown">
                 <span class="nav-link dropdown__toggle <?= $isAdminActive ? 'nav-link--active' : '' ?>">
@@ -30,16 +30,16 @@
         <div class="header__user desktop-only">
             <div class="user-info">
                 <?php
-                    $firstName = explode(' ', trim($user['full_name']))[0] ?? 'User';
-                    $initials = substr($user['full_name'], 0, 1);
-                    $nameParts = explode(' ', trim($user['full_name']));
+                    $firstName = explode(' ', trim($user->getFullName()))[0] ?? 'User';
+                    $initials = substr($user->getFullName(), 0, 1);
+                    $nameParts = explode(' ', trim($user->getFullName()));
                     if (count($nameParts) > 1) {
                         $initials .= substr(end($nameParts), 0, 1);
                     }
                     $initials = strtoupper($initials);
                 ?>
                 <span class="user-info__name">Welcome, <?= htmlspecialchars($firstName) ?></span>
-                <span class="user-info__role"><?= htmlspecialchars($user['job_title'] ?? 'Employee') ?></span>
+                <span class="user-info__role"><?= htmlspecialchars($user->getJobTitle() ?? 'Employee') ?></span>
             </div>
             <div class="avatar-initials avatar-initials--secondary"><?= htmlspecialchars($initials) ?></div>
             <a class="btn btn--secondary btn--small" href="logout">
@@ -69,8 +69,8 @@
         <div class="mobile-nav__user">
             <div class="avatar-initials avatar-initials--secondary"><?= htmlspecialchars($initials) ?></div>
             <div class="user-info user-info--left">
-                <span class="user-info__name"><?= htmlspecialchars($user['full_name']) ?></span>
-                <span class="user-info__role"><?= htmlspecialchars($user['job_title'] ?? 'Employee') ?></span>
+                <span class="user-info__name"><?= htmlspecialchars($user->getFullName()) ?></span>
+                <span class="user-info__role"><?= htmlspecialchars($user->getJobTitle() ?? 'Employee') ?></span>
             </div>
         </div>
         <?php endif; ?>
@@ -82,7 +82,7 @@
             <a href="bookings" class="nav-link <?= strpos($uri, 'bookings') !== false ? 'nav-link--active' : '' ?>">
                 <span class="material-symbols-outlined">event_note</span> My Bookings
             </a>
-            <?php if (isset($user) && $user['role'] === 'ADMIN'): ?>
+            <?php if (isset($user) && $user->getRole() === 'ADMIN'): ?>
             <div class="mobile-nav__section-title">Administration</div>
             <a href="dashboard" class="nav-link <?= strpos($uri, 'dashboard') !== false ? 'nav-link--active' : '' ?>">
                 <span class="material-symbols-outlined">dashboard</span> Dashboard

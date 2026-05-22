@@ -38,7 +38,8 @@
                 <?php endif; ?>
 
                 <?php foreach($displayBookings as $b): 
-                    $isPast = $b['booking_date'] < date('Y-m-d');
+                    $isPast = $b->getBookingDate() < date('Y-m-d');
+                    $status = $b->getStatus();
                     
                     // Determine Badge
                     $badgeClass = '';
@@ -46,13 +47,13 @@
                     $statusDotClass = '';
                     $statusText = '';
                     
-                    if ($b['status'] === 'CANCELLED' || $b['status'] === 'NO_SHOW') {
+                    if ($status === 'CANCELLED' || $status === 'NO_SHOW') {
                         $badgeClass = 'booking-card__badge--neutral';
-                        $friendlyText = $b['status'] === 'CANCELLED' ? 'Cancelled' : 'No Show';
+                        $friendlyText = $status === 'CANCELLED' ? 'Cancelled' : 'No Show';
                         $badgeText = $friendlyText;
                         $statusDotClass = 'status-dot--neutral';
                         $statusText = $friendlyText;
-                    } elseif ($b['status'] === 'CHECKED_IN') {
+                    } elseif ($status === 'CHECKED_IN') {
                         $badgeClass = $isPast ? 'booking-card__badge--neutral' : 'booking-card__badge--success';
                         $badgeText = $isPast ? 'Completed' : 'Checked In';
                         $statusDotClass = $isPast ? 'status-dot--neutral' : 'status-dot--success';
@@ -66,19 +67,19 @@
                 ?>
                 <article class="booking-card <?= $isPast ? 'booking-card--past' : '' ?>">
                     <figure class="booking-card__image-wrapper">
-                        <img src="<?= htmlspecialchars($b['floor_map_url']) ?>" alt="<?= htmlspecialchars($b['floor_name']) ?>" class="booking-card__image object-top">
+                        <img src="<?= htmlspecialchars($b->getFloorMapUrl()) ?>" alt="<?= htmlspecialchars($b->getFloorName()) ?>" class="booking-card__image object-top">
                         <span class="booking-card__badge <?= $badgeClass ?> desktop-only"><?= $badgeText ?></span>
                     </figure>
                     <div class="booking-card__content">
                         <header class="booking-card__header">
                             <div class="booking-card__date <?= $isPast ? 'text-muted' : '' ?>">
                                 <span class="material-symbols-outlined">calendar_month</span>
-                                <span><?= date('l, M j, Y', strtotime($b['booking_date'])) ?></span>
+                                <span><?= date('l, M j, Y', strtotime($b->getBookingDate())) ?></span>
                             </div>
-                            <h3 class="booking-card__title">Desk <?= htmlspecialchars($b['desk_identifier']) ?></h3>
+                            <h3 class="booking-card__title">Desk <?= htmlspecialchars($b->getDeskIdentifier()) ?></h3>
                             <div class="booking-card__details">
                                 <span class="feature-tag"><span class="material-symbols-outlined">schedule</span> All Day</span>
-                                <span class="feature-tag"><span class="material-symbols-outlined">location_on</span> <?= htmlspecialchars($b['floor_name']) ?></span>
+                                <span class="feature-tag"><span class="material-symbols-outlined">location_on</span> <?= htmlspecialchars($b->getFloorName()) ?></span>
                             </div>
                         </header>
                         <footer class="booking-card__footer">
@@ -87,17 +88,17 @@
                                 <span class="status-text"><?= $statusText ?></span>
                             </div>
                             <div class="booking-card__actions <?= $isPast ? 'ml-auto' : '' ?>">
-                                <?php if (!$isPast && $b['status'] === 'ACTIVE'): ?>
-                                    <?php if ($b['booking_date'] === date('Y-m-d')): ?>
-                                        <button class="btn btn--primary btn--small" onclick="checkInBooking(<?= $b['id'] ?>)">
+                                <?php if (!$isPast && $status === 'ACTIVE'): ?>
+                                    <?php if ($b->getBookingDate() === date('Y-m-d')): ?>
+                                        <button class="btn btn--primary btn--small" onclick="checkInBooking(<?= $b->getId() ?>)">
                                             <span class="material-symbols-outlined desktop-only">check_circle</span> Check In
                                         </button>
                                     <?php endif; ?>
-                                    <button class="btn btn--secondary btn--danger <?= $b['booking_date'] === date('Y-m-d') ? 'btn--small' : 'btn--full' ?>" onclick="cancelBooking(<?= $b['id'] ?>)">
+                                    <button class="btn btn--secondary btn--danger <?= $b->getBookingDate() === date('Y-m-d') ? 'btn--small' : 'btn--full' ?>" onclick="cancelBooking(<?= $b->getId() ?>)">
                                         <span class="material-symbols-outlined desktop-only">cancel</span> Cancel
                                     </button>
-                                <?php elseif ($isPast || $b['status'] === 'CHECKED_IN' || $b['status'] === 'CANCELLED' || $b['status'] === 'NO_SHOW'): ?>
-                                    <a href="/map?floor=<?= $b['floor_level'] ?>&date=<?= date('Y-m-d', strtotime('+1 day')) ?>" class="btn btn--link">
+                                <?php elseif ($isPast || $status === 'CHECKED_IN' || $status === 'CANCELLED' || $status === 'NO_SHOW'): ?>
+                                    <a href="/map?floor=<?= $b->getFloorLevel() ?>&date=<?= date('Y-m-d', strtotime('+1 day')) ?>" class="btn btn--link">
                                         Book Again <span class="material-symbols-outlined">arrow_forward</span>
                                     </a>
                                 <?php endif; ?>

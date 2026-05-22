@@ -22,18 +22,18 @@ class MapController extends AppController {
             $currentFloor = $allFloors[0];
         }
 
-        $desks = $currentFloor ? $deskRepository->getDesksByFloor($currentFloor['id'], $date) : [];
+        $desks = $currentFloor ? $deskRepository->getDesksByFloor($currentFloor->getId(), $date) : [];
 
         // Check if user has an active booking for the selected date
         $hasBookingToday = false;
         $bookedDeskId = null;
         if (isset($_SESSION['user'])) {
             $bookingRepo = new BookingRepository();
-            $userBookings = $bookingRepo->getUserBookings($_SESSION['user']['id']);
+            $userBookings = $bookingRepo->getUserBookings($_SESSION['user']->getId());
             foreach ($userBookings as $b) {
-                if ($b['booking_date'] === $date && in_array($b['status'], ['ACTIVE', 'CHECKED_IN'])) {
+                if ($b->getBookingDate() === $date && in_array($b->getStatus(), ['ACTIVE', 'CHECKED_IN'])) {
                     $hasBookingToday = true;
-                    $bookedDeskId = $b['desk_id'];
+                    $bookedDeskId = $b->getBooking()->getDeskId();
                     break;
                 }
             }
@@ -57,7 +57,7 @@ class MapController extends AppController {
             exit();
         }
 
-        $userId = $_SESSION['user']['id'];
+        $userId = $_SESSION['user']->getId();
         $bookingRepo = new BookingRepository();
         $allBookings = $bookingRepo->getUserBookings($userId);
 
@@ -67,11 +67,12 @@ class MapController extends AppController {
         $cancelled = [];
 
         foreach ($allBookings as $b) {
-            $isPast = $b['booking_date'] < $today;
+            $isPast = $b->getBookingDate() < $today;
+            $status = $b->getStatus();
             
-            if ($b['status'] === 'CANCELLED' || $b['status'] === 'NO_SHOW' || ($isPast && $b['status'] === 'ACTIVE')) {
+            if ($status === 'CANCELLED' || $status === 'NO_SHOW' || ($isPast && $status === 'ACTIVE')) {
                 $cancelled[] = $b;
-            } elseif ($isPast && $b['status'] === 'CHECKED_IN') {
+            } elseif ($isPast && $status === 'CHECKED_IN') {
                 $history[] = $b;
             } else {
                 $upcoming[] = $b;
@@ -111,7 +112,7 @@ class MapController extends AppController {
             return;
         }
 
-        $userId = $_SESSION['user']['id'];
+        $userId = $_SESSION['user']->getId();
         $bookingRepo = new BookingRepository();
         $allBookings = $bookingRepo->getUserBookings($userId);
 
@@ -121,11 +122,12 @@ class MapController extends AppController {
         $cancelled = [];
 
         foreach ($allBookings as $b) {
-            $isPast = $b['booking_date'] < $today;
+            $isPast = $b->getBookingDate() < $today;
+            $status = $b->getStatus();
             
-            if ($b['status'] === 'CANCELLED' || $b['status'] === 'NO_SHOW' || ($isPast && $b['status'] === 'ACTIVE')) {
+            if ($status === 'CANCELLED' || $status === 'NO_SHOW' || ($isPast && $status === 'ACTIVE')) {
                 $cancelled[] = $b;
-            } elseif ($isPast && $b['status'] === 'CHECKED_IN') {
+            } elseif ($isPast && $status === 'CHECKED_IN') {
                 $history[] = $b;
             } else {
                 $upcoming[] = $b;
@@ -173,8 +175,6 @@ class MapController extends AppController {
             return;
         }
 
-        $desk['has_bookings'] = $deskRepository->hasBookingHistory($id);
-
         header('Content-Type: application/json');
         echo json_encode($desk);
     }
@@ -192,7 +192,7 @@ class MapController extends AppController {
 
         $deskId = isset($_POST['desk_id']) ? (int)$_POST['desk_id'] : null;
         $date = isset($_POST['date']) ? $_POST['date'] : date('Y-m-d');
-        $userId = $_SESSION['user']['id'];
+        $userId = $_SESSION['user']->getId();
 
         if (!$deskId) {
             http_response_code(400);
@@ -234,7 +234,7 @@ class MapController extends AppController {
         }
 
         $id = isset($_POST['id']) ? (int)$_POST['id'] : null;
-        $userId = $_SESSION['user']['id'];
+        $userId = $_SESSION['user']->getId();
 
         if (!$id) {
             http_response_code(400);
@@ -266,7 +266,7 @@ class MapController extends AppController {
         }
 
         $id = isset($_POST['id']) ? (int)$_POST['id'] : null;
-        $userId = $_SESSION['user']['id'];
+        $userId = $_SESSION['user']->getId();
 
         if (!$id) {
             http_response_code(400);

@@ -1,6 +1,9 @@
 <?php
 
 require_once 'Repository.php';
+require_once __DIR__.'/../models/User.php';
+
+use Models\User;
 
 class UsersRepository extends Repository {
     public function getUsers(int $limit = 10, int $offset = 0): ?array 
@@ -16,7 +19,12 @@ class UsersRepository extends Repository {
         $query->bindParam(':offset', $offset, PDO::PARAM_INT);
         $query->execute();
 
-        return $query->fetchAll(PDO::FETCH_ASSOC);
+        $results = $query->fetchAll(PDO::FETCH_ASSOC);
+        $users = [];
+        foreach ($results as $row) {
+            $users[] = new User($row['id'], $row['email'], $row['password'], $row['full_name'], $row['job_title'], $row['role'], $row['is_active']);
+        }
+        return $users;
     }
 
     public function getUsersCount(): int 
@@ -28,7 +36,7 @@ class UsersRepository extends Repository {
         return (int)$query->fetchColumn();
     }
 
-    public function getUserByEmail(string $email) {
+    public function getUserByEmail(string $email): ?User {
         $query = $this->database->connect()->prepare(
             "
             SELECT * FROM users WHERE email = :email
@@ -37,11 +45,12 @@ class UsersRepository extends Repository {
         $query->bindParam(':email', $email);
         $query->execute();
 
-        $user = $query->fetch(PDO::FETCH_ASSOC);
-        return $user;
+        $row = $query->fetch(PDO::FETCH_ASSOC);
+        if (!$row) return null;
+        return new User($row['id'], $row['email'], $row['password'], $row['full_name'], $row['job_title'], $row['role'], $row['is_active']);
     }
 
-    public function getUserById(int $id) {
+    public function getUserById(int $id): ?User {
         $query = $this->database->connect()->prepare(
             "
             SELECT * FROM users WHERE id = :id
@@ -50,8 +59,9 @@ class UsersRepository extends Repository {
         $query->bindParam(':id', $id, PDO::PARAM_INT);
         $query->execute();
 
-        $user = $query->fetch(PDO::FETCH_ASSOC);
-        return $user;
+        $row = $query->fetch(PDO::FETCH_ASSOC);
+        if (!$row) return null;
+        return new User($row['id'], $row['email'], $row['password'], $row['full_name'], $row['job_title'], $row['role'], $row['is_active']);
     }
 
     public function getAdminCount(): int {

@@ -62,20 +62,20 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach($topUsers as $user): ?>
+                            <?php foreach($topUsers as $dto): $user = $dto->getUser(); ?>
                             <tr>
                                 <td>
                                     <div class="user-cell">
                                         <div class="user-cell__details">
-                                            <span class="user-cell__name"><?= htmlspecialchars($user['full_name']) ?></span>
-                                            <span class="user-cell__role"><?= htmlspecialchars($user['job_title']) ?></span>
+                                            <span class="user-cell__name"><?= htmlspecialchars($user->getFullName()) ?></span>
+                                            <span class="user-cell__role"><?= htmlspecialchars($user->getJobTitle()) ?></span>
                                         </div>
                                     </div>
                                 </td>
-                                <td class="text-right font-semibold"><?= $user['check_ins'] ?></td>
+                                <td class="text-right font-semibold"><?= $dto->getCheckIns() ?></td>
                                 <td class="text-right">
-                                    <span class="badge <?= $user['reliability_score'] > 80 ? 'badge--success' : ($user['reliability_score'] > 50 ? 'badge--warning' : 'badge--neutral') ?>">
-                                        <?= $user['reliability_score'] ?>%
+                                    <span class="badge <?= $dto->getReliabilityScore() > 80 ? 'badge--success' : ($dto->getReliabilityScore() > 50 ? 'badge--warning' : 'badge--neutral') ?>">
+                                        <?= $dto->getReliabilityScore() ?>%
                                     </span>
                                 </td>
                             </tr>
@@ -103,9 +103,9 @@
                         <tbody>
                             <?php foreach($topDesks as $desk): ?>
                             <tr>
-                                <td><span class="font-bold text-primary">Desk <?= htmlspecialchars($desk['identifier']) ?></span></td>
-                                <td class="text-muted"><?= htmlspecialchars($desk['floor_name']) ?></td>
-                                <td class="text-right font-semibold"><?= $desk['successful_bookings'] ?></td>
+                                <td><span class="font-bold text-primary">Desk <?= htmlspecialchars($desk->getIdentifier()) ?></span></td>
+                                <td class="text-muted"><?= htmlspecialchars($desk->getFloorName()) ?></td>
+                                <td class="text-right font-semibold"><?= $desk->getSuccessfulBookings() ?></td>
                             </tr>
                             <?php endforeach; ?>
                             <?php if (empty($topDesks)): ?>
@@ -121,10 +121,10 @@
             <div class="features-list">
                 <?php foreach($topFeatures as $feature): ?>
                 <div class="feature-stat-card">
-                    <span class="material-symbols-outlined feature-stat-card__icon"><?= htmlspecialchars($feature['icon_name']) ?></span>
+                    <span class="material-symbols-outlined feature-stat-card__icon"><?= htmlspecialchars($feature->getIconName()) ?></span>
                     <div>
-                        <span class="feature-stat-card__name"><?= htmlspecialchars($feature['feature_name']) ?></span>
-                        <span class="feature-stat-card__count"><?= $feature['total_bookings'] ?> bookings</span>
+                        <span class="feature-stat-card__name"><?= htmlspecialchars($feature->getFeatureName()) ?></span>
+                        <span class="feature-stat-card__count"><?= $feature->getTotalBookings() ?> bookings</span>
                     </div>
                 </div>
                 <?php endforeach; ?>

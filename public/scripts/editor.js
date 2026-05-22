@@ -308,7 +308,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 const options = Array.from(featureSelect.options);
                                 const match = options.find(opt => opt.getAttribute('data-name') === f.name);
                                 if (match) {
-                                    activeFeatures.set(match.value, { name: f.name, icon: f.icon });
+                                    activeFeatures.set(match.value, { name: f.name, icon: f.icon_name });
                                 }
                             });
                         }

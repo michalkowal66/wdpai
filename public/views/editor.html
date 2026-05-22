@@ -37,8 +37,8 @@
                                     <span class="material-symbols-outlined control-input__icon">layers</span>
                                     <select name="floor" class="control-input__select" onchange="this.form.submit()">
                                         <?php foreach($allFloors as $f): ?>
-                                            <option value="<?= $f['level'] ?>" <?= $currentFloor['id'] === $f['id'] ? 'selected' : '' ?>>
-                                                <?= htmlspecialchars($f['name']) ?>
+                                            <option value="<?= $f->getLevel() ?>" <?= $currentFloor && $currentFloor->getId() === $f->getId() ? 'selected' : '' ?>>
+                                                <?= htmlspecialchars($f->getName()) ?>
                                             </option>
                                         <?php endforeach; ?>
                                     </select>
@@ -53,21 +53,21 @@
 
                         <div class="editor-map-wrapper" id="editor-map">
                             <?php if ($currentFloor): ?>
-                                <img src="<?= $currentFloor['map_image_url'] ?>" alt="<?= htmlspecialchars($currentFloor['name']) ?>" id="floor-image">
+                                <img src="<?= $currentFloor->getMapImageUrl() ?>" alt="<?= htmlspecialchars($currentFloor->getName()) ?>" id="floor-image">
                                 
                                 <?php foreach($desks as $desk): 
-                                    $statusClass = $desk['is_active'] ? 'desk-marker--success' : 'desk-marker--occupied';
-                                    $icon = $desk['is_active'] ? 'desk' : 'block';
-                                    $statusData = $desk['is_active'] ? 'active' : 'deactivated';
-                                    $displayStyle = $desk['is_active'] ? 'flex' : 'none'; // hide deactivated by default
+                                    $statusClass = $desk->isActive() ? 'desk-marker--success' : 'desk-marker--occupied';
+                                    $icon = $desk->isActive() ? 'desk' : 'block';
+                                    $statusData = $desk->isActive() ? 'active' : 'deactivated';
+                                    $displayStyle = $desk->isActive() ? 'flex' : 'none'; // hide deactivated by default
                                 ?>
                                     <div class="desk-marker <?= $statusClass ?>" 
-                                         style="left: <?= $desk['pos_x'] ?>%; top: <?= $desk['pos_y'] ?>%; display: <?= $displayStyle ?>;"
-                                         data-id="<?= $desk['id'] ?>"
-                                         data-posx="<?= $desk['pos_x'] ?>"
-                                         data-posy="<?= $desk['pos_y'] ?>"
+                                         style="left: <?= $desk->getPosX() ?>%; top: <?= $desk->getPosY() ?>%; display: <?= $displayStyle ?>;"
+                                         data-id="<?= $desk->getId() ?>"
+                                         data-posx="<?= $desk->getPosX() ?>"
+                                         data-posy="<?= $desk->getPosY() ?>"
                                          data-status="<?= $statusData ?>"
-                                         title="<?= htmlspecialchars($desk['identifier']) ?> - <?= ucfirst($statusData) ?>">
+                                         title="<?= htmlspecialchars($desk->getIdentifier()) ?> - <?= ucfirst($statusData) ?>">
                                         <span class="material-symbols-outlined desk-marker__icon"><?= $icon ?></span>
                                     </div>
                                 <?php endforeach; ?>
@@ -93,7 +93,7 @@
                     <div class="side-panel__content">
                         <form class="form" id="desk-editor-form">
                             <input type="hidden" id="edit-id" name="id" value="">
-                            <input type="hidden" id="edit-floor-id" name="floor_id" value="<?= $currentFloor ? $currentFloor['id'] : '' ?>">
+                            <input type="hidden" id="edit-floor-id" name="floor_id" value="<?= $currentFloor ? $currentFloor->getId() : '' ?>">
                             <input type="hidden" id="edit-pos-x" name="pos_x" value="">
                             <input type="hidden" id="edit-pos-y" name="pos_y" value="">
 
@@ -112,7 +112,7 @@
                                     <select class="form__input flex-1" id="feature-select">
                                         <option value="" disabled selected>Select a feature...</option>
                                         <?php foreach($features as $f): ?>
-                                            <option value="<?= $f['id'] ?>" data-name="<?= htmlspecialchars($f['name']) ?>" data-icon="<?= htmlspecialchars($f['icon_name']) ?>"><?= htmlspecialchars($f['name']) ?></option>
+                                            <option value="<?= $f->getId() ?>" data-name="<?= htmlspecialchars($f->getName()) ?>" data-icon="<?= htmlspecialchars($f->getIconName()) ?>"><?= htmlspecialchars($f->getName()) ?></option>
                                         <?php endforeach; ?>
                                     </select>
                                     <button type="button" class="btn btn--secondary" id="add-feature-btn">Add</button>
