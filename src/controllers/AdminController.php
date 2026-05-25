@@ -42,7 +42,7 @@ class AdminController extends AppController {
 
     public function users() {
         $title = "HotDesk - User Management";
-        $usersRepository = new UsersRepository();
+        $usersRepository = UsersRepository::getInstance();
         
         $limit = 5;
         $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
@@ -75,7 +75,7 @@ class AdminController extends AppController {
         $role = $_POST['role'];
         $isActive = isset($_POST['is_active']) && $_POST['is_active'] === 'true';
 
-        $usersRepository = new UsersRepository();
+        $usersRepository = UsersRepository::getInstance();
         $user = $usersRepository->getUserById($id);
 
         // Security check: Don't allow demoting/deactivating the last admin
@@ -100,7 +100,7 @@ class AdminController extends AppController {
 
         $id = (int)$_POST['id'];
 
-        $usersRepository = new UsersRepository();
+        $usersRepository = UsersRepository::getInstance();
         $user = $usersRepository->getUserById($id);
 
         // Security check: Don't allow deleting the last admin

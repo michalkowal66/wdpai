@@ -64,6 +64,15 @@ CREATE TABLE bookings (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE login_attempts (
+    id SERIAL PRIMARY KEY,
+    ip_address VARCHAR(45) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    attempted_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_login_attempts_ip ON login_attempts(ip_address, attempted_at);
+
 CREATE UNIQUE INDEX unique_active_desk_booking ON bookings (desk_id, booking_date) WHERE status IN ('ACTIVE', 'CHECKED_IN');
 CREATE UNIQUE INDEX unique_active_user_booking ON bookings (user_id, booking_date) WHERE status IN ('ACTIVE', 'CHECKED_IN');
 

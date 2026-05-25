@@ -4,6 +4,14 @@ class AppController {
 
     public function __construct()
     {
+        $host = parse_url('http://' . $_SERVER['HTTP_HOST'], PHP_URL_HOST);
+        $isLocalhost = in_array($host, ['localhost', '127.0.0.1', '::1']);
+
+        if (!$isLocalhost && (empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] === "off")) {
+            header("Location: https://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
+            exit;
+        }
+
         $path = trim($_SERVER["REQUEST_URI"], '/');
         $path = parse_url($path, PHP_URL_PATH) ?: '';
 

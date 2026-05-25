@@ -6,11 +6,24 @@ require_once __DIR__.'/../models/User.php';
 use Models\User;
 
 class UsersRepository extends Repository {
+    private static ?UsersRepository $instance = null;
+
+    private function __construct() {
+        parent::__construct();
+    }
+
+    public static function getInstance(): UsersRepository {
+        if (self::$instance === null) {
+            self::$instance = new UsersRepository();
+        }
+        return self::$instance;
+    }
+
     public function getUsers(int $limit = 10, int $offset = 0): ?array 
     {
         $query = $this->database->connect()->prepare(
             "
-            SELECT * FROM users 
+            SELECT id, email, password, full_name, job_title, role, is_active FROM users 
             ORDER BY id ASC
             LIMIT :limit OFFSET :offset;
             "
@@ -39,7 +52,7 @@ class UsersRepository extends Repository {
     public function getUserByEmail(string $email): ?User {
         $query = $this->database->connect()->prepare(
             "
-            SELECT * FROM users WHERE email = :email
+            SELECT id, email, password, full_name, job_title, role, is_active FROM users WHERE email = :email
             "
         );
         $query->bindParam(':email', $email);
@@ -53,7 +66,7 @@ class UsersRepository extends Repository {
     public function getUserById(int $id): ?User {
         $query = $this->database->connect()->prepare(
             "
-            SELECT * FROM users WHERE id = :id
+            SELECT id, email, password, full_name, job_title, role, is_active FROM users WHERE id = :id
             "
         );
         $query->bindParam(':id', $id, PDO::PARAM_INT);
@@ -117,6 +130,34 @@ class UsersRepository extends Repository {
             "
         );
         $query->bindParam(':id', $id, PDO::PARAM_INT);
+        $query->execute();
+    }
+
+    public function logFailedLogin(string $ipAddress, string $email): void {
+        $query = $this->database->connect()->prepare(
+            "INSERT INTO login_attempts (ip_address, email) VALUES (:ip, :email)"
+        );
+        $query->bindParam(':ip', $ipAddress);
+        $query->bindParam(':email', $email);
+        $query->execute();
+    }
+
+    public function getFailedLoginCount(string $ipAddress, int $minutes = 15): int {
+        $query = $this->database->connect()->prepare(
+            "SELECT COUNT(*) FROM login_attempts 
+             WHERE ip_address = :ip 
+             AND attempted_at >= NOW() - INTERVAL '$minutes minutes'"
+        );
+        $query->bindParam(':ip', $ipAddress);
+        $query->execute();
+        return (int)$query->fetchColumn();
+    }
+
+    public function clearFailedLogins(string $ipAddress): void {
+        $query = $this->database->connect()->prepare(
+            "DELETE FROM login_attempts WHERE ip_address = :ip"
+        );
+        $query->bindParam(':ip', $ipAddress);
         $query->execute();
     }
 }
