@@ -327,6 +327,16 @@ document.addEventListener('DOMContentLoaded', () => {
         mapWrapper.addEventListener('click', (e) => {
             if (isDragging) return; // Don't trigger click if we just finished dragging
 
+            // Prevent creation if there is no floor image (empty state active)
+            if (!document.getElementById('floor-image')) {
+                return;
+            }
+
+            // Prevent creation if clicking on empty state text/button (fallback)
+            if (e.target.closest('.empty-state')) {
+                return;
+            }
+
             // Only trigger if clicking exactly on the wrapper or the image
             if (e.target.classList.contains('desk-marker') || e.target.closest('.desk-marker')) {
                 return;

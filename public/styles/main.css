@@ -637,6 +637,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: flex-start;
+    flex-wrap: wrap;
     gap: 1.5rem;
     font-size: 0.6875rem;
     font-weight: 700;
@@ -917,7 +918,6 @@ body {
     .control-group { width: auto; min-width: 250px; }
     
     .legend { justify-content: flex-end; }
-    .map-placeholder { aspect-ratio: 16/9; }
 
     .booking-panel {
         position: static;

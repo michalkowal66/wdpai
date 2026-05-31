@@ -35,25 +35,31 @@
                             <form action="/editor" method="GET" class="control-group" id="floor-select-form">
                                 <label class="control-input">
                                     <span class="material-symbols-outlined control-input__icon">layers</span>
-                                    <select name="floor" class="control-input__select" onchange="this.form.submit()">
-                                        <?php foreach($allFloors as $f): ?>
-                                            <option value="<?= $f->getLevel() ?>" <?= $currentFloor && $currentFloor->getId() === $f->getId() ? 'selected' : '' ?>>
-                                                <?= htmlspecialchars($f->getName()) ?>
-                                            </option>
-                                        <?php endforeach; ?>
+                                    <select name="floor" class="control-input__select" onchange="this.form.submit()" <?= empty($allFloors) ? 'disabled' : '' ?>>
+                                        <?php if (empty($allFloors)): ?>
+                                            <option value="">No floors available</option>
+                                        <?php else: ?>
+                                            <?php foreach($allFloors as $f): ?>
+                                                <option value="<?= $f->getLevel() ?>" <?= $currentFloor && $currentFloor->getId() === $f->getId() ? 'selected' : '' ?>>
+                                                    <?= htmlspecialchars($f->getName()) ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        <?php endif; ?>
                                     </select>
                                 </label>
                             </form>
                         </header>
 
+                        <?php if ($currentFloor): ?>
                         <div class="legend">
                             <div class="legend__item"><span class="legend__dot legend__dot--success"></span> Active</div>
                             <div class="legend__item"><span class="legend__dot legend__dot--danger"></span> Deactivated</div>
                         </div>
+                        <?php endif; ?>
 
                         <div class="editor-map-wrapper" id="editor-map">
                             <?php if ($currentFloor): ?>
-                                <img src="<?= $currentFloor->getMapImageUrl() ?>" alt="<?= htmlspecialchars($currentFloor->getName()) ?>" id="floor-image">
+                                <img src="<?= $currentFloor->getMapImageUrl() ?>" alt="<?= htmlspecialchars($currentFloor->getName()) ?>" id="floor-image" style="object-fit: contain;">
                                 
                                 <?php foreach($desks as $desk): 
                                     $statusClass = $desk->isActive() ? 'desk-marker--success' : 'desk-marker--occupied';
@@ -73,7 +79,11 @@
                                 <?php endforeach; ?>
 
                             <?php else: ?>
-                                <p class="text-center mt-lg mb-0 text-muted">No floors available. Go to Settings to add one.</p>
+                                <div class="empty-state">
+                                    <span class="material-symbols-outlined empty-state__icon">domain_disabled</span>
+                                    <p class="empty-state__text">No office maps have been uploaded yet.</p>
+                                    <a href="settings" class="btn btn--primary mt-md">Go to Settings</a>
+                                </div>
                             <?php endif; ?>
                         </div>
                     </section>

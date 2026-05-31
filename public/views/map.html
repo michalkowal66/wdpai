@@ -40,12 +40,16 @@
                             <form action="/map" method="GET" class="control-group flex-row flex-row--wrap gap-md" id="floor-select-form">
                                 <label class="control-input">
                                     <span class="material-symbols-outlined control-input__icon">layers</span>
-                                    <select name="floor" class="control-input__select" onchange="this.form.submit()">
-                                        <?php foreach($allFloors as $f): ?>
-                                            <option value="<?= $f->getLevel() ?>" <?= $currentFloor && $currentFloor->getId() === $f->getId() ? 'selected' : '' ?>>
-                                                <?= htmlspecialchars($f->getName()) ?>
-                                            </option>
-                                        <?php endforeach; ?>
+                                    <select name="floor" class="control-input__select" onchange="this.form.submit()" <?= empty($allFloors) ? 'disabled' : '' ?>>
+                                        <?php if (empty($allFloors)): ?>
+                                            <option value="">No floors available</option>
+                                        <?php else: ?>
+                                            <?php foreach($allFloors as $f): ?>
+                                                <option value="<?= $f->getLevel() ?>" <?= $currentFloor && $currentFloor->getId() === $f->getId() ? 'selected' : '' ?>>
+                                                    <?= htmlspecialchars($f->getName()) ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        <?php endif; ?>
                                     </select>
                                 </label>
                                 <label class="control-input">
@@ -55,15 +59,17 @@
                             </form>
                         </header>
 
+                        <?php if ($currentFloor): ?>
                         <div class="legend">
                             <div class="legend__item"><span class="legend__dot legend__dot--success"></span> Available</div>
                             <div class="legend__item"><span class="legend__dot legend__dot--danger"></span> Occupied</div>
                             <div class="legend__item"><span class="legend__dot legend__dot--warning"></span> Maintenance</div>
                         </div>
+                        <?php endif; ?>
 
                         <div class="map-placeholder" id="map-container" data-has-booking="<?= $hasBookingToday ? 'true' : 'false' ?>" data-booked-desk="<?= htmlspecialchars($bookedDeskId ?? '') ?>">
                             <?php if ($currentFloor): ?>
-                                <img src="<?= $currentFloor->getMapImageUrl() ?>" alt="<?= htmlspecialchars($currentFloor->getName()) ?>" class="map-image">
+                                <img src="<?= $currentFloor->getMapImageUrl() ?>" alt="<?= htmlspecialchars($currentFloor->getName()) ?>" class="map-image" style="object-fit: contain;">
                                 
                                 <?php foreach($desks as $desk): 
                                     $statusClass = '';
@@ -86,7 +92,13 @@
                                 <?php endforeach; ?>
 
                             <?php else: ?>
-                                <p>No map data available for this floor.</p>
+                                <div class="empty-state">
+                                    <span class="material-symbols-outlined empty-state__icon">domain_disabled</span>
+                                    <p class="empty-state__text">No office maps have been uploaded yet.</p>
+                                    <?php if (isset($user) && $user->getRole() === 'ADMIN'): ?>
+                                        <a href="settings" class="btn btn--primary mt-md">Go to Settings</a>
+                                    <?php endif; ?>
+                                </div>
                             <?php endif; ?>
                         </div>
                     </section>
