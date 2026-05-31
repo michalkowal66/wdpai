@@ -29,6 +29,10 @@ RUN apk add --no-cache --virtual .build-deps $BUILD_DEPS \
 
 RUN apk add --no-cache --virtual .run-deps $RUN_DEPS
 
+# Install PHPUnit globally
+RUN curl -L -o /usr/local/bin/phpunit https://phar.phpunit.de/phpunit-10.phar \
+    && chmod +x /usr/local/bin/phpunit
+
 RUN echo 'memory_limit = -1' >> /usr/local/etc/php/conf.d/docker-php-memlimit.ini;
 
 # Copy the application code
