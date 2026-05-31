@@ -126,3 +126,24 @@ JOIN desk_features df ON f.id = df.feature_id
 JOIN bookings b ON df.desk_id = b.desk_id
 GROUP BY f.id, f.name, f.icon_name
 ORDER BY total_bookings DESC;
+
+-- =========================================
+-- DATABASE FUNCTIONS & TRIGGERS
+-- =========================================
+
+-- Function: Prevent bookings in the past
+CREATE OR REPLACE FUNCTION prevent_past_bookings()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.booking_date < CURRENT_DATE THEN
+        RAISE EXCEPTION 'Cannot create or update a booking for a past date.';
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Trigger: Execute function before insert or update on bookings
+CREATE TRIGGER trigger_check_booking_date
+BEFORE INSERT OR UPDATE ON bookings
+FOR EACH ROW
+EXECUTE FUNCTION prevent_past_bookings();
