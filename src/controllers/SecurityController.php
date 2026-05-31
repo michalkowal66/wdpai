@@ -66,6 +66,20 @@ class SecurityController extends AppController {
         $usersRepository->clearFailedLogins($ipAddress); // Reset attempts on success
         $_SESSION['user'] = $user;
 
+        // Remember Me functionality
+        if (isset($_POST['remember-me'])) {
+            $params = session_get_cookie_params();
+            setcookie(
+                session_name(), 
+                session_id(), 
+                time() + 86400 * 30, // 30 days
+                $params['path'], 
+                $params['domain'], 
+                $params['secure'], 
+                $params['httponly']
+            );
+        }
+
         $url = "http://$_SERVER[HTTP_HOST]";
         header("Location: {$url}/map");
         return;
