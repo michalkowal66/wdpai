@@ -143,6 +143,7 @@ class Routing {
             $controllerObj->$action($id);
         }
         else {
+            http_response_code(404);
             include 'public/views/404.html';
         }
     }

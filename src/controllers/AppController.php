@@ -29,8 +29,8 @@ class AppController {
         $adminApiRoutes = ['updateUser', 'deleteUser', 'setMaintenance', 'addFloor', 'updateFloor', 'deleteFloor', 'addFeature', 'deleteFeature', 'saveDesk', 'deactivateDesk', 'reactivateDesk', 'hardDeleteDesk'];
         
         if (in_array($path, $adminRoutes) && (!isset($_SESSION['user']) || $_SESSION['user']->getRole() !== 'ADMIN')) {
-            $url = "http://$_SERVER[HTTP_HOST]";
-            header("Location: {$url}/map");
+            http_response_code(403);
+            include 'public/views/403.html';
             exit();
         }
 
@@ -62,7 +62,6 @@ class AppController {
     protected function render(string $template = null, array $variables = [])
     {
         $templatePath = 'public/views/'. $template.'.html';
-        $templatePath404 = 'public/views/404.html';
         $output = "";
 
         // Provide user context to all views if logged in
@@ -77,8 +76,9 @@ class AppController {
             include $templatePath;
             $output = ob_get_clean();
         } else {
+            http_response_code(404);
             ob_start();
-            include $templatePath404;
+            include 'public/views/404.html';
             $output = ob_get_clean();
         }
         echo $output;
