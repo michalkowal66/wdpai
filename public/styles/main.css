@@ -306,20 +306,33 @@ body {
     line-height: 1.5;
 }
 
+.form__input--readonly {
+    background: var(--color-bg-input);
+    color: var(--color-text-muted);
+}
+
 /* Icons in inputs */
 .form__icon {
     position: absolute;
     color: #94a3b8;
     font-size: 20px;
+    top: 50%;
+    transform: translateY(-50%);
 }
 
 .form__icon--left {
     left: 0.75rem;
 }
 
+.form__icon--right-inset {
+    right: 1rem;
+}
+
 .form__icon-btn {
     position: absolute;
     right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
     background: none;
     border: none;
     color: var(--color-text-muted);
