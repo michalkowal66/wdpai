@@ -58,7 +58,7 @@
                             <tr>
                                 <th>User</th>
                                 <th class="text-right">Check-ins</th>
-                                <th class="text-right">Reliability</th>
+                                <th class="text-right desktop-only">Reliability</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -73,7 +73,7 @@
                                     </div>
                                 </td>
                                 <td class="text-right font-semibold"><?= $dto->getCheckIns() ?></td>
-                                <td class="text-right">
+                                <td class="text-right desktop-only">
                                     <span class="badge <?= $dto->getReliabilityScore() > 80 ? 'badge--success' : ($dto->getReliabilityScore() > 50 ? 'badge--warning' : 'badge--neutral') ?>">
                                         <?= $dto->getReliabilityScore() ?>%
                                     </span>
