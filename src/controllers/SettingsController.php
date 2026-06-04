@@ -135,6 +135,7 @@ class SettingsController extends AppController {
         }
 
         $floorRepo = new FloorRepository();
+        $floor = $floorRepo->getFloorById($id);
         
         if ($floorRepo->getDeskCountOnFloor($id) > 0) {
             http_response_code(400);
@@ -143,6 +144,13 @@ class SettingsController extends AppController {
         }
 
         if ($floorRepo->deleteFloor($id)) {
+            // Delete associated image file
+            if ($floor && $floor->getMapImageUrl()) {
+                $imagePath = __DIR__ . '/../..' . $floor->getMapImageUrl();
+                if (file_exists($imagePath) && is_file($imagePath)) {
+                    unlink($imagePath);
+                }
+            }
             http_response_code(200);
             echo json_encode(['status' => 'success']);
         } else {
@@ -166,6 +174,7 @@ class SettingsController extends AppController {
 
         $floorRepo = new FloorRepository();
         $publicPath = null;
+        $oldFloor = $floorRepo->getFloorById($id);
 
         // Handle optional image upload
         if (isset($_FILES['map_image']) && $_FILES['map_image']['error'] === UPLOAD_ERR_OK) {
@@ -207,6 +216,13 @@ class SettingsController extends AppController {
         }
 
         if ($floorRepo->updateFloor($id, $name, $level, $publicPath)) {
+            // Delete old image if a new one was uploaded
+            if ($publicPath && $oldFloor && $oldFloor->getMapImageUrl()) {
+                $oldImagePath = __DIR__ . '/../..' . $oldFloor->getMapImageUrl();
+                if (file_exists($oldImagePath) && is_file($oldImagePath)) {
+                    unlink($oldImagePath);
+                }
+            }
             http_response_code(200);
             echo json_encode(['status' => 'success']);
         } else {

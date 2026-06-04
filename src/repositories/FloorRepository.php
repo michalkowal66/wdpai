@@ -29,6 +29,16 @@ class FloorRepository extends Repository {
         return new Floor($row['id'], $row['name'], $row['level'], $row['map_image_url']);
     }
 
+    public function getFloorById(int $id): ?Floor {
+        $stmt = $this->database->connect()->prepare('SELECT * FROM floors WHERE id = :id');
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$row) return null;
+        return new Floor($row['id'], $row['name'], $row['level'], $row['map_image_url']);
+    }
+
     public function createFloor(string $name, int $level, string $mapImageUrl): bool {
         try {
             $stmt = $this->database->connect()->prepare('

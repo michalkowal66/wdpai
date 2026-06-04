@@ -66,9 +66,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     <span class="material-symbols-outlined" style="color: var(--color-primary);">${f.icon_name}</span>
                     <span>${f.name}</span>
                 </div>
-                <button class="btn-icon text-error js-delete-feature" data-id="${f.id}" data-name="${f.name}">
-                    <span class="material-symbols-outlined">delete</span>
-                </button>
+                <div class="form__actions-row">
+                    <button class="btn-icon text-danger js-delete-feature" data-id="${f.id}" data-name="${f.name}">
+                        <span class="material-symbols-outlined">delete</span>
+                    </button>
+                </div>
             `;
             featuresContainer.appendChild(item);
         });
@@ -112,14 +114,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     <span class="badge badge--info">Level ${f.level}</span>
                     <span class="font-bold">${f.name}</span>
                 </div>
-                <div style="display: flex; gap: 0.25rem;">
+                <div class="form__actions-row">
                     <a href="${f.map_image_url}" target="_blank" class="btn-icon" aria-label="View Map">
                         <span class="material-symbols-outlined">visibility</span>
                     </a>
                     <button class="btn-icon js-edit-floor" data-id="${f.id}" data-name="${f.name}" data-level="${f.level}" aria-label="Edit Floor">
                         <span class="material-symbols-outlined">edit</span>
                     </button>
-                    <button class="btn-icon text-error js-delete-floor" data-id="${f.id}" data-name="${f.name}" aria-label="Delete Floor">
+                    <button class="btn-icon text-danger js-delete-floor" data-id="${f.id}" data-name="${f.name}" aria-label="Delete Floor">
                         <span class="material-symbols-outlined">delete</span>
                     </button>
                 </div>
