@@ -116,6 +116,25 @@ document.addEventListener('DOMContentLoaded', () => {
         mobileNavOverlay.addEventListener('click', closeNav);
     }
 
+    // --- Password Visibility Toggle ---
+    const toggleButtons = document.querySelectorAll('.js-toggle-password');
+    toggleButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const targetId = btn.getAttribute('data-target');
+            const passwordInput = document.getElementById(targetId);
+            const icon = btn.querySelector('.material-symbols-outlined');
+
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.textContent = 'visibility_off';
+            } else {
+                passwordInput.type = 'password';
+                icon.textContent = 'visibility';
+            }
+        });
+    });
+
     // --- Change Password Logic ---
     const cpBtnDesktop = document.getElementById('nav-change-password-btn');
     const cpBtnMobile = document.getElementById('mobile-change-password-btn');

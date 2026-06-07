@@ -133,15 +133,30 @@
         <form id="change-password-form">
             <div class="form__group mb-lg">
                 <label class="form__label">Current Password</label>
-                <input type="password" class="form__input" name="current_password" required>
+                <div class="form__input-wrapper">
+                    <input type="password" class="form__input" id="cp-current" name="current_password" required>
+                    <button type="button" class="form__icon-btn js-toggle-password" data-target="cp-current">
+                        <span class="material-symbols-outlined">visibility</span>
+                    </button>
+                </div>
             </div>
             <div class="form__group mb-lg">
                 <label class="form__label">New Password</label>
-                <input type="password" class="form__input" name="new_password" required minlength="8">
+                <div class="form__input-wrapper">
+                    <input type="password" class="form__input" id="cp-new" name="new_password" required minlength="8">
+                    <button type="button" class="form__icon-btn js-toggle-password" data-target="cp-new">
+                        <span class="material-symbols-outlined">visibility</span>
+                    </button>
+                </div>
             </div>
             <div class="form__group mb-xl">
                 <label class="form__label">Confirm New Password</label>
-                <input type="password" class="form__input" name="confirm_password" required minlength="8">
+                <div class="form__input-wrapper">
+                    <input type="password" class="form__input" id="cp-confirm" name="confirm_password" required minlength="8">
+                    <button type="button" class="form__icon-btn js-toggle-password" data-target="cp-confirm">
+                        <span class="material-symbols-outlined">visibility</span>
+                    </button>
+                </div>
             </div>
             <div class="modal__actions">
                 <button type="button" class="btn btn--text" id="cp-cancel-btn">Cancel</button>

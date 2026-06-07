@@ -1,24 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Password Visibility Toggle
-    const toggleButtons = document.querySelectorAll('.js-toggle-password');
-    
-    toggleButtons.forEach(btn => {
-        btn.addEventListener('click', () => {
-            const targetId = btn.getAttribute('data-target');
-            const passwordInput = document.getElementById(targetId);
-            const icon = btn.querySelector('.material-symbols-outlined');
-
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-                icon.textContent = 'visibility_off';
-            } else {
-                passwordInput.type = 'password';
-                icon.textContent = 'visibility';
-            }
-        });
-    });
-
-    // 2. Client-side Validation
+    // 1. Client-side Validation
     const validateForm = (form) => {
         let isValid = true;
         const inputs = form.querySelectorAll('.form__input');
