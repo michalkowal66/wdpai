@@ -97,6 +97,37 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.addEventListener('click', openPanel);
     });
 
+    // Reset Password Logic
+    const resetPasswordButtons = document.querySelectorAll('.js-reset-password-btn');
+    resetPasswordButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const userId = btn.getAttribute('data-id');
+            const userName = btn.getAttribute('data-name');
+            
+            Modal.confirm('Reset Password', `Are you sure you want to reset the password for ${userName}? A new temporary password will be generated.`, () => {
+                const data = new URLSearchParams();
+                data.append('id', userId);
+
+                fetch('/resetPassword', {
+                    method: 'POST',
+                    body: data
+                }).then(async response => {
+                    const result = await response.json();
+                    if (response.ok) {
+                        Toast.show(`Password reset successfully!`);
+                        
+                        // Show the new password in a modal
+                        Modal.alert('Temporary Password', `The new password for ${userName} is: <strong>${result.newPassword}</strong><br><br>Please copy this and give it to the user.`);
+                    } else {
+                        Toast.show(result.message || 'Failed to reset password.', 'error');
+                    }
+                }).catch(err => {
+                    Toast.show('Network error occurred.', 'error');
+                });
+            });
+        });
+    });
+
     // Attach save and delete events
     if (saveBtn) saveBtn.addEventListener('click', saveChanges);
     if (deleteBtn) deleteBtn.addEventListener('click', deleteUser);

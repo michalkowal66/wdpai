@@ -28,24 +28,32 @@
 
         <?php if (isset($user)): ?>
         <div class="header__user desktop-only">
-            <div class="user-info">
-                <?php
-                    $firstName = explode(' ', trim($user->getFullName()))[0] ?? 'User';
-                    $initials = substr($user->getFullName(), 0, 1);
-                    $nameParts = explode(' ', trim($user->getFullName()));
-                    if (count($nameParts) > 1) {
-                        $initials .= substr(end($nameParts), 0, 1);
-                    }
-                    $initials = strtoupper($initials);
-                ?>
-                <span class="user-info__name">Welcome, <?= htmlspecialchars($firstName) ?></span>
-                <span class="user-info__role"><?= htmlspecialchars($user->getJobTitle() ?? 'Employee') ?></span>
+            <?php
+                $firstName = explode(' ', trim($user->getFullName()))[0] ?? 'User';
+                $initials = substr($user->getFullName(), 0, 1);
+                $nameParts = explode(' ', trim($user->getFullName()));
+                if (count($nameParts) > 1) {
+                    $initials .= substr(end($nameParts), 0, 1);
+                }
+                $initials = strtoupper($initials);
+            ?>
+            <div class="dropdown">
+                <div class="dropdown__toggle dropdown__toggle--user">
+                    <div class="user-info">
+                        <span class="user-info__name">Welcome, <?= htmlspecialchars($firstName) ?></span>
+                        <span class="user-info__role"><?= htmlspecialchars($user->getJobTitle() ?? 'Employee') ?></span>
+                    </div>
+                    <div class="avatar-initials avatar-initials--secondary"><?= htmlspecialchars($initials) ?></div>
+                </div>
+                <div class="dropdown__content dropdown__content--right dropdown__content--user">
+                    <a href="#" class="nav-link" id="nav-change-password-btn">
+                        <span class="material-symbols-outlined">lock_reset</span> Change Password
+                    </a>
+                    <a href="logout" class="nav-link text-danger">
+                        <span class="material-symbols-outlined">logout</span> Logout
+                    </a>
+                </div>
             </div>
-            <div class="avatar-initials avatar-initials--secondary"><?= htmlspecialchars($initials) ?></div>
-            <a class="btn btn--secondary btn--small" href="logout">
-                <span class="material-symbols-outlined">logout</span>
-                Logout
-            </a>
         </div>
         <?php endif; ?>
 
@@ -104,11 +112,41 @@
 
         <?php if (isset($user)): ?>
         <div class="mobile-nav__footer">
-            <a class="btn btn--secondary btn--full" href="logout">
+            <a class="btn btn--secondary btn--full mb-sm" href="#" id="mobile-change-password-btn">
+                <span class="material-symbols-outlined">lock_reset</span>
+                Change Password
+            </a>
+            <a class="btn btn--secondary btn--full mb-0" href="logout">
                 <span class="material-symbols-outlined">logout</span>
                 Logout
             </a>
         </div>
         <?php endif; ?>
+    </div>
+</div>
+
+<!-- Change Password Modal -->
+<div class="modal-overlay" id="change-password-modal">
+    <div class="modal">
+        <h3 class="modal__title">Change Password</h3>
+        <p class="modal__text">Update your account password. Minimum 8 characters.</p>
+        <form id="change-password-form">
+            <div class="form__group mb-lg">
+                <label class="form__label">Current Password</label>
+                <input type="password" class="form__input" name="current_password" required>
+            </div>
+            <div class="form__group mb-lg">
+                <label class="form__label">New Password</label>
+                <input type="password" class="form__input" name="new_password" required minlength="8">
+            </div>
+            <div class="form__group mb-xl">
+                <label class="form__label">Confirm New Password</label>
+                <input type="password" class="form__input" name="confirm_password" required minlength="8">
+            </div>
+            <div class="modal__actions">
+                <button type="button" class="btn btn--text" id="cp-cancel-btn">Cancel</button>
+                <button type="submit" class="btn btn--primary" id="cp-submit-btn">Update Password</button>
+            </div>
+        </form>
     </div>
 </div>

@@ -16,7 +16,7 @@ class AppController {
         $path = parse_url($path, PHP_URL_PATH) ?: '';
 
         // Protected routes check
-        $protectedRoutes = ['map', 'bookings'];
+        $protectedRoutes = ['map', 'bookings', 'changePassword'];
 
         if (in_array($path, $protectedRoutes) && !isset($_SESSION['user'])) {
             $url = "http://$_SERVER[HTTP_HOST]";
@@ -26,7 +26,7 @@ class AppController {
 
         // Admin routes check
         $adminRoutes = ['users', 'dashboard', 'desks', 'settings', 'editor'];
-        $adminApiRoutes = ['updateUser', 'deleteUser', 'setMaintenance', 'addFloor', 'updateFloor', 'deleteFloor', 'addFeature', 'deleteFeature', 'saveDesk', 'deactivateDesk', 'reactivateDesk', 'hardDeleteDesk'];
+        $adminApiRoutes = ['updateUser', 'deleteUser', 'resetPassword', 'setMaintenance', 'addFloor', 'updateFloor', 'deleteFloor', 'addFeature', 'deleteFeature', 'saveDesk', 'deactivateDesk', 'reactivateDesk', 'hardDeleteDesk'];
         
         if (in_array($path, $adminRoutes) && (!isset($_SESSION['user']) || $_SESSION['user']->getRole() !== 'ADMIN')) {
             http_response_code(403);

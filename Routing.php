@@ -58,6 +58,10 @@ class Routing {
             "controller" => "AdminController",
             "action" => "deleteUser"
         ],
+        "resetPassword" => [
+            "controller" => "AdminController",
+            "action" => "resetPassword"
+        ],
         "desks" => [
             "controller" => "AdminController",
             "action" => "desks"
@@ -113,6 +117,10 @@ class Routing {
         "register" => [
             "controller" => "SecurityController",
             "action" => "register"
+        ],
+        "changePassword" => [
+            "controller" => "SecurityController",
+            "action" => "changePassword"
         ],
         "logout" => [
             "controller" => "SecurityController",

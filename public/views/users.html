@@ -53,6 +53,9 @@
                                     <td><?= htmlspecialchars($u->getEmail()) ?></td>
                                     <td><span class="badge <?= $roleClass ?>"><?= htmlspecialchars($u->getRole()) ?></span></td>
                                     <td class="text-right">
+                                        <button class="btn-icon text-warning js-reset-password-btn" data-id="<?= $u->getId() ?>" data-name="<?= htmlspecialchars($u->getFullName()) ?>" title="Reset Password">
+                                            <span class="material-symbols-outlined">key</span>
+                                        </button>
                                         <button class="btn-icon js-edit-user-btn"
                                             data-id="<?= $u->getId() ?>"
                                             data-fullname="<?= htmlspecialchars($u->getFullName()) ?>"
@@ -74,14 +77,20 @@
                             $roleClass = $u->getRole() === 'ADMIN' ? 'badge--success' : 'badge--secondary';
                         ?>
                         <article class="user-card">
-                            <button class="btn-icon user-card__edit js-edit-user-btn"
-                                data-id="<?= $u->getId() ?>"
-                                data-fullname="<?= htmlspecialchars($u->getFullName()) ?>"
-                                data-jobtitle="<?= htmlspecialchars($u->getJobTitle() ?? '') ?>"
-                                data-email="<?= htmlspecialchars($u->getEmail()) ?>"
-                                data-role="<?= htmlspecialchars($u->getRole()) ?>"
-                                data-active="<?= $u->isActive() ? '1' : '0' ?>"
-                            ><span class="material-symbols-outlined">edit</span></button>
+                            <div class="user-card__actions" style="position: absolute; top: 0.75rem; right: 0.75rem; display: flex; gap: 0.25rem;">
+                                <button class="btn-icon text-warning js-reset-password-btn" data-id="<?= $u->getId() ?>" data-name="<?= htmlspecialchars($u->getFullName()) ?>" title="Reset Password" aria-label="Reset Password">
+                                    <span class="material-symbols-outlined">key</span>
+                                </button>
+                                <button class="btn-icon js-edit-user-btn"
+                                    data-id="<?= $u->getId() ?>"
+                                    data-fullname="<?= htmlspecialchars($u->getFullName()) ?>"
+                                    data-jobtitle="<?= htmlspecialchars($u->getJobTitle() ?? '') ?>"
+                                    data-email="<?= htmlspecialchars($u->getEmail()) ?>"
+                                    data-role="<?= htmlspecialchars($u->getRole()) ?>"
+                                    data-active="<?= $u->isActive() ? '1' : '0' ?>"
+                                    aria-label="Edit User"
+                                ><span class="material-symbols-outlined">edit</span></button>
+                            </div>
                             <div class="user-card__header">
                                 <span class="user-card__name"><?= htmlspecialchars($u->getFullName()) ?></span>
                                 <span class="user-card__title"><?= htmlspecialchars($u->getJobTitle() ?? 'Employee') ?></span>

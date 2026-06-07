@@ -118,6 +118,34 @@ class AdminController extends AppController {
         echo json_encode(['status' => 'success']);
     }
 
+    public function resetPassword() {
+        if (!$this->isPost()) {
+            return;
+        }
+
+        $id = (int)$_POST['id'];
+
+        $usersRepository = UsersRepository::getInstance();
+        $user = $usersRepository->getUserById($id);
+
+        if (!$user) {
+            http_response_code(404);
+            echo json_encode(['status' => 'error', 'message' => 'User not found.']);
+            return;
+        }
+
+        // Generate a random 8 character password
+        $bytes = random_bytes(4); // 4 bytes = 8 hex characters
+        $newPassword = bin2hex($bytes);
+        
+        $hashedPassword = password_hash($newPassword, PASSWORD_BCRYPT);
+        
+        $usersRepository->updateUserPassword($id, $hashedPassword);
+
+        http_response_code(200);
+        echo json_encode(['status' => 'success', 'newPassword' => $newPassword]);
+    }
+
     public function desks() {
         $title = "HotDesk - Desk Management";
         require_once __DIR__.'/../repositories/DeskRepository.php';

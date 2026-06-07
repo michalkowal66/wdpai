@@ -99,6 +99,60 @@ class SecurityController extends AppController {
         return $this->render('inactive');
     }
 
+    public function changePassword()
+    {
+        if (!$this->isPost()) {
+            http_response_code(405);
+            return;
+        }
+
+        if (!isset($_SESSION['user'])) {
+            http_response_code(401);
+            echo json_encode(['status' => 'error', 'message' => 'Unauthorized']);
+            return;
+        }
+
+        $currentPassword = $_POST['current_password'] ?? '';
+        $newPassword = $_POST['new_password'] ?? '';
+        $confirmPassword = $_POST['confirm_password'] ?? '';
+
+        if (empty($currentPassword) || empty($newPassword) || empty($confirmPassword)) {
+            http_response_code(400);
+            echo json_encode(['status' => 'error', 'message' => 'All fields are required.']);
+            return;
+        }
+
+        if (strlen($newPassword) < 8 || strlen($newPassword) > 255) {
+            http_response_code(400);
+            echo json_encode(['status' => 'error', 'message' => 'New password must be between 8 and 255 characters.']);
+            return;
+        }
+
+        if ($newPassword !== $confirmPassword) {
+            http_response_code(400);
+            echo json_encode(['status' => 'error', 'message' => 'New passwords do not match.']);
+            return;
+        }
+
+        $usersRepository = UsersRepository::getInstance();
+        $user = $usersRepository->getUserById($_SESSION['user']->getId());
+
+        if (!$user || !password_verify($currentPassword, $user->getPassword())) {
+            http_response_code(400);
+            echo json_encode(['status' => 'error', 'message' => 'Incorrect current password.']);
+            return;
+        }
+
+        $hashedPassword = password_hash($newPassword, PASSWORD_BCRYPT);
+        $usersRepository->updateUserPassword($user->getId(), $hashedPassword);
+        
+        // Update user object in session
+        $_SESSION['user'] = $usersRepository->getUserById($user->getId());
+
+        http_response_code(200);
+        echo json_encode(['status' => 'success', 'message' => 'Password updated successfully.']);
+    }
+
     public function register()
     {
         if (!$this->isPost()) {

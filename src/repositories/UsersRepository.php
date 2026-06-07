@@ -122,6 +122,16 @@ class UsersRepository extends Repository {
         $query->execute();
     }
 
+    public function updateUserPassword(int $id, string $hashedPassword)
+    {
+        $query = $this->database->connect()->prepare(
+            "UPDATE users SET password = :password WHERE id = :id"
+        );
+        $query->bindParam(':password', $hashedPassword);
+        $query->bindParam(':id', $id, PDO::PARAM_INT);
+        $query->execute();
+    }
+
     public function deleteUser(int $id)
     {
         $query = $this->database->connect()->prepare(

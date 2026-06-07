@@ -485,6 +485,10 @@ body {
 .mt-md { margin-top: 1rem; }
 .mt-lg { margin-top: 2rem; }
 .mb-0 { margin-bottom: 0 !important; }
+.mb-sm { margin-bottom: 0.5rem !important; }
+.mb-md { margin-bottom: 1rem !important; }
+.mb-lg { margin-bottom: 1.5rem !important; }
+.mb-xl { margin-bottom: 2.5rem !important; }
 .ml-auto { margin-left: auto; }
 
 .flex-1 { flex: 1; }
@@ -1832,6 +1836,20 @@ body {
     border-radius: var(--radius-md);
     z-index: 100;
     padding: 0.5rem 0;
+}
+
+.dropdown__content--right {
+    left: auto;
+    right: 0;
+    transform: none;
+}
+
+.dropdown__content--user {
+    min-width: 180px;
+}
+
+.dropdown__toggle--user {
+    gap: 1rem;
 }
 
 .dropdown:hover .dropdown__content {
