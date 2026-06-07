@@ -16,6 +16,17 @@ class SecurityController extends AppController {
         return !empty($token) && hash_equals($_SESSION['csrf'] ?? '', $token);
     }
 
+    private function validatePasswordFormat(string $password): ?string {
+        if (empty($password)) {
+            return 'Password is required.';
+        }
+        $len = strlen($password);
+        if ($len < 8 || $len > 255) {
+            return 'Password must be between 8 and 255 characters.';
+        }
+        return null; // Null means no errors
+    }
+
     public function login()
     {
         if (!$this->isPost()) {
@@ -116,15 +127,16 @@ class SecurityController extends AppController {
         $newPassword = $_POST['new_password'] ?? '';
         $confirmPassword = $_POST['confirm_password'] ?? '';
 
-        if (empty($currentPassword) || empty($newPassword) || empty($confirmPassword)) {
+        if (empty($currentPassword) || empty($confirmPassword)) {
             http_response_code(400);
             echo json_encode(['status' => 'error', 'message' => 'All fields are required.']);
             return;
         }
 
-        if (strlen($newPassword) < 8 || strlen($newPassword) > 255) {
+        $passwordError = $this->validatePasswordFormat($newPassword);
+        if ($passwordError) {
             http_response_code(400);
-            echo json_encode(['status' => 'error', 'message' => 'New password must be between 8 and 255 characters.']);
+            echo json_encode(['status' => 'error', 'message' => $passwordError]);
             return;
         }
 
@@ -171,8 +183,8 @@ class SecurityController extends AppController {
 
         $errors = [];
 
-        if (strlen($email) > 100 || strlen($fullName) > 100 || strlen($password) > 255) {
-            $errors['email'] = 'Invalid input length.';
+        if (strlen($email) > 100 || strlen($fullName) > 100) {
+            $errors['email'] = 'Invalid input length for email or name.';
         }
 
         if (empty($fullName)) {
@@ -185,10 +197,9 @@ class SecurityController extends AppController {
             $errors['email'] = 'Invalid email format';
         }
 
-        if (empty($password)) {
-            $errors['password'] = 'Password is required';
-        } elseif (strlen($password) < 8) {
-            $errors['password'] = 'Password must be at least 8 characters long';
+        $passwordError = $this->validatePasswordFormat($password);
+        if ($passwordError) {
+            $errors['password'] = $passwordError;
         }
 
         if (empty($password2)) {
