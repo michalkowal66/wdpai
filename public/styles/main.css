@@ -301,6 +301,12 @@ body {
     padding-right: 2.5rem;
 }
 
+.form__input--file {
+    padding-top: 0.625rem;
+    padding-bottom: 0.625rem;
+    line-height: 1.5;
+}
+
 .form__input--readonly {
     background: var(--color-bg-input);
     color: var(--color-text-muted);
