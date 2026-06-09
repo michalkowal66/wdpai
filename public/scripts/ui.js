@@ -93,6 +93,67 @@ window.Modal = {
     }
 };
 
+window.MapNavigation = {
+    init: function(containerId, toggleBtnId, zoomClass) {
+        const container = document.getElementById(containerId);
+        const toggleBtn = document.getElementById(toggleBtnId);
+        
+        if (!container || !toggleBtn) return;
+
+        toggleBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isZoomed = container.classList.toggle(zoomClass);
+            const icon = toggleBtn.querySelector('.material-symbols-outlined');
+            
+            if (isZoomed) {
+                icon.textContent = 'zoom_out';
+                toggleBtn.classList.add('map-zoom-btn--active');
+                Toast.show('Zoom enabled. Swipe or drag to pan the map.', 'success');
+                container.style.cursor = 'grab';
+            } else {
+                icon.textContent = 'zoom_in';
+                toggleBtn.classList.remove('map-zoom-btn--active');
+                container.style.cursor = ''; // Revert to default for that view
+            }
+        });
+
+        // Drag-to-scroll implementation
+        let isPanning = false;
+        let pStartX, pStartY, pScrollLeft, pScrollTop;
+
+        container.addEventListener('mousedown', (e) => {
+            if (!container.classList.contains(zoomClass)) return;
+            isPanning = true;
+            container.style.cursor = 'grabbing';
+            pStartX = e.pageX - container.offsetLeft;
+            pStartY = e.pageY - container.offsetTop;
+            pScrollLeft = container.scrollLeft;
+            pScrollTop = container.scrollTop;
+        });
+
+        const stopPanning = () => {
+            if (isPanning) {
+                isPanning = false;
+                container.style.cursor = 'grab';
+            }
+        };
+
+        container.addEventListener('mouseleave', stopPanning);
+        container.addEventListener('mouseup', stopPanning);
+
+        container.addEventListener('mousemove', (e) => {
+            if (!isPanning) return;
+            e.preventDefault();
+            const x = e.pageX - container.offsetLeft;
+            const y = e.pageY - container.offsetTop;
+            const walkX = (x - pStartX) * 1.5; 
+            const walkY = (y - pStartY) * 1.5;
+            container.scrollLeft = pScrollLeft - walkX;
+            container.scrollTop = pScrollTop - walkY;
+        });
+    }
+};
+
 // --- Mobile Navigation Logic ---
 document.addEventListener('DOMContentLoaded', () => {
     const mobileMenuBtn = document.getElementById('mobile-menu-btn');

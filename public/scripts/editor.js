@@ -97,12 +97,17 @@ document.addEventListener('DOMContentLoaded', () => {
     let activeFeatures = new Map(); // Store id -> {name, icon}
 
     // --- Drag and Drop Logic ---
-// ... (keep drag and drop logic unchanged) ...
     let isDragging = false;
     let draggedMarker = null;
 
+    // --- Mobile Map Navigation (Shared Utility) ---
+    if (mapWrapper) {
+        MapNavigation.init('editor-map', 'map-zoom-toggle', 'editor-map-wrapper--zoomed');
+    }
+
     const calculatePercentage = (clientX, clientY) => {
-        const rect = mapWrapper.getBoundingClientRect();
+        const content = mapWrapper.querySelector('.map-content');
+        const rect = content ? content.getBoundingClientRect() : mapWrapper.getBoundingClientRect();
         let x = ((clientX - rect.left) / rect.width) * 100;
         let y = ((clientY - rect.top) / rect.height) * 100;
         

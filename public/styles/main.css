@@ -78,9 +78,6 @@ body {
     margin: 0 auto;
     padding: 0 1rem;
 }
-@media (min-width: 480px) {
-    .container { padding: 0 1.5rem; }
-}
 
 /* Additional Typo */
 .font-medium { font-weight: 500; }
@@ -304,18 +301,17 @@ body {
     padding-right: 2.5rem;
 }
 
-.form__input--file {
-    padding-top: 0.625rem;
-    padding-bottom: 0.625rem;
-    line-height: 1.5;
-    max-width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
 .form__input--readonly {
     background: var(--color-bg-input);
     color: var(--color-text-muted);
+}
+
+.form__input--textarea {
+    height: auto;
+    min-height: 5rem;
+    padding: 0.75rem 1rem;
+    line-height: 1.5;
+    resize: vertical;
 }
 
 /* Icons in inputs */
@@ -687,6 +683,11 @@ body {
 .legend__dot--danger { background-color: var(--color-danger); }
 .legend__dot--warning { background-color: var(--color-warning); }
 
+.map-container-wrapper {
+    position: relative;
+    width: 100%;
+}
+
 .map-placeholder {
     width: 100%;
     position: relative;
@@ -694,6 +695,56 @@ body {
     border: 1px solid var(--color-border);
     border-radius: var(--radius-lg);
     overflow: hidden;
+}
+
+/* Zoomed state for mobile */
+.map-placeholder--zoomed .map-content,
+.editor-map-wrapper--zoomed .map-content {
+    width: 250% !important;
+    min-width: 250%;
+}
+
+.map-placeholder--zoomed,
+.editor-map-wrapper--zoomed {
+    overflow: auto !important;
+    cursor: grab;
+}
+
+.map-placeholder--zoomed:active,
+.editor-map-wrapper--zoomed:active {
+    cursor: grabbing;
+}
+
+.map-content {
+    position: relative;
+    width: 100%;
+}
+
+.map-zoom-btn {
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 50%;
+    background-color: var(--color-primary);
+    color: white;
+    border: none;
+    box-shadow: var(--shadow-sheet);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 30;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.map-zoom-btn:active {
+    transform: scale(0.9);
+}
+
+.map-zoom-btn--active {
+    background-color: var(--color-text-main);
 }
 
 .map-image {
@@ -1650,12 +1701,17 @@ body {
 .modal {
     background: var(--color-bg-surface);
     border-radius: var(--radius-xl);
-    padding: 2rem;
+    padding: 1.25rem; /* Even smaller padding to give content room */
     width: 90%;
     max-width: 400px;
     box-shadow: var(--shadow-sheet);
     transform: scale(0.95);
     transition: transform 0.2s;
+    box-sizing: border-box;
+}
+
+@media (min-width: 768px) {
+    .modal { padding: 2rem; }
 }
 
 .modal-overlay--show .modal {
@@ -1678,8 +1734,26 @@ body {
 
 .modal__actions {
     display: flex;
-    justify-content: flex-end;
-    gap: 1rem;
+    flex-direction: column-reverse; 
+    gap: 0.75rem;
+}
+
+@media (min-width: 768px) {
+    .modal__actions {
+        flex-direction: row;
+        justify-content: flex-end;
+        gap: 1rem;
+    }
+}
+
+.modal__actions .btn {
+    width: 100%;
+}
+
+@media (min-width: 768px) {
+    .modal__actions .btn {
+        width: auto;
+    }
 }
 
 .btn--danger.btn--primary { 

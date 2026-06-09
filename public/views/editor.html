@@ -57,33 +57,44 @@
                         </div>
                         <?php endif; ?>
 
-                        <div class="editor-map-wrapper" id="editor-map">
-                            <?php if ($currentFloor): ?>
-                                <img src="<?= $currentFloor->getMapImageUrl() ?>" alt="<?= htmlspecialchars($currentFloor->getName()) ?>" id="floor-image" style="object-fit: contain;">
-                                
-                                <?php foreach($desks as $desk): 
-                                    $statusClass = $desk->isActive() ? 'desk-marker--success' : 'desk-marker--occupied';
-                                    $icon = $desk->isActive() ? 'desk' : 'block';
-                                    $statusData = $desk->isActive() ? 'active' : 'deactivated';
-                                    $displayStyle = $desk->isActive() ? 'flex' : 'none'; // hide deactivated by default
-                                ?>
-                                    <div class="desk-marker <?= $statusClass ?>" 
-                                         style="left: <?= $desk->getPosX() ?>%; top: <?= $desk->getPosY() ?>%; display: <?= $displayStyle ?>;"
-                                         data-id="<?= $desk->getId() ?>"
-                                         data-posx="<?= $desk->getPosX() ?>"
-                                         data-posy="<?= $desk->getPosY() ?>"
-                                         data-status="<?= $statusData ?>"
-                                         title="<?= htmlspecialchars($desk->getIdentifier()) ?> - <?= ucfirst($statusData) ?>">
-                                        <span class="material-symbols-outlined desk-marker__icon"><?= $icon ?></span>
+                        <div class="map-container-wrapper">
+                            <div class="editor-map-wrapper" id="editor-map">
+                                <?php if ($currentFloor): ?>
+                                    <div class="map-content">
+                                        <img src="<?= $currentFloor->getMapImageUrl() ?>" alt="<?= htmlspecialchars($currentFloor->getName()) ?>" id="floor-image" style="object-fit: contain;">
+                                        
+                                        <?php foreach($desks as $desk): 
+                                            $statusClass = $desk->isActive() ? 'desk-marker--success' : 'desk-marker--occupied';
+                                            $icon = $desk->isActive() ? 'desk' : 'block';
+                                            $statusData = $desk->isActive() ? 'active' : 'deactivated';
+                                            $displayStyle = $desk->isActive() ? 'flex' : 'none'; // hide deactivated by default
+                                        ?>
+                                            <div class="desk-marker <?= $statusClass ?>" 
+                                                style="left: <?= $desk->getPosX() ?>%; top: <?= $desk->getPosY() ?>%; display: <?= $displayStyle ?>;"
+                                                data-id="<?= $desk->getId() ?>"
+                                                data-posx="<?= $desk->getPosX() ?>"
+                                                data-posy="<?= $desk->getPosY() ?>"
+                                                data-status="<?= $statusData ?>"
+                                                title="<?= htmlspecialchars($desk->getIdentifier()) ?> - <?= ucfirst($statusData) ?>">
+                                                <span class="material-symbols-outlined desk-marker__icon"><?= $icon ?></span>
+                                            </div>
+                                        <?php endforeach; ?>
                                     </div>
-                                <?php endforeach; ?>
 
-                            <?php else: ?>
-                                <div class="empty-state">
-                                    <span class="material-symbols-outlined empty-state__icon">domain_disabled</span>
-                                    <p class="empty-state__text">No office maps have been uploaded yet.</p>
-                                    <a href="settings" class="btn btn--primary mt-md">Go to Settings</a>
-                                </div>
+                                <?php else: ?>
+                                    <div class="empty-state">
+                                        <span class="material-symbols-outlined empty-state__icon">domain_disabled</span>
+                                        <p class="empty-state__text">No office maps have been uploaded yet.</p>
+                                        <a href="settings" class="btn btn--primary mt-md">Go to Settings</a>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+
+                            <!-- Mobile Zoom Toggle -->
+                            <?php if ($currentFloor): ?>
+                            <button class="map-zoom-btn mobile-only" id="map-zoom-toggle" aria-label="Toggle Zoom">
+                                <span class="material-symbols-outlined">zoom_in</span>
+                            </button>
                             <?php endif; ?>
                         </div>
                     </section>
@@ -177,7 +188,7 @@
                 </div>
                 <div class="form__group mb-xl">
                     <label class="form__label">Reason / Notes</label>
-                    <textarea class="form__input" name="reason" id="m-reason" style="height: auto; padding: 0.75rem;" rows="3" placeholder="e.g. Broken monitor cable"></textarea>
+                    <textarea class="form__input form__input--textarea" name="reason" id="m-reason" rows="3" placeholder="e.g. Broken monitor cable"></textarea>
                 </div>
                 <div class="modal__actions">
                     <button type="button" class="btn btn--text" id="m-cancel-btn">Cancel</button>

@@ -67,38 +67,49 @@
                         </div>
                         <?php endif; ?>
 
-                        <div class="map-placeholder" id="map-container" data-has-booking="<?= $hasBookingToday ? 'true' : 'false' ?>" data-booked-desk="<?= htmlspecialchars($bookedDeskId ?? '') ?>">
-                            <?php if ($currentFloor): ?>
-                                <img src="<?= $currentFloor->getMapImageUrl() ?>" alt="<?= htmlspecialchars($currentFloor->getName()) ?>" class="map-image" style="object-fit: contain;">
-                                
-                                <?php foreach($desks as $desk): 
-                                    $statusClass = '';
-                                    $icon = 'desk';
-                                    if ($desk->getCurrentStatus() === 'occupied') {
-                                        $statusClass = 'desk-marker--occupied';
-                                        $icon = 'person';
-                                    } elseif ($desk->getCurrentStatus() === 'maintenance') {
-                                        $statusClass = 'desk-marker--maintenance';
-                                        $icon = 'build';
-                                    }
-                                ?>
-                                    <div class="desk-marker <?= $statusClass ?>" 
-                                         style="left: <?= $desk->getPosX() ?>%; top: <?= $desk->getPosY() ?>%;"
-                                         data-id="<?= $desk->getId() ?>"
-                                         data-status="<?= $desk->getCurrentStatus() ?>"
-                                         title="<?= htmlspecialchars($desk->getIdentifier()) ?> - <?= htmlspecialchars($desk->getCurrentStatus()) ?>">
-                                        <span class="material-symbols-outlined desk-marker__icon"><?= $icon ?></span>
+                        <div class="map-container-wrapper">
+                            <div class="map-placeholder" id="map-container" data-has-booking="<?= $hasBookingToday ? 'true' : 'false' ?>" data-booked-desk="<?= htmlspecialchars($bookedDeskId ?? '') ?>">
+                                <?php if ($currentFloor): ?>
+                                    <div class="map-content">
+                                        <img src="<?= $currentFloor->getMapImageUrl() ?>" alt="<?= htmlspecialchars($currentFloor->getName()) ?>" class="map-image" style="object-fit: contain;">
+                                        
+                                        <?php foreach($desks as $desk): 
+                                            $statusClass = '';
+                                            $icon = 'desk';
+                                            if ($desk->getCurrentStatus() === 'occupied') {
+                                                $statusClass = 'desk-marker--occupied';
+                                                $icon = 'person';
+                                            } elseif ($desk->getCurrentStatus() === 'maintenance') {
+                                                $statusClass = 'desk-marker--maintenance';
+                                                $icon = 'build';
+                                            }
+                                        ?>
+                                            <div class="desk-marker <?= $statusClass ?>" 
+                                                style="left: <?= $desk->getPosX() ?>%; top: <?= $desk->getPosY() ?>%;"
+                                                data-id="<?= $desk->getId() ?>"
+                                                data-status="<?= $desk->getCurrentStatus() ?>"
+                                                title="<?= htmlspecialchars($desk->getIdentifier()) ?> - <?= htmlspecialchars($desk->getCurrentStatus()) ?>">
+                                                <span class="material-symbols-outlined desk-marker__icon"><?= $icon ?></span>
+                                            </div>
+                                        <?php endforeach; ?>
                                     </div>
-                                <?php endforeach; ?>
 
-                            <?php else: ?>
-                                <div class="empty-state">
-                                    <span class="material-symbols-outlined empty-state__icon">domain_disabled</span>
-                                    <p class="empty-state__text">No office maps have been uploaded yet.</p>
-                                    <?php if (isset($user) && $user->getRole() === 'ADMIN'): ?>
-                                        <a href="settings" class="btn btn--primary mt-md">Go to Settings</a>
-                                    <?php endif; ?>
-                                </div>
+                                <?php else: ?>
+                                    <div class="empty-state">
+                                        <span class="material-symbols-outlined empty-state__icon">domain_disabled</span>
+                                        <p class="empty-state__text">No office maps have been uploaded yet.</p>
+                                        <?php if (isset($user) && $user->getRole() === 'ADMIN'): ?>
+                                            <a href="settings" class="btn btn--primary mt-md">Go to Settings</a>
+                                        <?php endif; ?>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+
+                            <!-- Mobile Zoom Toggle - Fixed to this container -->
+                            <?php if ($currentFloor): ?>
+                            <button class="map-zoom-btn mobile-only" id="map-zoom-toggle" aria-label="Toggle Zoom">
+                                <span class="material-symbols-outlined">zoom_in</span>
+                            </button>
                             <?php endif; ?>
                         </div>
                     </section>

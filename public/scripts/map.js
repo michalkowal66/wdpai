@@ -110,6 +110,11 @@ document.addEventListener('DOMContentLoaded', () => {
         applyFilters();
     }
 
+    // --- Mobile Map Navigation (Shared Utility) ---
+    if (mapContainer) {
+        MapNavigation.init('map-container', 'map-zoom-toggle', 'map-placeholder--zoomed');
+    }
+
     const clearSelection = () => {
         if (currentSelectedMarker) {
             currentSelectedMarker.classList.remove('desk-marker--selected');
