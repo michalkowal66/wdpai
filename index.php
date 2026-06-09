@@ -1,11 +1,13 @@
 <?php
 require_once "src/models/User.php";
 
+$isHttps = !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off';
+
 session_set_cookie_params([
     'lifetime' => 0,
     'path' => '/',
     'domain' => '',
-    'secure' => true,
+    'secure' => $isHttps,
     'httponly' => true,
     'samesite' => 'Strict'
 ]);
