@@ -28,6 +28,69 @@ document.addEventListener('DOMContentLoaded', () => {
     const deactivateBtn = document.getElementById('deactivate-desk-btn');
     const reactivateBtn = document.getElementById('reactivate-desk-btn');
     const hardDeleteBtn = document.getElementById('hard-delete-desk-btn');
+    const maintenanceBtn = document.getElementById('maintenance-btn');
+
+    // Maintenance Modal Elements
+    const maintenanceModal = document.getElementById('maintenance-modal');
+    const maintenanceForm = document.getElementById('maintenance-form');
+    const mDeskIdInput = document.getElementById('m-desk-id');
+    const mCancelBtn = document.getElementById('m-cancel-btn');
+
+    // --- Maintenance Logic ---
+    if (maintenanceBtn) {
+        maintenanceBtn.addEventListener('click', () => {
+            const deskId = inputId.value;
+            if (!deskId) return;
+
+            mDeskIdInput.value = deskId;
+            
+            // Set default dates (today to tomorrow)
+            const today = new Date().toISOString().split('T')[0];
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            const tomorrowStr = tomorrow.toISOString().split('T')[0];
+
+            document.getElementById('m-start-date').value = today;
+            document.getElementById('m-end-date').value = tomorrowStr;
+            document.getElementById('m-reason').value = '';
+
+            maintenanceModal.classList.add('modal-overlay--show');
+        });
+    }
+
+    if (mCancelBtn) {
+        mCancelBtn.addEventListener('click', () => {
+            maintenanceModal.classList.remove('modal-overlay--show');
+        });
+    }
+
+    if (maintenanceForm) {
+        maintenanceForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const formData = new FormData(maintenanceForm);
+            
+            const data = new URLSearchParams();
+            for (const pair of formData) {
+                data.append(pair[0], pair[1]);
+            }
+
+            fetch('/setMaintenance', {
+                method: 'POST',
+                body: data
+            }).then(async response => {
+                const result = await response.json();
+                if (response.ok) {
+                    Toast.show('Desk set to maintenance mode.');
+                    maintenanceModal.classList.remove('modal-overlay--show');
+                    location.reload(); 
+                } else {
+                    Toast.show(result.message || 'Error setting maintenance.', 'error');
+                }
+            }).catch(() => {
+                Toast.show('Network error.', 'error');
+            });
+        });
+    }
 
     let currentMarker = null;
     let ghostMarker = null;
@@ -250,8 +313,10 @@ document.addEventListener('DOMContentLoaded', () => {
             deactivateBtn.classList.add('is-hidden');
             reactivateBtn.classList.add('is-hidden');
             hardDeleteBtn.classList.add('is-hidden');
+            maintenanceBtn.classList.add('is-hidden');
         } else {
             panelTitle.textContent = 'Edit Desk';
+            maintenanceBtn.classList.remove('is-hidden');
             
             // Check status of current marker to toggle buttons
             const status = currentMarker.getAttribute('data-status');

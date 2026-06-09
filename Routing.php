@@ -62,10 +62,6 @@ class Routing {
             "controller" => "AdminController",
             "action" => "resetPassword"
         ],
-        "desks" => [
-            "controller" => "AdminController",
-            "action" => "desks"
-        ],
         "setMaintenance" => [
             "controller" => "AdminController",
             "action" => "setMaintenance"

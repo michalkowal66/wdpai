@@ -142,6 +142,9 @@
                         <button type="button" id="save-desk-btn" class="btn btn--primary btn--full btn--h-lg">
                             Save Desk
                         </button>
+                        <button type="button" id="maintenance-btn" class="btn btn--secondary btn--full btn--h-lg is-hidden" title="Set Maintenance">
+                            <span class="material-symbols-outlined">build</span> Set Maintenance
+                        </button>
                         <button type="button" id="deactivate-desk-btn" class="btn btn--secondary btn--danger btn--full btn--h-lg is-hidden">
                             <span class="material-symbols-outlined">delete</span> Deactivate Desk
                         </button>
@@ -156,6 +159,33 @@
             </div>
         </div>
     </main>
+
+    <!-- Maintenance Modal -->
+    <div class="modal-overlay" id="maintenance-modal">
+        <div class="modal">
+            <h3 class="modal__title">Set Desk Maintenance</h3>
+            <p class="modal__text">This will cancel all existing bookings during the maintenance period.</p>
+            <form id="maintenance-form" class="form">
+                <input type="hidden" name="desk_id" id="m-desk-id">
+                <div class="form__group mb-lg">
+                    <label class="form__label">Start Date</label>
+                    <input type="date" class="form__input" name="start_date" id="m-start-date" required>
+                </div>
+                <div class="form__group mb-lg">
+                    <label class="form__label">End Date (Inclusive)</label>
+                    <input type="date" class="form__input" name="end_date" id="m-end-date" required>
+                </div>
+                <div class="form__group mb-xl">
+                    <label class="form__label">Reason / Notes</label>
+                    <textarea class="form__input" name="reason" id="m-reason" style="height: auto; padding: 0.75rem;" rows="3" placeholder="e.g. Broken monitor cable"></textarea>
+                </div>
+                <div class="modal__actions">
+                    <button type="button" class="btn btn--text" id="m-cancel-btn">Cancel</button>
+                    <button type="submit" class="btn btn--primary">Confirm Maintenance</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <script src="/public/scripts/editor.js" defer></script>
 </body>

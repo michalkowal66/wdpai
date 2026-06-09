@@ -146,31 +146,6 @@ class AdminController extends AppController {
         echo json_encode(['status' => 'success', 'newPassword' => $newPassword]);
     }
 
-    public function desks() {
-        $title = "HotDesk - Desk Management";
-        require_once __DIR__.'/../repositories/DeskRepository.php';
-        $deskRepository = new DeskRepository();
-        
-        $limit = 10;
-        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-        if ($page < 1) $page = 1;
-        $offset = ($page - 1) * $limit;
-
-        $totalDesks = $deskRepository->getDesksCount();
-        $desksList = $deskRepository->getAllDesks($limit, $offset);
-        $totalPages = ceil($totalDesks / $limit);
-
-        return $this->render("desks", [
-            "title" => $title,
-            "desks" => $desksList,
-            "currentPage" => $page,
-            "totalPages" => $totalPages,
-            "totalDesks" => $totalDesks,
-            "limit" => $limit,
-            "offset" => $offset
-        ]);
-    }
-
     public function setMaintenance() {
         if (!$this->isPost()) {
             return;

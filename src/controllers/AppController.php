@@ -25,7 +25,7 @@ class AppController {
         }
 
         // Admin routes check
-        $adminRoutes = ['users', 'dashboard', 'desks', 'settings', 'editor'];
+        $adminRoutes = ['users', 'dashboard', 'settings', 'editor'];
         $adminApiRoutes = ['updateUser', 'deleteUser', 'resetPassword', 'setMaintenance', 'addFloor', 'updateFloor', 'deleteFloor', 'addFeature', 'deleteFeature', 'saveDesk', 'deactivateDesk', 'reactivateDesk', 'hardDeleteDesk'];
         
         if (in_array($path, $adminRoutes) && (!isset($_SESSION['user']) || $_SESSION['user']->getRole() !== 'ADMIN')) {
