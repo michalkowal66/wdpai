@@ -13,7 +13,7 @@
             <?php $isAdminActive = preg_match('/dashboard|editor|users|desks|settings/', $uri); ?>
             <div class="dropdown">
                 <span class="nav-link dropdown__toggle <?= $isAdminActive ? 'nav-link--active' : '' ?>">
-                    Administration <span class="material-symbols-outlined" style="font-size: 1.125rem;">expand_more</span>
+                    Administration <span class="material-symbols-outlined icon-md">expand_more</span>
                 </span>
                 <div class="dropdown__content">
                     <a href="dashboard" class="nav-link <?= strpos($uri, 'dashboard') !== false ? 'nav-link--active' : '' ?>">Dashboard</a>

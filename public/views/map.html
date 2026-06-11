@@ -71,7 +71,7 @@
                             <div class="map-placeholder" id="map-container" data-has-booking="<?= $hasBookingToday ? 'true' : 'false' ?>" data-booked-desk="<?= htmlspecialchars($bookedDeskId ?? '') ?>">
                                 <?php if ($currentFloor): ?>
                                     <div class="map-content">
-                                        <img src="<?= $currentFloor->getMapImageUrl() ?>" alt="<?= htmlspecialchars($currentFloor->getName()) ?>" class="map-image" style="object-fit: contain;">
+                                        <img src="<?= $currentFloor->getMapImageUrl() ?>" alt="<?= htmlspecialchars($currentFloor->getName()) ?>" class="map-image object-contain">
                                         
                                         <?php foreach($desks as $desk): 
                                             $statusClass = '';
@@ -131,7 +131,7 @@
 
                     <div class="side-panel__content" id="panel-content">
                         <!-- Initial placeholder state -->
-                        <div id="desk-details-container" style="display: none;">
+                        <div id="desk-details-container" class="is-hidden">
                             <div class="desk-card">
                                 <div class="desk-card__image-wrapper">
                                     <div class="desk-image-placeholder">
@@ -152,7 +152,7 @@
                                 </div>
                             </div>
 
-                            <div class="alert-box" id="detail-desk-alert" style="display: none;">
+                            <div class="alert-box is-hidden" id="detail-desk-alert">
                                 <span class="material-symbols-outlined alert-box__icon">warning</span>
                                 <div class="alert-box__content">
                                     <span class="alert-box__title" id="alert-title">Attention</span>
@@ -176,7 +176,7 @@
                         </div>
                     </div>
 
-                    <footer class="side-panel__footer" id="panel-actions" style="display: none;">
+                    <footer class="side-panel__footer is-hidden" id="panel-actions">
                         <?php if ($hasBookingToday): ?>
                             <a href="/bookings" class="btn btn--secondary btn--full btn--large justify-center">
                                 Manage Bookings

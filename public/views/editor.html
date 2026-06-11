@@ -61,7 +61,7 @@
                             <div class="editor-map-wrapper" id="editor-map">
                                 <?php if ($currentFloor): ?>
                                     <div class="map-content">
-                                        <img src="<?= $currentFloor->getMapImageUrl() ?>" alt="<?= htmlspecialchars($currentFloor->getName()) ?>" id="floor-image" style="object-fit: contain;">
+                                        <img src="<?= $currentFloor->getMapImageUrl() ?>" alt="<?= htmlspecialchars($currentFloor->getName()) ?>" id="floor-image" class="object-contain">
                                         
                                         <?php foreach($desks as $desk): 
                                             $statusClass = $desk->isActive() ? 'desk-marker--success' : 'desk-marker--occupied';

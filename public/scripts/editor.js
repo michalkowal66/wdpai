@@ -170,9 +170,9 @@ document.addEventListener('DOMContentLoaded', () => {
         markers.forEach(marker => {
             const status = marker.getAttribute('data-status');
             if (activeFilters.includes('all') || activeFilters.includes(status)) {
-                marker.style.display = 'flex';
+                marker.classList.remove('is-hidden');
             } else {
-                marker.style.display = 'none';
+                marker.classList.add('is-hidden');
             }
         });
     };
@@ -199,7 +199,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 }
                 
-                if (currentMarker && currentMarker.style.display === 'none') {
+                if (currentMarker && currentMarker.classList.contains('is-hidden')) {
                     closePanel();
                 }
                 applyFilters();
@@ -219,17 +219,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         activeFeatures.forEach((data, id) => {
-            const tag = document.createElement('div');
-            tag.style.display = 'inline-flex';
-            tag.style.alignItems = 'center';
-            tag.style.gap = '0.25rem';
-            tag.style.padding = '0.25rem 0.5rem';
-            tag.style.background = 'var(--color-primary-light)';
-            tag.style.border = '1px solid var(--color-primary)';
-            tag.style.borderRadius = 'var(--radius-md)';
-            tag.style.color = 'var(--color-primary)';
-            tag.style.fontSize = '0.75rem';
-            tag.style.fontWeight = '600';
+            const tag = document.createElement('span');
+            tag.className = 'feature-tag';
 
             tag.innerHTML = `
                 <span class="material-symbols-outlined" style="font-size: 1rem;">${data.icon}</span>

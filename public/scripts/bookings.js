@@ -156,7 +156,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     loadMoreBtn.disabled = false;
                     loadMoreBtn.innerHTML = `Load more history (<span id="remaining-count">${data.remainingCount}</span> remaining) <span class="material-symbols-outlined">expand_more</span>`;
                 } else {
-                    loadMoreContainer.style.display = 'none';
+                    loadMoreContainer.classList.add('is-hidden');
                 }
 
             } catch (error) {

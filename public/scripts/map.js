@@ -31,7 +31,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let isDeskAvailable = false;
 
     // Get selected date from the UI
-// ... [rest of variables]
     const dateInput = document.querySelector('.control-input__select[type="date"]');
     const selectedDate = dateInput ? dateInput.value : new Date().toISOString().split('T')[0];
 
@@ -65,9 +64,9 @@ document.addEventListener('DOMContentLoaded', () => {
         markers.forEach(marker => {
             const status = marker.getAttribute('data-status');
             if (activeFilters.includes('all') || activeFilters.includes(status)) {
-                marker.style.display = 'flex';
+                marker.classList.remove('is-hidden');
             } else {
-                marker.style.display = 'none';
+                marker.classList.add('is-hidden');
             }
         });
         updateURL();
@@ -98,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 
                 // clear selection if we hide the selected marker
-                if (currentSelectedMarker && currentSelectedMarker.style.display === 'none') {
+                if (currentSelectedMarker && currentSelectedMarker.classList.contains('is-hidden')) {
                     closePanel();
                 }
 
@@ -127,9 +126,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const populatePanel = (deskData) => {
         // Hide empty state, show details
-        emptyState.style.display = 'none';
-        detailsContainer.style.display = 'block';
-        panelActions.style.display = 'flex';
+        emptyState.classList.add('is-hidden');
+        detailsContainer.classList.remove('is-hidden');
+        panelActions.classList.remove('is-hidden');
 
         // Basic info
         uiDeskId.textContent = `Desk ${deskData.identifier}`;
@@ -164,7 +163,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Setup Alert Box based on booking status
         if (hasBookingToday) {
-            uiAlertBox.style.display = 'flex';
+            uiAlertBox.classList.remove('is-hidden');
             if (String(currentDeskId) === bookedDeskId) {
                 uiAlertBox.style.background = '#f0fdf4';
                 uiAlertBox.style.borderColor = '#bbf7d0';
@@ -183,7 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 uiAlertText.textContent = 'You already have a desk reserved for this day. Manage your bookings to change it.';
             }
         } else {
-            uiAlertBox.style.display = 'none';
+            uiAlertBox.classList.add('is-hidden');
         }
 
         // Enable or disable the confirm button based on availability
@@ -216,8 +215,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const fetchDeskDetails = async (id) => {
         // Show loading state
-        emptyState.style.display = 'none';
-        detailsContainer.style.display = 'block';
+        emptyState.classList.add('is-hidden');
+        detailsContainer.classList.remove('is-hidden');
         uiDeskName.textContent = 'Loading...';
         uiDeskFeatures.innerHTML = '';
         
@@ -284,9 +283,9 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Reset panel view
         setTimeout(() => {
-            emptyState.style.display = 'block';
-            detailsContainer.style.display = 'none';
-            panelActions.style.display = 'none';
+            emptyState.classList.remove('is-hidden');
+            detailsContainer.classList.add('is-hidden');
+            panelActions.classList.add('is-hidden');
         }, 300); // Wait for transition
     };
 

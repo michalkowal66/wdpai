@@ -26,7 +26,7 @@
             <form class="form" action="login" method="POST" id="login-form" novalidate>
                 <input type="hidden" name="csrf" value="<?= htmlspecialchars($csrf ?? '') ?>">
                 <?php if (isset($messages) && is_string($messages)): ?>
-                    <div class="form__error form__error--visible text-center mb-0" style="font-size: 0.875rem;">
+                    <div class="form__error form__error--visible text-center mb-0 text-sm">
                         <?= htmlspecialchars($messages) ?>
                     </div>
                 <?php endif; ?>

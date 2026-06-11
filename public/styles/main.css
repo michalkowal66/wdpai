@@ -513,12 +513,16 @@ body {
 .empty-state__text { margin-top: 1rem; font-weight: 500; }
 
 .object-top { object-position: top center; }
+.object-contain { object-fit: contain; }
 
 .text-huge { font-size: 5rem; margin-bottom: 0; }
+.text-sm { font-size: 0.875rem; }
 .text-xs { font-size: 0.75rem; }
 
 .bg-danger { background-color: var(--color-danger); color: white; border-color: transparent; }
 .bg-warning { background-color: var(--color-warning); color: white; border-color: transparent; }
+
+.rounded-xl { border-radius: var(--radius-xl); }
 
 .btn--h-lg { height: 3rem; }
 .btn--md { height: 2.75rem; padding: 0 1rem; }
@@ -1452,6 +1456,14 @@ body {
     display: flex;
     flex-direction: column;
     margin-bottom: 1rem;
+}
+
+.user-card__actions {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    display: flex;
+    gap: 0.25rem;
 }
 
 .user-card__name {

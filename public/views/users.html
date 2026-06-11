@@ -77,7 +77,7 @@
                             $roleClass = $u->getRole() === 'ADMIN' ? 'badge--success' : 'badge--secondary';
                         ?>
                         <article class="user-card">
-                            <div class="user-card__actions" style="position: absolute; top: 0.75rem; right: 0.75rem; display: flex; gap: 0.25rem;">
+                            <div class="user-card__actions">
                                 <button class="btn-icon text-warning js-reset-password-btn" data-id="<?= $u->getId() ?>" data-name="<?= htmlspecialchars($u->getFullName()) ?>" title="Reset Password" aria-label="Reset Password">
                                     <span class="material-symbols-outlined">key</span>
                                 </button>
@@ -103,7 +103,7 @@
                         <?php endforeach; ?>
                     </section>
 
-                    <footer class="pagination" style="border-radius: var(--radius-xl); margin-top: 1rem;">
+                    <footer class="pagination rounded-xl mt-md">
                         <?php 
                             $startRecord = min($offset + 1, $totalUsers);
                             $endRecord = min($offset + $limit, $totalUsers);
