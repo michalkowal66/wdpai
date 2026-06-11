@@ -1,0 +1,148 @@
+-- Plik przykładowy (uruchamiany po init.sql)
+-- Skopiuj ten plik jako seed.sql, aby zainicjalizować dane.
+
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
+-- 1. Użytkownicy (20 użytkowników, w tym Admin, pracownicy i jedno konto nieaktywne)
+-- Wszystkie konta mają to samo hasło: admin123
+INSERT INTO users (email, password, full_name, job_title, role, is_active) VALUES 
+('admin@hotdesk.io', '$2y$10$lUxJBy.mv9YEcQv978jWm.TjXTuIG0jEaI6W8zNMbuZoSC5wW3tLq', 'System Administrator', 'Chief of Operations', 'ADMIN', true),
+('alex.rivera@hotdesk.io', '$2y$10$lUxJBy.mv9YEcQv978jWm.TjXTuIG0jEaI6W8zNMbuZoSC5wW3tLq', 'Alex Rivera', 'UX Designer', 'EMPLOYEE', true),
+('s.jenkins@hotdesk.io', '$2y$10$lUxJBy.mv9YEcQv978jWm.TjXTuIG0jEaI6W8zNMbuZoSC5wW3tLq', 'Sarah Jenkins', 'Frontend Lead', 'EMPLOYEE', true),
+('m.scott@hotdesk.io', '$2y$10$lUxJBy.mv9YEcQv978jWm.TjXTuIG0jEaI6W8zNMbuZoSC5wW3tLq', 'Michael Scott', 'Regional Manager', 'EMPLOYEE', true),
+('d.schrute@hotdesk.io', '$2y$10$lUxJBy.mv9YEcQv978jWm.TjXTuIG0jEaI6W8zNMbuZoSC5wW3tLq', 'Dwight Schrute', 'Assistant to RM', 'EMPLOYEE', true),
+('p.beesly@hotdesk.io', '$2y$10$lUxJBy.mv9YEcQv978jWm.TjXTuIG0jEaI6W8zNMbuZoSC5wW3tLq', 'Pam Beesly', 'Receptionist', 'EMPLOYEE', true),
+('j.halpert@hotdesk.io', '$2y$10$lUxJBy.mv9YEcQv978jWm.TjXTuIG0jEaI6W8zNMbuZoSC5wW3tLq', 'Jim Halpert', 'Sales Rep', 'EMPLOYEE', true),
+('a.bernard@hotdesk.io', '$2y$10$lUxJBy.mv9YEcQv978jWm.TjXTuIG0jEaI6W8zNMbuZoSC5wW3tLq', 'Andy Bernard', 'Sales Director', 'EMPLOYEE', true),
+('a.martin@hotdesk.io', '$2y$10$lUxJBy.mv9YEcQv978jWm.TjXTuIG0jEaI6W8zNMbuZoSC5wW3tLq', 'Angela Martin', 'Senior Accountant', 'EMPLOYEE', true),
+('k.malone@hotdesk.io', '$2y$10$lUxJBy.mv9YEcQv978jWm.TjXTuIG0jEaI6W8zNMbuZoSC5wW3tLq', 'Kevin Malone', 'Accountant', 'EMPLOYEE', true),
+('o.martinez@hotdesk.io', '$2y$10$lUxJBy.mv9YEcQv978jWm.TjXTuIG0jEaI6W8zNMbuZoSC5wW3tLq', 'Oscar Martinez', 'Accountant', 'EMPLOYEE', true),
+('s.hudson@hotdesk.io', '$2y$10$lUxJBy.mv9YEcQv978jWm.TjXTuIG0jEaI6W8zNMbuZoSC5wW3tLq', 'Stanley Hudson', 'Sales Rep', 'EMPLOYEE', true),
+('p.lapin@hotdesk.io', '$2y$10$lUxJBy.mv9YEcQv978jWm.TjXTuIG0jEaI6W8zNMbuZoSC5wW3tLq', 'Phyllis Lapin', 'Sales Rep', 'EMPLOYEE', true),
+('k.kapoor@hotdesk.io', '$2y$10$lUxJBy.mv9YEcQv978jWm.TjXTuIG0jEaI6W8zNMbuZoSC5wW3tLq', 'Kelly Kapoor', 'Customer Service', 'EMPLOYEE', true),
+('t.flenderson@hotdesk.io', '$2y$10$lUxJBy.mv9YEcQv978jWm.TjXTuIG0jEaI6W8zNMbuZoSC5wW3tLq', 'Toby Flenderson', 'HR Rep', 'EMPLOYEE', true),
+('c.bratton@hotdesk.io', '$2y$10$lUxJBy.mv9YEcQv978jWm.TjXTuIG0jEaI6W8zNMbuZoSC5wW3tLq', 'Creed Bratton', 'Quality Assurance', 'EMPLOYEE', true),
+('m.palmer@hotdesk.io', '$2y$10$lUxJBy.mv9YEcQv978jWm.TjXTuIG0jEaI6W8zNMbuZoSC5wW3tLq', 'Meredith Palmer', 'Supplier Relations', 'EMPLOYEE', true),
+('r.howard@hotdesk.io', '$2y$10$lUxJBy.mv9YEcQv978jWm.TjXTuIG0jEaI6W8zNMbuZoSC5wW3tLq', 'Ryan Howard', 'Temp', 'EMPLOYEE', true),
+('d.philbin@hotdesk.io', '$2y$10$lUxJBy.mv9YEcQv978jWm.TjXTuIG0jEaI6W8zNMbuZoSC5wW3tLq', 'Darryl Philbin', 'Warehouse Foreman', 'EMPLOYEE', true),
+('new.guy@hotdesk.io', '$2y$10$lUxJBy.mv9YEcQv978jWm.TjXTuIG0jEaI6W8zNMbuZoSC5wW3tLq', 'New Guy', 'Intern', 'EMPLOYEE', false);
+
+-- 2. Piętra
+INSERT INTO floors (name, level, map_image_url)
+VALUES 
+('North Wing Floor 1', 1, '/public/uploads/maps/Floor1.png'),
+('North Wing Floor 2', 2, '/public/uploads/maps/Floor2.png');
+
+-- 3. Cechy (Features)
+INSERT INTO features (name, icon_name)
+VALUES 
+('Strong WiFi', 'wifi'),
+('Dual Monitor', 'monitor'),
+('Adjustable Desk', 'height'),
+('Quiet Zone', 'volume_off'),
+('Near Window', 'wb_sunny'),
+('Power Outlet', 'power');
+
+-- 4. Biurka - Piętro 1
+INSERT INTO desks (identifier, description, floor_id, pos_x, pos_y)
+VALUES 
+('101', 'Window View - Quiet', 1, 12.0, 15.0),
+('102', 'Standard Desk', 1, 28.0, 15.0),
+('103', 'Focus Station', 1, 48.0, 15.0),
+('104', 'Dual Screen Pod', 1, 65.0, 15.0),
+('105', 'Corner Office Style', 1, 85.0, 15.0),
+('106', 'Central Hub A', 1, 48.0, 40.0),
+('107', 'Central Hub B', 1, 65.0, 40.0),
+('108', 'Side Desk A', 1, 12.0, 85.0),
+('109', 'Collab Spot A', 1, 35.0, 85.0),
+('110', 'Collab Spot B', 1, 51.0, 85.0),
+('111', 'Collab Spot C', 1, 66.0, 80.0),
+('112', 'Collab Spot D', 1, 91.0, 80.0);
+
+-- 5. Biurka - Piętro 2
+INSERT INTO desks (identifier, description, floor_id, pos_x, pos_y)
+VALUES 
+('201', 'Premium Window', 2, 12.0, 15.0),
+('202', 'Premium Window', 2, 28.0, 15.0),
+('203', 'Standard Desk', 2, 48.0, 15.0),
+('204', 'Standard Desk', 2, 65.0, 15.0),
+('205', 'Standard Desk', 2, 85.0, 15.0),
+('206', 'Executive Pod', 2, 28.0, 60.0),
+('207', 'Bottom View A', 2, 12.0, 85.0),
+('208', 'Bottom View B', 2, 40.0, 85.0),
+('209', 'Bottom View C', 2, 53.0, 85.0),
+('210', 'Bottom View D', 2, 72.0, 85.0),
+('211', 'Bottom View Large', 2, 88.0, 85.0);
+
+-- 6. Przypisanie cech do biurek
+INSERT INTO desk_features (desk_id, feature_id)
+SELECT d.id, f.id FROM desks d, features f WHERE d.identifier = '101' AND f.name IN ('Near Window', 'Quiet Zone');
+
+INSERT INTO desk_features (desk_id, feature_id)
+SELECT d.id, f.id FROM desks d, features f WHERE d.identifier = '104' AND f.name IN ('Dual Monitor', 'Power Outlet');
+
+INSERT INTO desk_features (desk_id, feature_id)
+SELECT d.id, f.id FROM desks d, features f WHERE d.identifier = '111' AND f.name IN ('Adjustable Desk', 'Strong WiFi');
+
+INSERT INTO desk_features (desk_id, feature_id)
+SELECT d.id, f.id FROM desks d, features f WHERE d.identifier = '201' AND f.name IN ('Near Window', 'Dual Monitor', 'Power Outlet');
+
+-- 7. Historyczne Rezerwacje (Bookings) - Dynamiczne w czasie za pomocą CURRENT_DATE
+
+-- Wyłączenie wyzwalacza blokującego przeszłe rezerwacje na czas seedowania bazy
+ALTER TABLE bookings DISABLE TRIGGER trigger_check_booking_date;
+
+-- CHECKED_IN (Pomyślne rezerwacje)
+INSERT INTO bookings (user_id, desk_id, booking_date, status, checked_in_at) VALUES 
+(1, 1, CURRENT_DATE - INTERVAL '1 day', 'CHECKED_IN', CURRENT_DATE - INTERVAL '1 day' + TIME '08:15:00'),
+(2, 2, CURRENT_DATE - INTERVAL '1 day', 'CHECKED_IN', CURRENT_DATE - INTERVAL '1 day' + TIME '07:50:00'),
+(3, 3, CURRENT_DATE - INTERVAL '1 day', 'CHECKED_IN', CURRENT_DATE - INTERVAL '1 day' + TIME '08:05:00'),
+(4, 5, CURRENT_DATE - INTERVAL '2 days', 'CHECKED_IN', CURRENT_DATE - INTERVAL '2 days' + TIME '08:20:00'),
+(5, 6, CURRENT_DATE - INTERVAL '2 days', 'CHECKED_IN', CURRENT_DATE - INTERVAL '2 days' + TIME '08:00:00'),
+(6, 7, CURRENT_DATE - INTERVAL '2 days', 'CHECKED_IN', CURRENT_DATE - INTERVAL '2 days' + TIME '07:55:00'),
+(7, 13, CURRENT_DATE - INTERVAL '3 days', 'CHECKED_IN', CURRENT_DATE - INTERVAL '3 days' + TIME '08:10:00'),
+(8, 14, CURRENT_DATE - INTERVAL '3 days', 'CHECKED_IN', CURRENT_DATE - INTERVAL '3 days' + TIME '08:02:00'),
+(9, 15, CURRENT_DATE - INTERVAL '3 days', 'CHECKED_IN', CURRENT_DATE - INTERVAL '3 days' + TIME '08:30:00'),
+(10, 20, CURRENT_DATE - INTERVAL '4 days', 'CHECKED_IN', CURRENT_DATE - INTERVAL '4 days' + TIME '07:45:00'),
+(1, 2, CURRENT_DATE - INTERVAL '4 days', 'CHECKED_IN', CURRENT_DATE - INTERVAL '4 days' + TIME '08:11:00'),
+(2, 4, CURRENT_DATE - INTERVAL '5 days', 'CHECKED_IN', CURRENT_DATE - INTERVAL '5 days' + TIME '08:14:00');
+
+-- NO_SHOW (Użytkownicy, którzy nie stawili się w biurze)
+INSERT INTO bookings (user_id, desk_id, booking_date, status) VALUES 
+(4, 1, CURRENT_DATE - INTERVAL '1 day', 'NO_SHOW'),
+(11, 8, CURRENT_DATE - INTERVAL '2 days', 'NO_SHOW'),
+(12, 10, CURRENT_DATE - INTERVAL '3 days', 'NO_SHOW'),
+(13, 2, CURRENT_DATE - INTERVAL '4 days', 'NO_SHOW'),
+(14, 4, CURRENT_DATE - INTERVAL '5 days', 'NO_SHOW'),
+(1, 15, CURRENT_DATE - INTERVAL '6 days', 'NO_SHOW');
+
+-- CANCELLED (Anulowane rezerwacje)
+INSERT INTO bookings (user_id, desk_id, booking_date, status) VALUES 
+(15, 11, CURRENT_DATE - INTERVAL '1 day', 'CANCELLED'),
+(16, 12, CURRENT_DATE - INTERVAL '2 days', 'CANCELLED'),
+(17, 16, CURRENT_DATE - INTERVAL '3 days', 'CANCELLED'),
+(18, 17, CURRENT_DATE - INTERVAL '4 days', 'CANCELLED'),
+(19, 18, CURRENT_DATE - INTERVAL '5 days', 'CANCELLED'),
+(1, 21, CURRENT_DATE - INTERVAL '7 days', 'CANCELLED');
+
+-- Ponowne włączenie wyzwalacza chroniącego aplikację
+ALTER TABLE bookings ENABLE TRIGGER trigger_check_booking_date;
+
+-- 8. Dzisiejsze rezerwacje
+INSERT INTO bookings (user_id, desk_id, booking_date, status, checked_in_at) VALUES 
+(1, 10, CURRENT_DATE, 'CHECKED_IN', CURRENT_TIMESTAMP), -- Admin checked in today
+(2, 3, CURRENT_DATE, 'ACTIVE', NULL),
+(3, 4, CURRENT_DATE, 'ACTIVE', NULL),
+(4, 5, CURRENT_DATE, 'ACTIVE', NULL),
+(5, 6, CURRENT_DATE, 'ACTIVE', NULL),
+(6, 7, CURRENT_DATE, 'ACTIVE', NULL);
+
+-- 9. Przyszłe rezerwacje
+INSERT INTO bookings (user_id, desk_id, booking_date, status) VALUES 
+(1, 1, CURRENT_DATE + INTERVAL '1 day', 'ACTIVE'),
+(2, 2, CURRENT_DATE + INTERVAL '1 day', 'ACTIVE'),
+(3, 3, CURRENT_DATE + INTERVAL '1 day', 'ACTIVE'),
+(5, 6, CURRENT_DATE + INTERVAL '2 days', 'ACTIVE'),
+(6, 7, CURRENT_DATE + INTERVAL '2 days', 'ACTIVE'),
+(7, 13, CURRENT_DATE + INTERVAL '3 days', 'ACTIVE'),
+(8, 14, CURRENT_DATE + INTERVAL '3 days', 'ACTIVE');

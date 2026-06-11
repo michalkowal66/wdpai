@@ -7,31 +7,42 @@ Projekt zrealizowany w ramach przedmiotu *Wstęp do Projektowania Aplikacji Inte
 
 ---
 
-## Prezentacja Interfejsu
+## Moduły Aplikacji
+
+Aplikacja dzieli się na publiczny moduł autoryzacji oraz dwa główne panele dostępowe, zależne od uprawnień użytkownika (RBAC).
 
 ### Panel Pracownika (Employee View)
-TODO
+* **Rezerwacje (Bookings):** Przeglądanie własnej historii rezerwacji i nadchodzących rezerwacji.
+* **Mapa (Map):** Interaktywny podgląd pięter z możliwością sprawdzania statusu biurek, ich zajętości oraz dokonywania nowych rezerwacji.
+* **Zarządzanie kontem:** Zmiana hasła oraz wylogowanie z systemu.
 
 ### Panel Administratora (Admin View)
-TODO
+* **Zarządzanie Użytkownikami (Users):** Akceptacja nowo zarejestrowanych pracowników, zmiana ról (Admin/Employee), resetowanie haseł oraz usuwanie kont.
+* **Dashboard Analityczny:** Statystyki popularności poszczególnych biurek i udogodnień oraz frekwencja pracowników.
+* **Edytor Mapy (Editor):** Interaktywne zarządzanie stanowiskami na wybranym piętrze – dodawanie nowych biurek, przesuwanie ich na mapie, edycja parametrów, oznaczanie biurek jako wymagających naprawy, ich deaktywacja oraz całkowite usuwanie.
+* **Ustawienia (Settings):** Zarządzanie słownikiem udogodnień (features) dodawanym do globalnej listy oraz dodawanie i edycja dostępnych pięter (floors).
 
 ### Strony Błędów i Bezpieczeństwa
-TODO
+System posiada dedykowane i zunifikowane strony błędów HTTP maskujące komunikaty serwera:
+* **400 Bad Request**
+* **403 Forbidden**
+* **404 Not Found**
+* **500 Internal Server Error** (Maskowanie stack trace w środowisku produkcyjnym)
 
 ---
 
 ## Stos Technologiczny i Architektura
 
-Aplikacja nie korzysta z gotowych frameworków PHP ani bibliotek CSS typu Bootstrap/Tailwind. Całość opiera się na autorskich implementacjach wzorców projektowych.
+Aplikacja została stworzona zgodnie z wytycznymi przedmiotu, całkowicie bez wykorzystania zewnętrznych frameworków PHP oraz bibliotek CSS (jak Bootstrap czy Tailwind). Całość opiera się na autorskich implementacjach wzorców projektowych.
 
-* **Backend**: PHP 8+ (Vanilla), obiektowe podejście (OOP), SOLID.
+* **Backend**: PHP 8+ (Vanilla), w pełni obiektowe podejście (OOP), zasady SOLID, automatycznie generowana dokumentacja PHPDoc.
 * **Wzorce Projektowe**: 
-  * **MVC** (Model-View-Controller) do separacji logiki.
-  * **Repository Pattern** do komunikacji z bazą.
-  * **DTO (Data Transfer Objects)** dla złożonych relacji wielotabelowych.
-  * **Singleton** do zarządzania instancją bazy i kluczowymi repozytoriami.
+  * **MVC** (Model-View-Controller) do separacji logiki od warstwy prezentacji.
+  * **Repository Pattern** do odizolowanej komunikacji z bazą.
+  * **DTO (Data Transfer Objects)** do transportu złożonych, łączonych wyników zapytan (np. popularność biurek).
+  * **Singleton** do zarządzania współdzieloną instancją połączenia bazy danych.
 * **Baza Danych**: PostgreSQL (Wyzwalacze, Funkcje PL/pgSQL, Widoki Analityczne, Transakcje).
-* **Frontend**: HTML5, Vanilla CSS (BEM), JS (ES6+, Vanilla, Fetch API).
+* **Frontend**: HTML5, Vanilla CSS, JS (ES6+, Vanilla, mechanizm Fetch API dla zapytań asynchronicznych asynchronicznych API).
 * **Infrastruktura**: Docker & Docker Compose.
 
 ---
@@ -44,9 +55,9 @@ Aplikacja nie korzysta z gotowych frameworków PHP ani bibliotek CSS typu Bootst
 
 Baza danych spełnia **3 postać normalną** (3NF) i zabezpieczona jest kaskadowym usuwaniem (`ON DELETE CASCADE`). Zawiera relacje `1:N` oraz `N:M` (np. tabela łącznikowa `desk_features`).
 
-### Widoki, Funkcje i Wyzwalacze (Trigger)
-Zgodnie z wymaganiami projektu zaimplementowano obiekty chroniące integralność bazy:
-1. **Triggery**: `trigger_check_booking_date` chroniący przed wstawieniem rezerwacji z datą w przeszłości.
+### Widoki, Funkcje i Wyzwalacze (Triggery)
+Zgodnie z wymogami projektowymi zaimplementowano własne obiekty chroniące spójność wbudowane w strukturę PostgreSQL:
+1. **Triggery**: `trigger_check_booking_date` weryfikujący logikę biznesową przed wstawieniem rezerwacji (blokada wstecznych rezerwacji).
 2. **Funkcje PL/pgSQL**: `prevent_past_bookings()` obsługująca w/w wyzwalacz.
 3. **Widoki Analityczne**: `view_desk_popularity`, `view_user_attendance`, `view_feature_popularity`.
 
@@ -56,48 +67,79 @@ Zgodnie z wymaganiami projektu zaimplementowano obiekty chroniące integralnoś�
 
 ## Praktyki Bezpieczeństwa
 
-System wdraża rygorystyczne zasady bezpieczeństwa aplikacji webowych:
+System wdraża rygorystyczne zasady bezpieczeństwa aplikacji webowych, w tym:
 
-1. **SQL Injection**: Globalne stosowanie PDO Prepared Statements we wszystkich kwerendach bazy danych.
-2. **XSS (Cross-Site Scripting)**: Escapowanie wszelkich danych z użyciem `htmlspecialchars()` w widokach.
-3. **CSRF (Cross-Site Request Forgery)**: Autorskie generowanie i ścisła walidacja tokenów jednorazowych (metoda `hash_equals()`) w formularzach autoryzacyjnych POST.
-4. **Ochrona Sesji**: Flagi `HttpOnly`, `Secure` i `SameSite=Strict`. Regeneracja ID sesji po zalogowaniu przeciwko atakom *Session Fixation*.
-5. **Rate Limiting i Ochrona Logowania**: Limitowanie prób logowania za pomocą zapytań do dedykowanej tabeli bazy danych (`HTTP 429 Too Many Requests` po 5 błędnych logowaniach z danego IP w ciągu 15 min). Zrzut nieudanych logowań do pliku `error_log`. Limit `strlen()` chroniący przed "Bcrypt DoS". Brak enumeracji użytkowników (zawsze zwracane generyczne "Invalid email or password").
-6. **HTTPS**: Wymuszenie protokołu HTTPS (301 Redirect) na poziomie konstruktora aplikacji.
-7. **Obsługa Błędów**: Globalny `set_exception_handler` maskujący surowe logi (stack trace) w produkcji przykryty stroną `500.html`.
+1. **SQL Injection**: Pełne stosowanie PDO Prepared Statements we wszystkich kwerendach bazodanowych.
+2. **XSS (Cross-Site Scripting)**: Escapowanie wszelkich danych z użyciem `htmlspecialchars()` przy renderowaniu widoków.
+3. **CSRF (Cross-Site Request Forgery)**: Autorskie generowanie i walidacja tokenów jednorazowych we wszystkich formularzach mutujących stan (porównywane odporną na timing-attacks metodą `hash_equals()`).
+4. **Ochrona Sesji**: Ciasteczka sesyjne z flagami `HttpOnly`, `Secure` i `SameSite=Strict`. Wykorzystanie `session_regenerate_id(true)` po uwierzytelnieniu chroni przed podatnością *Session Fixation*. Zrzucanie sesji do zera po wylogowaniu.
+5. **Rate Limiting i Brute Force**: Limitowanie zapytań chroniące przez przeciążeniem. Po przekroczeniu progu nieudanych prób logowania konto jest czasowo blokowane. Aplikacja unika rzucania wyjątkiem przy weryfikacji haseł, aby nie powodować enumeracji i "Bcrypt DoS" (zawsze zwraca "Invalid email or password").
+6. **HTTPS**: Wymuszenie komunikacji szyfrowanej przez przekierowanie 301.
+7. **Bezpieczeństwo połączenia**: Pula połączeń zarządzana przez Singleton z wymuszonym odpinaniem referencji by nie dławić demona bazodanowego otwartymi rzutami połączeń.
+
+---
+
+## Skrypty Administracyjne (CLI)
+
+W celu zachowania wygody deweloperskiej wprowadzono dedykowany skrypt CLI pozwalający na stworzenie pierwszego konta administratora:
+
+**Tworzenie konta Administratora:**
+Skrypt `create-admin.php` z poziomu CLI (wymaga działającego kontenera i bazy):
+```bash
+docker exec <nazwa_kontenera_php> php create-admin.php <email> <haslo> ["Pelne Imie"]
+```
+*Przykład:*
+```bash
+docker exec <nazwa_kontenera_php> php create-admin.php admin@hotdesk.io SuperTajneHaslo123 "Jan Kowalski"
+```
 
 ---
 
 ## Instalacja i Uruchomienie
 
-Aby uruchomić aplikację w środowisku developerskim:
+Aby uruchomić aplikację w środowisku deweloperskim:
 
 1. Sklonuj repozytorium na dysk lokalny.
-2. Utwórz plik `.env` na podstawie istniejącego pliku przykładowego lub skopiuj plik z przykładowymi zmiennymi środowiskowymi - `cp .env.example .env`.
-3. Zbuduj i uruchom kontenery używając Docker Compose:
+2. Konfiguracja środowiska (`.env`):
+   Skopiuj plik z przykładowymi zmiennymi i dostosuj je do swojego środowiska:
+   ```bash
+   cp .env.example .env
+   ```
+   *Opis przykładowych zmiennych w pliku:*
+   * `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD` - dane uwierzytelniające do bazy PostgreSQL.
+   * `PGADMIN_DEFAULT_EMAIL`, `PGADMIN_DEFAULT_PASSWORD` - dane logowania do interfejsu webowego pgAdmin.
+   * `APP_DEBUG` - włącza (`true`) lub wyłącza (`false`) tryb deweloperski.
+
+3. Inicjalizacja danych testowych (Opcjonalnie):
+   Jeśli chcesz uruchomić system z przykładowymi użytkownikami, piętrami, biurkami oraz historią rezerwacji, przygotuj plik inicjujący (seed):
+   ```bash
+   cp docker/db/init/seed.sql.example docker/db/init/seed.sql
+   ```
+   *Skrypt zostanie automatycznie zaczytany przez kontener bazy danych przy jego pierwszym uruchomieniu.*
+
+4. Zbuduj obrazy i uruchom kontenery używając Docker Compose:
    ```bash
    docker compose up -d
    ```
-4. Aplikacja będzie dostępna pod adresem: [http://localhost:8080](http://localhost:8080).
+5. Aplikacja zostanie powiązana pod adresem: [http://localhost:8080](http://localhost:8080).
+6. Jeśli nie korzystasz z danych testowych (`seed.sql`), wygeneruj początkowego administratora systemu za pomocą opisanego wyżej skryptu administracyjnego CLI.
 
-**Konta Testowe (po załadowaniu ewentualnych danych testowych):**
-* **Admin**: `admin@hotdesk.io` / Hasło: `admin123`
-* Nowych użytkowników można zarejestrować, ale wymagają ręcznej aktywacji w panelu przez Administratora.
+*Uwaga: Nowo rejestrujący się z formularza strony użytkownicy są domyślnie tworzeni jako nieaktywni. Wymagają oni ręcznego zatwierdzenia (aktywacji) z poziomu interfejsu Administratora.*
 
 ---
 
-## Uruchamianie Testów Automatycznych
+## Automatyczne Testowanie Aplikacji
 
-W środowisku deweloperskim skonfigurowano przykłady dwóch rodzajów testów potwierdzających niezawodność architektury:
+W środowisku deweloperskim utworzono próbne testy weryfikujące architekturę:
 
 **1. Testy Jednostkowe (PHPUnit)**
-Testują instancjonowanie Obiektów Domenowych (Modeli) oraz poprawne działanie metody wbudowanej `JsonSerializable` na potrzeby API.
+Weryfikacja metod Modelu oraz interfejsu `JsonSerializable`.
 ```bash
-docker exec wdpai-php-1 phpunit /app/tests/UserModelTest.php
+docker exec <nazwa_kontenera_php> phpunit /app/tests/UserModelTest.php
 ```
 
-**2. Testy Integracyjne End-to-End (Bash / Curl)**
-Prosty skrypt `bash` badający bezpośrednio port HTTP aplikacji w celu weryfikacji poprawnego generowania kodów stanu przez routing (200, 302, 404).
+**2. Testy End-to-End Routingu (Bash / Curl)**
+Skrypt integracyjny sprawdzający na poziomie nagłówków HTTP odpowiednie wywoływanie kodów dla stron autoryzowanych (przekierowania 302 na chronionych stronach, 403 dla braku autoryzacji panelu administracyjnego i 200).
 ```bash
 bash tests/integration.sh
 ```
