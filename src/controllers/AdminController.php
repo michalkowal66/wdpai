@@ -6,6 +6,11 @@ require_once __DIR__.'/../repositories/StatisticsRepository.php';
 
 class AdminController extends AppController {
 
+    /**
+     * Renders the admin dashboard with utilization statistics, top desks, top users, and feature popularity.
+     *
+     * @return void
+     */
     public function dashboard() {
         $statsRepo = new StatisticsRepository();
         
@@ -40,6 +45,11 @@ class AdminController extends AppController {
         ]);
     }
 
+    /**
+     * Renders the user management view with pagination.
+     *
+     * @return void
+     */
     public function users() {
         $title = "HotDesk - User Management";
         $usersRepository = UsersRepository::getInstance();
@@ -64,6 +74,11 @@ class AdminController extends AppController {
         ]);
     }
 
+    /**
+     * Updates a user's details and active status.
+     *
+     * @return void
+     */
     public function updateUser() {
         if (!$this->isPost()) {
             return;
@@ -93,6 +108,11 @@ class AdminController extends AppController {
         echo json_encode(['status' => 'success']);
     }
 
+    /**
+     * Deletes a user from the system.
+     *
+     * @return void
+     */
     public function deleteUser() {
         if (!$this->isPost()) {
             return;
@@ -118,6 +138,11 @@ class AdminController extends AppController {
         echo json_encode(['status' => 'success']);
     }
 
+    /**
+     * Resets a user's password and returns the newly generated password.
+     *
+     * @return void
+     */
     public function resetPassword() {
         if (!$this->isPost()) {
             return;
@@ -146,6 +171,11 @@ class AdminController extends AppController {
         echo json_encode(['status' => 'success', 'newPassword' => $newPassword]);
     }
 
+    /**
+     * Sets a maintenance period for a specific desk.
+     *
+     * @return void
+     */
     public function setMaintenance() {
         if (!$this->isPost()) {
             return;
@@ -182,6 +212,11 @@ class AdminController extends AppController {
         }
     }
 
+    /**
+     * Renders the visual desk editor for a specific floor.
+     *
+     * @return void
+     */
     public function editor() {
         require_once __DIR__.'/../repositories/FloorRepository.php';
         require_once __DIR__.'/../repositories/DeskRepository.php';
@@ -217,6 +252,11 @@ class AdminController extends AppController {
         ]);
     }
 
+    /**
+     * Saves or creates a desk with its details and associated features.
+     *
+     * @return void
+     */
     public function saveDesk() {
         if (!$this->isPost()) return;
 
@@ -251,6 +291,11 @@ class AdminController extends AppController {
         }
     }
 
+    /**
+     * Deactivates a specific desk.
+     *
+     * @return void
+     */
     public function deactivateDesk() {
         if (!$this->isPost()) return;
 
@@ -272,6 +317,11 @@ class AdminController extends AppController {
         }
     }
 
+    /**
+     * Reactivates a specific desk.
+     *
+     * @return void
+     */
     public function reactivateDesk() {
         if (!$this->isPost()) return;
 
@@ -293,6 +343,11 @@ class AdminController extends AppController {
         }
     }
 
+    /**
+     * Permanently deletes a desk from the system if it has no booking history.
+     *
+     * @return void
+     */
     public function hardDeleteDesk() {
         if (!$this->isPost()) return;
 

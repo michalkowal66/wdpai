@@ -8,6 +8,15 @@ use Models\Booking;
 use DTO\BookingDetailsDTO;
 
 class BookingRepository extends Repository {
+    /**
+     * Books a desk for a specific user on a given date.
+     *
+     * @param int $userId The ID of the user booking the desk.
+     * @param int $deskId The ID of the desk to be booked.
+     * @param string $date The booking date (Y-m-d).
+     * @return string|bool Returns true on success, or a string indicating the error ('user_limit', 'desk_taken').
+     * @throws PDOException If a database error occurs.
+     */
     public function bookDesk(int $userId, int $deskId, string $date): string|bool {
         try {
             $stmt = $this->database->connect()->prepare('
@@ -30,6 +39,12 @@ class BookingRepository extends Repository {
         }
     }
 
+    /**
+     * Retrieves all bookings for a specific user.
+     *
+     * @param int $userId The ID of the user.
+     * @return array An array of BookingDetailsDTO objects representing the user's bookings.
+     */
     public function getUserBookings(int $userId): array {
         $stmt = $this->database->connect()->prepare('
             SELECT b.*, 
@@ -56,6 +71,13 @@ class BookingRepository extends Repository {
         return $dtos;
     }
 
+    /**
+     * Cancels an active booking for a specific user.
+     *
+     * @param int $id The ID of the booking to cancel.
+     * @param int $userId The ID of the user who owns the booking.
+     * @return bool True if the booking was successfully cancelled, false otherwise.
+     */
     public function cancelBooking(int $id, int $userId): bool {
         $stmt = $this->database->connect()->prepare('
             UPDATE bookings 
@@ -67,6 +89,13 @@ class BookingRepository extends Repository {
         return $stmt->execute() && $stmt->rowCount() > 0;
     }
 
+    /**
+     * Checks in a user for an active booking on the current date.
+     *
+     * @param int $id The ID of the booking.
+     * @param int $userId The ID of the user checking in.
+     * @return bool True if the check-in was successful, false otherwise.
+     */
     public function checkInBooking(int $id, int $userId): bool {
         $stmt = $this->database->connect()->prepare('
             UPDATE bookings 
@@ -78,6 +107,14 @@ class BookingRepository extends Repository {
         return $stmt->execute() && $stmt->rowCount() > 0;
     }
 
+    /**
+     * Automatically cancels active bookings that are considered no-shows.
+     * 
+     * This includes bookings from previous days or today's bookings
+     * where the check-in deadline has passed.
+     *
+     * @return int The number of bookings that were automatically cancelled.
+     */
     public function autoCancelNoShows(): int {
         $stmt = $this->database->connect()->prepare("
             UPDATE bookings 

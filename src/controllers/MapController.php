@@ -8,6 +8,11 @@ require_once __DIR__.'/../repositories/BookingRepository.php';
 
 class MapController extends AppController {
 
+    /**
+     * Renders the main floor map view with available desks for a selected date.
+     *
+     * @return void
+     */
     public function index() {
         $floorLevel = isset($_GET['floor']) ? (int)$_GET['floor'] : 1;
         $date = isset($_GET['date']) ? $_GET['date'] : date('Y-m-d'); // Default to today
@@ -50,6 +55,11 @@ class MapController extends AppController {
         ]);
     }
 
+    /**
+     * Renders the user's bookings view (upcoming, history, or cancelled).
+     *
+     * @return void
+     */
     public function bookings() {
         if (!isset($_SESSION['user'])) {
             $url = "http://$_SERVER[HTTP_HOST]";
@@ -105,6 +115,11 @@ class MapController extends AppController {
         ]);
     }
 
+    /**
+     * Retrieves the paginated booking data for the current user as JSON.
+     *
+     * @return void
+     */
     public function getBookingsData() {
         if (!isset($_SESSION['user'])) {
             http_response_code(401);
@@ -159,6 +174,11 @@ class MapController extends AppController {
         ]);
     }
 
+    /**
+     * Retrieves detailed information and features for a specific desk as JSON.
+     *
+     * @return void
+     */
     public function deskDetails() {
         if (!$this->isGet() || !isset($_GET['id'])) {
             http_response_code(400);
@@ -179,6 +199,11 @@ class MapController extends AppController {
         echo json_encode($desk);
     }
 
+    /**
+     * Books a desk for the current user for a specific date.
+     *
+     * @return void
+     */
     public function bookDesk() {
         if (!$this->isPost()) {
             return;
@@ -222,6 +247,11 @@ class MapController extends AppController {
         }
     }
 
+    /**
+     * Cancels an active booking for the current user.
+     *
+     * @return void
+     */
     public function cancelBooking() {
         if (!$this->isPost()) {
             return;
@@ -254,6 +284,11 @@ class MapController extends AppController {
         }
     }
 
+    /**
+     * Checks in the user for their booking on the current date.
+     *
+     * @return void
+     */
     public function checkInBooking() {
         if (!$this->isPost()) {
             return;

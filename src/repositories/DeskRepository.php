@@ -10,6 +10,13 @@ use Models\Feature;
 use DTO\DeskDetailsDTO;
 
 class DeskRepository extends Repository {
+    /**
+     * Retrieves desks by floor and date, including their current status.
+     *
+     * @param int $floorId The ID of the floor.
+     * @param string $date The date to check for desk availability (Y-m-d).
+     * @return array An array of DeskDetailsDTO objects.
+     */
     public function getDesksByFloor(int $floorId, string $date): array {
         $stmt = $this->database->connect()->prepare('
             SELECT 
@@ -40,6 +47,12 @@ class DeskRepository extends Repository {
         return $dtos;
     }
 
+    /**
+     * Retrieves all desks on a specific floor, regardless of status.
+     *
+     * @param int $floorId The ID of the floor.
+     * @return array An array of Desk objects.
+     */
     public function getAllDesksByFloor(int $floorId): array {
         $stmt = $this->database->connect()->prepare('
             SELECT d.* 
@@ -57,6 +70,12 @@ class DeskRepository extends Repository {
         return $desks;
     }
 
+    /**
+     * Retrieves a specific desk along with its associated features.
+     *
+     * @param int $deskId The ID of the desk.
+     * @return DeskDetailsDTO|null A DeskDetailsDTO object if found, null otherwise.
+     */
     public function getDeskWithFeatures(int $deskId): ?DeskDetailsDTO {
         $stmt = $this->database->connect()->prepare('
             SELECT d.*, f.id as feature_id, f.name as feature_name, f.icon_name
@@ -86,6 +105,13 @@ class DeskRepository extends Repository {
         return new DeskDetailsDTO($desk, null, $features, $hasBookings);
     }
 
+    /**
+     * Retrieves a paginated list of all desks.
+     *
+     * @param int $limit The maximum number of records to return.
+     * @param int $offset The number of records to skip.
+     * @return array An array of DeskDetailsDTO objects.
+     */
     public function getAllDesks(int $limit = 10, int $offset = 0): array {
         $stmt = $this->database->connect()->prepare('
             SELECT d.*, f.name as floor_name
@@ -107,12 +133,26 @@ class DeskRepository extends Repository {
         return $dtos;
     }
 
+    /**
+     * Gets the total count of all desks.
+     *
+     * @return int The total number of desks.
+     */
     public function getDesksCount(): int {
         $stmt = $this->database->connect()->prepare('SELECT COUNT(*) FROM desks');
         $stmt->execute();
         return (int)$stmt->fetchColumn();
     }
 
+    /**
+     * Sets a maintenance period for a specific desk and cancels overlapping bookings.
+     *
+     * @param int $deskId The ID of the desk.
+     * @param string $startDate The start date of the maintenance (Y-m-d).
+     * @param string $endDate The end date of the maintenance (Y-m-d).
+     * @param string $reason The reason for maintenance.
+     * @return bool True if successful, false otherwise.
+     */
     public function setMaintenance(int $deskId, string $startDate, string $endDate, string $reason): bool {
         $conn = $this->database->connect();
         try {
@@ -149,6 +189,18 @@ class DeskRepository extends Repository {
         }
     }
 
+    /**
+     * Saves a new desk or updates an existing one, along with its features.
+     *
+     * @param int|null $id The ID of the desk, or null if creating a new one.
+     * @param int $floorId The ID of the floor where the desk is located.
+     * @param string $identifier The unique identifier for the desk.
+     * @param string $description The description of the desk.
+     * @param float $posX The X-coordinate position of the desk.
+     * @param float $posY The Y-coordinate position of the desk.
+     * @param array $features An array of feature IDs associated with the desk.
+     * @return bool True if the desk was saved successfully, false otherwise.
+     */
     public function saveDesk(?int $id, int $floorId, string $identifier, string $description, float $posX, float $posY, array $features): bool {
         $conn = $this->database->connect();
         try {
@@ -201,6 +253,12 @@ class DeskRepository extends Repository {
         }
     }
 
+    /**
+     * Deactivates a desk and cancels its future bookings.
+     *
+     * @param int $id The ID of the desk to deactivate.
+     * @return bool True if successful, false otherwise.
+     */
     public function deactivateDesk(int $id): bool {
         $conn = $this->database->connect();
         try {
@@ -226,6 +284,12 @@ class DeskRepository extends Repository {
         }
     }
 
+    /**
+     * Reactivates a deactivated desk.
+     *
+     * @param int $id The ID of the desk to reactivate.
+     * @return bool True if successful, false otherwise.
+     */
     public function reactivateDesk(int $id): bool {
         try {
             $stmt = $this->database->connect()->prepare('UPDATE desks SET is_active = TRUE WHERE id = :id');
@@ -236,6 +300,12 @@ class DeskRepository extends Repository {
         }
     }
 
+    /**
+     * Checks whether a desk has any booking history.
+     *
+     * @param int $deskId The ID of the desk.
+     * @return bool True if the desk has been booked at least once, false otherwise.
+     */
     public function hasBookingHistory(int $deskId): bool {
         $stmt = $this->database->connect()->prepare('SELECT COUNT(*) FROM bookings WHERE desk_id = :deskId');
         $stmt->bindParam(':deskId', $deskId, PDO::PARAM_INT);
@@ -243,6 +313,13 @@ class DeskRepository extends Repository {
         return (int)$stmt->fetchColumn() > 0;
     }
 
+    /**
+     * Permanently deletes a desk from the database.
+     * Will fail if the desk has booking history.
+     *
+     * @param int $id The ID of the desk to delete.
+     * @return bool True if the desk was successfully deleted, false otherwise.
+     */
     public function hardDeleteDesk(int $id): bool {
         if ($this->hasBookingHistory($id)) {
             return false;

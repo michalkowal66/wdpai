@@ -5,6 +5,14 @@ require_once 'src/controllers/MapController.php';
 require_once 'src/controllers/AdminController.php';
 require_once 'src/controllers/SettingsController.php';
 
+/**
+ * Application Router.
+ * 
+ * Maps incoming HTTP requests to specific Controller methods based on the URI.
+ * Implements a basic Front Controller pattern for centralized request handling.
+ * 
+ * @package Core
+ */
 class Routing {
 
     private static $instances = [];

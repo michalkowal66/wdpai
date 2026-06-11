@@ -3,6 +3,14 @@
 require_once "config.php";
 
 // singleton 
+/**
+ * Core Database Connection Manager.
+ * 
+ * Provides a centralized wrapper for establishing and managing 
+ * the PDO database connection using environment credentials.
+ * 
+ * @package Core
+ */
 class Database {
     private $username;
     private $password;

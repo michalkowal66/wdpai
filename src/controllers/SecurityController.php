@@ -5,6 +5,11 @@ require_once __DIR__.'/../repositories/UsersRepository.php';
 
 class SecurityController extends AppController {
 
+    /**
+     * Generates and returns a CSRF token.
+     *
+     * @return string The generated CSRF token.
+     */
     private function generateCsrfToken(): string {
         if (empty($_SESSION['csrf'])) {
             $_SESSION['csrf'] = bin2hex(random_bytes(32));
@@ -12,10 +17,22 @@ class SecurityController extends AppController {
         return $_SESSION['csrf'];
     }
 
+    /**
+     * Validates the provided CSRF token against the session token.
+     *
+     * @param string|null $token The token to validate.
+     * @return bool True if valid, false otherwise.
+     */
     private function validateCsrfToken(?string $token): bool {
         return !empty($token) && hash_equals($_SESSION['csrf'] ?? '', $token);
     }
 
+    /**
+     * Validates the format and length of a given password.
+     *
+     * @param string $password The password to validate.
+     * @return string|null Error message if invalid, or null if valid.
+     */
     private function validatePasswordFormat(string $password): ?string {
         if (empty($password)) {
             return 'Password is required.';
@@ -27,6 +44,12 @@ class SecurityController extends AppController {
         return null; // Null means no errors
     }
 
+    /**
+     * Handles user login, rate limiting, and session regeneration.
+     * Renders the login view on GET or on authentication failure.
+     *
+     * @return void
+     */
     public function login()
     {
         if (!$this->isPost()) {
@@ -96,6 +119,11 @@ class SecurityController extends AppController {
         return;
     }
 
+    /**
+     * Logs out the current user and destroys their session.
+     *
+     * @return void
+     */
     public function logout()
     {
         session_unset();
@@ -110,6 +138,11 @@ class SecurityController extends AppController {
         return $this->render('inactive');
     }
 
+    /**
+     * Handles the password change process for the authenticated user.
+     *
+     * @return void
+     */
     public function changePassword()
     {
         if (!$this->isPost()) {
@@ -165,6 +198,12 @@ class SecurityController extends AppController {
         echo json_encode(['status' => 'success', 'message' => 'Password updated successfully.']);
     }
 
+    /**
+     * Handles new user registration.
+     * Renders the registration view with validation errors if present.
+     *
+     * @return void
+     */
     public function register()
     {
         if (!$this->isPost()) {

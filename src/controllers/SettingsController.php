@@ -6,6 +6,11 @@ require_once __DIR__.'/../repositories/FloorRepository.php';
 
 class SettingsController extends AppController {
     
+    /**
+     * Renders the settings view with available features and floors.
+     *
+     * @return void
+     */
     public function settings() {
         $featureRepo = new FeatureRepository();
         $floorRepo = new FloorRepository();
@@ -17,6 +22,11 @@ class SettingsController extends AppController {
         ]);
     }
 
+    /**
+     * Adds a new feature based on POST data.
+     *
+     * @return void
+     */
     public function addFeature() {
         if (!$this->isPost()) return;
 
@@ -39,6 +49,11 @@ class SettingsController extends AppController {
         }
     }
 
+    /**
+     * Deletes a feature if it is not currently assigned to any desks.
+     *
+     * @return void
+     */
     public function deleteFeature() {
         if (!$this->isPost()) return;
 
@@ -65,6 +80,11 @@ class SettingsController extends AppController {
         }
     }
 
+    /**
+     * Adds a new floor with its associated map image.
+     *
+     * @return void
+     */
     public function addFloor() {
         if (!$this->isPost()) return;
 
@@ -125,6 +145,11 @@ class SettingsController extends AppController {
         echo json_encode(['message' => 'Failed to move uploaded file.']);
     }
 
+    /**
+     * Deletes a floor and its map image if it contains no desks.
+     *
+     * @return void
+     */
     public function deleteFloor() {
         if (!$this->isPost()) return;
 
@@ -159,6 +184,11 @@ class SettingsController extends AppController {
         }
     }
 
+    /**
+     * Updates floor details and optionally replaces its map image.
+     *
+     * @return void
+     */
     public function updateFloor() {
         if (!$this->isPost()) return;
 
