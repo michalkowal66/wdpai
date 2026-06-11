@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const cancelBtn = document.getElementById('cancel-panel-btn');
     const confirmBtn = document.getElementById('confirm-booking-btn');
     const grid = document.querySelector('.dashboard-grid');
+    const backdrop = document.querySelector('.booking-panel-backdrop');
 
     // UI elements to populate
     const emptyState = document.getElementById('desk-empty-state');
@@ -271,6 +272,7 @@ document.addEventListener('DOMContentLoaded', () => {
         currentSelectedMarker.classList.add('desk-marker--selected');
 
         panel.classList.add('side-panel--active');
+        if (backdrop) backdrop.classList.add('side-panel-backdrop--active');
         grid.classList.add('dashboard-grid--with-sidebar');
         
         fetchDeskDetails(id);
@@ -279,6 +281,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const closePanel = () => {
         clearSelection();
         panel.classList.remove('side-panel--active');
+        if (backdrop) backdrop.classList.remove('side-panel-backdrop--active');
         grid.classList.remove('dashboard-grid--with-sidebar');
         
         // Reset panel view
@@ -298,5 +301,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (closeBtn) closeBtn.addEventListener('click', closePanel);
     if (cancelBtn) cancelBtn.addEventListener('click', closePanel);
+    if (backdrop) backdrop.addEventListener('click', closePanel);
     if (confirmBtn) confirmBtn.addEventListener('click', bookDesk);
 });
