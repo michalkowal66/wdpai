@@ -99,6 +99,58 @@ Aplikacja została stworzona zgodnie z wytycznymi przedmiotu, całkowicie bez wy
 * **Frontend**: HTML5, Vanilla CSS, JS (ES6+, Vanilla, mechanizm Fetch API dla zapytań asynchronicznych asynchronicznych API).
 * **Infrastruktura**: Docker & Docker Compose.
 
+### Diagram Warstwowy Architektury
+
+```mermaid
+graph TD
+    classDef layer fill:#f8f9fa,stroke:#dee2e6,stroke-width:2px,rx:5px,ry:5px;
+    classDef client fill:#e3f2fd,stroke:#90caf9,stroke-width:2px;
+    classDef backend fill:#e8f5e9,stroke:#a5d6a7,stroke-width:2px;
+    classDef db fill:#fff3e0,stroke:#ffcc80,stroke-width:2px;
+
+    subgraph Warstwa Prezentacji / Frontend
+        Views["Widoki (public/views)<br/><i>Pliki PHP / HTML</i>"]:::client
+        Assets["Assety (public/scripts, styles)<br/><i>Vanilla JS (Fetch API), CSS</i>"]:::client
+    end
+
+    subgraph Warstwa Routing'u
+        Router["Router (index.php)<br/><i>Kierowanie żądań HTTP</i>"]:::backend
+    end
+
+    subgraph Warstwa Aplikacji - Controllers
+        Controllers["Kontrolery (src/controllers)<br/><i>Logika żądań, walidacja, autoryzacja</i>"]:::backend
+    end
+
+    subgraph Warstwa Domenowa i DTO
+        Models["Modele (src/models)<br/><i>Encje reprezentujące struktury z bazy</i>"]:::backend
+        DTOs["DTO (src/dto)<br/><i>Złożone obiekty do transferu danych</i>"]:::backend
+    end
+
+    subgraph Warstwa Dostępu do Danych - Repositories
+        Repositories["Repozytoria (src/repositories)<br/><i>Bezpośrednia komunikacja z PDO, SQL</i>"]:::backend
+    end
+
+    subgraph Baza Danych
+        DB[("PostgreSQL<br/><i>Widoki, Triggery, Funkcje</i>")]:::db
+    end
+
+    %% Przepływ
+    Views -- "Żądania HTTP / Fetch API" --> Router
+    Assets -. "Obsługa interfejsu (JS/CSS)" .-> Views
+    
+    Router -- "Mapowanie na" --> Controllers
+    Controllers -- "Zwraca wyrenderowany widok / JSON" --> Views
+    
+    Controllers -- "Wywołuje operacje na" --> Repositories
+    
+    Repositories -. "Mapuje wyniki na" .-> Models
+    Repositories -. "Tworzy złożone" .-> DTOs
+    Controllers -. "Operuje na" .-> Models
+    Controllers -. "Zwraca" .-> DTOs
+    
+    Repositories <--"Zapytania (Prepared Statements)"--> DB
+```
+
 ---
 
 ## Architektura Bazy Danych (ERD)
@@ -197,3 +249,54 @@ Skrypt integracyjny sprawdzający na poziomie nagłówków HTTP odpowiednie wywo
 ```bash
 bash tests/integration.sh
 ```
+
+---
+
+## Scenariusz Testowy
+
+Poniższy scenariusz pozwala przetestować kluczowe funkcjonalności i zabezpieczenia aplikacji zgodnie z wymaganiami.
+
+### 1. Rejestracja, Logowanie i Autoryzacja
+1. **Rejestracja:** Przejdź na `/register`, utwórz nowe konto.
+2. **Logowanie (Inactive):** Spróbuj zalogować się na nowo utworzone konto. System powinien przekierować na stronę `/inactive` (użytkownik wymaga akceptacji).
+3. **Logowanie Admina:** Zaloguj się na główne konto administratora (stworzone przez CLI).
+4. **Zarządzanie (Aktywacja):** W panelu administratora przejdź do "Users", znajdź nowe konto, zmień jego status na "Active" (możesz też przypisać mu rolę Admina lub zostawić Employee).
+
+### 2. Role i Ograniczenia dostępu
+1. Zaloguj się na aktywne konto z rolą **Employee**.
+2. **Test 403 (Forbidden):** Jako pracownik spróbuj ręcznie wpisać w pasku adresu URL: `/dashboard` lub `/editor`. Powinien wyświetlić się zunifikowany ekran błędu **403 Forbidden**.
+3. **Test wylogowania:** Wyloguj się z aplikacji (zakładka profilu -> Logout).
+4. **Test 401/Przekierowania:** Będąc wylogowanym spróbuj wejść na `/map` lub `/bookings`. System przekieruje Cię na ekran logowania.
+
+### 3. Zarządzanie Zasobami
+Zaloguj się na konto **Admin**:
+1. **Dodawanie piętra (Create):** Przejdź do Settings -> Add Floor. Wypełnij dane i wgraj plik ze zdjęciem mapy piętra.
+2. **Edycja udogodnień:** W Settings dodaj nowe udogodnienie (np. "Dwa Monitory", wybierając ikonę).
+3. **Edytor Mapy (Create/Update):** Przejdź do Editor. Wybierz nowo utworzone piętro. Kliknij na mapie, aby dodać biurko. Wpisz identyfikator (np. "A-12"), dodaj stworzone udogodnienie. Biurko pojawi się na mapie. Przesuń je w inne miejsce.
+4. **Maintenance / Deaktywacja (Update):** W Edytorze kliknij przycisk, aby wyłączyć je z użytku (Set Maintenance).
+5. **Usuwanie (Delete):** Dodaj testowe biurko, a następnie użyj przycisku (Hard Delete), aby je trwale usunąć.
+
+### 4. Proces Rezerwacji
+Zaloguj się na konto **Employee**:
+1. Przejdź na widok `/map`. Wybierz dzisiejszą datę.
+2. Zlokalizuj dostępne biurko i kliknij na nie, a następnie "Confirm Booking".
+3. **Blokada wyzwalacza (Database Trigger):** Zmień datę w kalendarzu na **datę wczorajszą** i spróbuj dokonać rezerwacji. System (i wyzwalacz `trigger_check_booking_date`) odrzuci to zapytanie, wyświetlając komunikat, że nie można rezerwować biurka w przeszłości.
+4. **Zarządzanie Rezerwacją:** Przejdź do `/bookings`. Twoja dzisiejsza rezerwacja będzie w zakładce "Upcoming".
+5. **Check-in:** Ponieważ rezerwacja jest na dzisiaj, kliknij "Check-in". Status zmieni się na "Checked In".
+6. **Odwołanie:** Zrób rezerwację na dzień jutrzejszy i użyj przycisku "Cancel". Przejdzie do zakładki "Cancelled".
+
+---
+
+## Checklista Wymagań
+
+- [x] **Aplikacja napisana obiektowo** zgodnie z zasadami SOLID i MVC (brak frameworka).
+- [x] **Relacyjna Baza Danych (PostgreSQL)** z relacjami 1:N i N:M, spełniająca 3 postać normalną.
+- [x] **Minimum 2 widoki bazodanowe** (złączenia tabel): Utworzono np. `view_desk_popularity`, `view_user_attendance`.
+- [x] **Minimum 1 wyzwalacz (Trigger) i 1 funkcja**: Utworzono `trigger_check_booking_date` chroniący przed rezerwacjami wstecznymi.
+- [x] **Transakcje i blokady**: Używane transakcje bazodanowe.
+- [x] **Zabezpieczenia webowe**: Zabezpieczenia przed SQLi (Prepared Statements), XSS (htmlspecialchars), CSRF (tokeny hash_equals), bezpieczne sesje.
+- [x] **Dokumentacja (Readme):** Diagram ERD, link do źródła, screeny (Web i Mobile), architektura (diagram warstwowy), instrukcja uruchomienia.
+- [x] **Scenariusz testowy:** Powyższy przewodnik krok po kroku.
+- [x] **Automatyczne testowanie:** Utworzono test PHPUnit oraz skrypt w bashu (test end-to-end endpointów HTTP).
+- [x] **Strony błędów:** Obsługa błędów 400, 403, 404, 500.
+- [x] **Design:** Responsywność, estetyka, RWD (Media Queries), brak gotowych szablonów CSS.
