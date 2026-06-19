@@ -29,6 +29,60 @@ System posiada dedykowane i zunifikowane strony błędów HTTP maskujące komuni
 * **404 Not Found**
 * **500 Internal Server Error** (Maskowanie stack trace w środowisku produkcyjnym)
 
+### Widoki aplikacji
+#### Logowanie
+##### Desktop
+![image](docs/img/login-desktop.png)
+##### Mobile
+<img src="docs/img/login-mobile.png" width="392">
+
+#### Rejestracja
+##### Desktop
+![image](docs/img/register-desktop.png)
+##### Mobile
+<img src="docs/img/register-mobile.png" width="392">
+
+#### Mapa piętra
+##### Desktop
+![image](docs/img/map-desktop.png)
+##### Mobile
+<img src="docs/img/map1-mobile.png" width="392">
+<img src="docs/img/map2-mobile.png" width="392">
+
+#### Rezerwacje
+##### Desktop
+![image](docs/img/bookings-desktop.png)
+##### Mobile
+<img src="docs/img/bookings-mobile.png" width="392">
+
+#### Dashboard
+##### Desktop
+![image](docs/img/dashboard-desktop.png)
+##### Mobile
+<img src="docs/img/dashboard-mobile.png" width="392">
+
+#### Edytor pięter
+##### Desktop
+![image](docs/img/editor-desktop.png)
+![image](docs/img/maintenance-desktop.png)
+##### Mobile
+<img src="docs/img/editor1-mobile.png" width="392">
+<img src="docs/img/editor2-mobile.png" width="392">
+<img src="docs/img/maintenance-mobile.png" width="392">
+
+#### Użytkownicy
+##### Desktop
+![image](docs/img/users-desktop.png)
+##### Mobile
+<img src="docs/img/users1-mobile.png" width="392">
+<img src="docs/img/users2-mobile.png" width="392">
+
+#### Ustawienia
+##### Desktop
+![image](docs/img/settings-desktop.png)
+##### Mobile
+<img src="docs/img/settings-mobile.png" width="392">
+
 ---
 
 ## Stos Technologiczny i Architektura
