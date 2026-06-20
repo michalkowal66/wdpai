@@ -192,11 +192,11 @@ W celu zachowania wygody deweloperskiej wprowadzono dedykowany skrypt CLI pozwal
 **Tworzenie konta Administratora:**
 Skrypt `create-admin.php` z poziomu CLI (wymaga działającego kontenera i bazy):
 ```bash
-docker exec <nazwa_kontenera_php> php create-admin.php <email> <haslo> ["Pelne Imie"]
+docker exec <nazwa_kontenera_php> php /app/create-admin.php <email> <haslo> ["Pelne Imie"]
 ```
 *Przykład:*
 ```bash
-docker exec <nazwa_kontenera_php> php create-admin.php admin@hotdesk.io SuperTajneHaslo123 "Jan Kowalski"
+docker exec <nazwa_kontenera_php> php /app/create-admin.php admin@hotdesk.io SuperTajneHaslo123 "Jan Kowalski"
 ```
 
 ---
